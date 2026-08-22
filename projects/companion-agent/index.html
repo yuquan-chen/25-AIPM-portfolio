@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Companion Agent Demo</title>
+    <style>
+        :root {
+            --companion-paper: #E9DFCA;
+            --companion-ink: #25201D;
+            --companion-wine: #743F43;
+            --companion-blush: #C88F82;
+            --companion-green: #405248;
+            --companion-faded: #9C8E7B;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--companion-paper);
+            color: var(--companion-ink);
+            overflow: hidden;
+        }
+
+        /* 嵌入模式样式调整 */
+        .embedded .demo-header,
+        .embedded .demo-footer {
+            display: none;
+        }
+
+        .embedded .demo-container {
+            padding: 56px 18px 18px;
+            max-width: none;
+            height: 100vh;
+        }
+
+        .embedded-root,
+        .embedded-root body {
+            height: 100%;
+            min-height: 0;
+        }
+
+        .embed-ribbon {
+            display: none;
+        }
+
+        .embedded .embed-ribbon {
+            position: fixed;
+            inset: 0 0 auto 0;
+            z-index: 1200;
+            min-height: 44px;
+            padding: 0 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            color: var(--companion-ink);
+            background: rgba(233, 223, 202, .96);
+            border-bottom: 1px solid rgba(37, 32, 29, .45);
+            font: 11px/1.2 "Courier New", monospace;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+        }
+
+        .embed-ribbon strong {
+            color: var(--companion-wine);
+            font-weight: 700;
+        }
+
+        .embed-ribbon .round-progress {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            white-space: nowrap;
+        }
+
+        .embed-ribbon .round-track {
+            width: 86px;
+            height: 3px;
+            background: rgba(116, 63, 67, .18);
+        }
+
+        .embed-ribbon .round-fill {
+            width: 10%;
+            height: 100%;
+            background: var(--companion-wine);
+            transition: width .35s ease;
+        }
+
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .demo-header {
+            text-align: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--companion-faded);
+            margin-bottom: 20px;
+        }
+
+        .demo-header h1 {
+            font-size: 1.2rem;
+            color: var(--companion-ink);
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .demo-header p {
+            font-size: 0.9rem;
+            color: var(--companion-faded);
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        /* 主演示区域 */
+        .demo-main {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            overflow: hidden;
+        }
+
+        /* 聊天界面 */
+        .chat-interface {
+            background: linear-gradient(135deg, rgba(37, 32, 29, 0.03) 0%, rgba(37, 32, 29, 0.01) 100%);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(156, 142, 123, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            max-height: 80vh;
+            overflow: hidden;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 15px;
+            padding-right: 10px;
+            scroll-behavior: smooth;
+            max-height: calc(80vh - 120px);
+            min-height: 200px;
+            scrollbar-width: thin;
+            scrollbar-color: #984536 rgba(156, 142, 123, 0.1);
+        }
+
+        /* 自定义滚动条样式 */
+        .chat-messages::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: rgba(156, 142, 123, 0.05);
+            border-radius: 4px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: #984536;
+            border-radius: 4px;
+            opacity: 0.72;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb:hover {
+            background: var(--companion-wine);
+            opacity: 0.8;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            max-width: 80%;
+        }
+
+        .message.other {
+            align-self: flex-start;
+            background: linear-gradient(135deg, rgba(64, 82, 72, 0.15) 0%, rgba(64, 82, 72, 0.05) 100%);
+            padding: 14px 18px;
+            border-radius: 16px 16px 16px 4px;
+            border: 1px solid rgba(64, 82, 72, 0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .message.user {
+            margin-left: auto;
+            background: linear-gradient(135deg, var(--companion-wine) 0%, var(--companion-blush) 100%);
+            color: white;
+            padding: 14px 18px;
+            border-radius: 16px 16px 4px 16px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(116, 63, 67, 0.2);
+        }
+
+        .message.user.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 输入区域 */
+        .input-area {
+            border: 1px solid rgba(200, 143, 130, 0.3);
+            border-radius: 12px;
+            padding: 18px;
+            background: linear-gradient(135deg, rgba(200, 143, 130, 0.1) 0%, rgba(200, 143, 130, 0.05) 100%);
+            box-shadow: inset 0 2px 4px rgba(200, 143, 130, 0.05);
+        }
+
+        .input-display {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            min-height: 40px;
+            color: var(--companion-ink);
+            line-height: 1.4;
+        }
+
+        .input-display .deleted {
+            text-decoration: line-through;
+            color: var(--companion-wine);
+            opacity: 0.5;
+        }
+
+        .input-display .current {
+            color: var(--companion-ink);
+        }
+
+        .input-display .cursor {
+            display: inline-block;
+            width: 2px;
+            height: 16px;
+            background: var(--companion-wine);
+            animation: blink 1s infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        .input-hint {
+            font-size: 12px;
+            color: var(--companion-faded);
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        /* 感知面板 */
+        .perception-panel {
+            background: linear-gradient(135deg, rgba(37, 32, 29, 0.02) 0%, rgba(37, 32, 29, 0.005) 100%);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            border: 1px solid rgba(156, 142, 123, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .panel-title {
+            font-size: 0.9rem;
+            color: var(--companion-faded);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        /* 状态指示器 */
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: linear-gradient(135deg, rgba(64, 82, 72, 0.08) 0%, rgba(64, 82, 72, 0.02) 100%);
+            border-radius: 12px;
+            border: 1px solid rgba(64, 82, 72, 0.1);
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--companion-green);
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 8px rgba(64, 82, 72, 0.3);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+
+        .status-text {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: var(--companion-ink);
+        }
+
+        /* 指标卡片 */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.4) 100%);
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid rgba(156, 142, 123, 0.15);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .metric-label {
+            font-size: 11px;
+            color: var(--companion-faded);
+            margin-bottom: 5px;
+        }
+
+        .metric-value {
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--companion-ink);
+        }
+
+        .metric-value.warning {
+            color: var(--companion-wine);
+        }
+
+        /* 心理负荷曲线 */
+        .load-chart {
+            height: 80px;
+            border: 1px solid rgba(156, 142, 123, 0.2);
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.2) 100%);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .load-chart svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .load-line {
+            fill: none;
+            stroke: var(--companion-blush);
+            stroke-width: 2;
+        }
+
+        .threshold-line {
+            stroke: var(--companion-green);
+            stroke-width: 1;
+            stroke-dasharray: 4,4;
+        }
+
+        /* Agent 建议弹窗 */
+        .agent-suggestion {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            background: linear-gradient(145deg, #F3E8D7 0%, #EBDCCB 100%);
+            border-radius: 16px;
+            box-shadow: 0 16px 38px rgba(68, 51, 38, 0.18), 0 5px 14px rgba(116, 63, 67, 0.08);
+            padding: 20px;
+            width: min(340px, calc(100vw - 34px));
+            max-width: 340px;
+            max-height: 75vh;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid rgba(116, 63, 67, 0.18);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        /* 自定义滚动条样式 */
+        .agent-suggestion::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .agent-suggestion::-webkit-scrollbar-track {
+            background: rgba(156, 142, 123, 0.1);
+            border-radius: 3px;
+        }
+
+        .agent-suggestion::-webkit-scrollbar-thumb {
+            background: #984536;
+            border-radius: 3px;
+            opacity: 0.5;
+        }
+
+        .agent-suggestion::-webkit-scrollbar-thumb:hover {
+            background: var(--companion-wine);
+            opacity: 0.7;
+        }
+
+        .agent-suggestion.visible {
+            opacity: 1;
+            pointer-events: all;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .suggestion-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .suggestion-icon {
+            width: 34px;
+            height: 34px;
+            background: #A97872;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 17px;
+        }
+
+        .suggestion-title {
+            font-weight: bold;
+            color: var(--companion-ink);
+        }
+
+        .suggestion-subtitle {
+            font-size: 12px;
+            color: var(--companion-faded);
+        }
+
+        .suggestion-content {
+            background: linear-gradient(135deg, rgba(174, 157, 130, 0.18) 0%, rgba(157, 177, 157, 0.12) 100%);
+            border: 1px solid rgba(116, 101, 82, 0.18);
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 14px;
+        }
+
+        .suggestion-text {
+            font-size: 13px;
+            line-height: 1.55;
+            color: var(--companion-ink);
+            font-weight: 400;
+        }
+
+        .suggestion-reasoning {
+            font-size: 11px;
+            color: var(--companion-faded);
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(156, 142, 123, 0.2);
+            font-style: italic;
+        }
+
+        .suggestion-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .suggestion-btn {
+            flex: 1;
+            padding: 9px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .suggestion-btn.primary {
+            background: linear-gradient(135deg, var(--companion-wine) 0%, var(--companion-blush) 100%);
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(116, 63, 67, 0.2);
+            border: none;
+        }
+
+        .suggestion-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(116, 63, 67, 0.3);
+        }
+
+        .suggestion-btn.primary:active {
+            transform: translateY(0);
+        }
+
+        .suggestion-btn.secondary {
+            background: rgba(156, 142, 123, 0.08);
+            color: var(--companion-ink);
+            border: 1px solid rgba(156, 142, 123, 0.2);
+        }
+
+        .suggestion-btn.secondary:hover {
+            background: rgba(156, 142, 123, 0.15);
+            border-color: rgba(156, 142, 123, 0.3);
+        }
+
+        /* 底部信息 */
+        .demo-footer {
+            text-align: center;
+            padding: 10px 0;
+            border-top: 1px solid var(--companion-faded);
+            margin-top: 20px;
+            font-size: 12px;
+            color: var(--companion-faded);
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .demo-main {
+                grid-template-columns: 1fr;
+                overflow-y: auto;
+            }
+
+            .embedded .demo-container {
+                height: auto;
+                min-height: 100vh;
+                padding: 52px 10px 10px;
+            }
+
+            .embedded .demo-main {
+                overflow: visible;
+            }
+
+            .chat-interface,
+            .perception-panel {
+                min-height: 440px;
+                max-height: none;
+                border-radius: 0;
+                box-shadow: none;
+            }
+
+            .embed-ribbon > span:first-child {
+                display: none;
+            }
+        }
+    </style>
+    <style>
+        .window-lights{position:fixed;top:15px;left:18px;z-index:1600;display:flex;align-items:center;gap:8px}.window-light{width:13px;height:13px;padding:0;border:0;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(37,32,29,.2),0 1px 4px rgba(37,32,29,.16)}.window-light.red{background:#ef5b60;cursor:pointer}.window-light.yellow{background:#e8b52f}.window-light.green{background:#35bf62}.window-light.red:hover{filter:brightness(1.08);transform:scale(1.08)}.embedded .window-lights{display:none!important}.embedded .embed-ribbon{padding-left:104px}
+        .entry-screen{position:fixed;inset:0;z-index:1500;display:grid;place-items:center;padding:28px;background:radial-gradient(circle at 50% 42%,rgba(243,232,215,.96),rgba(233,223,202,.99) 70%);cursor:pointer;transition:opacity .35s ease,visibility .35s ease}.entry-screen.is-hidden{opacity:0;visibility:hidden;pointer-events:none}.entry-screen::before,.entry-screen::after{content:"";position:absolute;pointer-events:none;border:1px solid rgba(116,63,67,.22)}.entry-screen::before{inset:22px}.entry-screen::after{inset:32px;border-color:rgba(116,63,67,.11)}.entry-copy{position:relative;z-index:1;max-width:560px;text-align:center}.entry-kicker{color:var(--companion-wine);font:700 10px/1.3 "Courier New",monospace;letter-spacing:.16em}.entry-copy h2{margin:17px 0 12px;font:500 clamp(28px,5vw,52px)/1.06 Georgia,"Songti SC",serif}.entry-copy p{max-width:500px;margin:0 auto;color:var(--companion-faded);font-size:13px;line-height:1.8}.entry-hint{display:inline-block;margin-top:27px;color:var(--companion-green);font:700 10px/1.4 "Courier New",monospace;letter-spacing:.13em}.entry-hint::before{content:"↘  ";color:var(--companion-wine)}
+        @media(max-width:600px){.window-lights{top:13px;left:16px}.entry-screen::before{inset:16px}.entry-screen::after{inset:24px}.entry-copy{padding:0 18px}.entry-copy h2{font-size:34px}.entry-copy p{font-size:12px}}
+    </style>
+    <style>
+        .window-light{display:block}
+        .entry-screen{background:rgba(71,52,46,.14);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
+        .entry-screen::before{inset:20px;border-color:rgba(116,63,67,.14)}.entry-screen::after{inset:30px;border-color:rgba(116,63,67,.08)}
+        .entry-copy{width:min(530px,calc(100vw - 54px));padding:31px 34px 29px;border:1px solid rgba(116,63,67,.28);background:rgba(243,232,215,.96);box-shadow:0 22px 50px rgba(68,51,38,.2),inset 0 0 30px rgba(116,63,67,.05);transform:scale(.86);transition:transform .36s cubic-bezier(.16,1,.3,1)}
+        .entry-screen.is-hidden .entry-copy{transform:scale(1.08)}
+        @media(max-width:600px){.entry-copy{width:min(440px,calc(100vw - 42px));padding:26px 22px 24px}}
+    </style>
+    <style>
+        body{font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+        body .demo-container{transition:transform .48s cubic-bezier(.16,1,.3,1),opacity .38s ease}
+        body:not(.is-active) .demo-container{transform:translateY(22px) scale(.965);opacity:.72}
+        body.is-active .demo-container{transform:none;opacity:1}
+        body:not(.is-active) .demo-container>.demo-header,body:not(.is-active) .demo-container>.demo-main,body:not(.is-active) .demo-container>.demo-footer,body:not(.is-active) .embed-ribbon{visibility:hidden;opacity:0;transform:scale(.96);pointer-events:none;max-height:0;overflow:hidden}
+        body:not(.is-active){background:transparent!important;overflow:hidden}
+        body.is-active .demo-container>.demo-header,body.is-active .demo-container>.demo-main,body.is-active .demo-container>.demo-footer,body.is-active .embed-ribbon{visibility:visible;opacity:1;transform:none;max-height:none;overflow:visible;transition:opacity .42s ease,transform .48s cubic-bezier(.16,1,.3,1)}
+        .entry-screen{background:transparent!important;backdrop-filter:none;-webkit-backdrop-filter:none;cursor:default}
+        body:not(.is-active) .entry-screen::before,
+        body:not(.is-active) .entry-screen::after{display:none}
+        body:not(.is-active) .window-lights{visibility:hidden;opacity:0}
+        .entry-screen.is-entering .entry-copy{transform:translateY(-26px) scale(1.18);opacity:0}
+        .entry-copy{width:min(400px,calc(100vw - 56px));padding:22px 25px 20px;background:rgba(243,232,215,.78);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(116,63,67,.34);box-shadow:0 16px 34px rgba(90,55,42,.18);cursor:pointer;transform:scale(.9);transition:transform .44s cubic-bezier(.16,1,.3,1),opacity .32s ease}
+        .entry-copy h2{font-size:clamp(24px,3.2vw,38px);line-height:1.08}
+        .entry-hint{margin-top:19px;font-size:9px}
+        @media(max-width:600px){.entry-copy{width:min(390px,calc(100vw - 42px));padding:22px 20px 20px}.entry-screen.is-entering .entry-copy{transform:translateY(-18px) scale(1.1)}}
+    </style>
+    <style>
+        /* 与 Editing Agent 对齐：同一套窗口层级、分栏比例与面板起始线 */
+        .embedded .embed-ribbon{display:none!important}
+        .embedded .embed-ribbon{position:relative;inset:auto;flex:0 0 44px;min-height:44px;padding-left:104px;border:0;border-bottom:1px solid rgba(37,32,29,.35);background:rgba(233,223,202,.78)}
+        .embedded .demo-container{padding:0;max-width:none;height:100%;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+        .embedded.is-active .demo-header{display:grid;grid-template-columns:minmax(260px,.8fr) 1px minmax(260px,1.2fr);align-items:center;gap:18px;min-height:76px;padding:18px 30px 16px;text-align:left;border:0;border-bottom:1px solid rgba(55,44,36,.2);margin:0}
+        .embedded.is-active .demo-header::after{content:"";grid-column:2;grid-row:1;width:1px;height:31px;background:rgba(55,44,36,.2)}
+        .embedded.is-active .demo-header h1{grid-column:1;grid-row:1;margin:0;color:var(--companion-ink);font:500 20px/1.1 Georgia,"Songti SC",serif;letter-spacing:0}
+        .embedded.is-active .demo-header p{grid-column:3;grid-row:1;margin:0;color:var(--companion-faded);font:11px/1.55 "Courier New",monospace;font-style:normal}
+        .companion-note{display:grid;grid-template-columns:minmax(230px,.9fr) repeat(3,1fr);border-bottom:1px solid rgba(55,44,36,.2);background:rgba(239,229,210,.25)}
+        .companion-note > div{padding:18px 22px 19px;border-right:1px solid rgba(55,44,36,.16)}
+        .companion-note > div:last-child{border-right:0}
+        .companion-note .note-kicker{display:block;margin-bottom:8px;color:var(--companion-wine);font:700 9px/1 "Courier New",monospace;letter-spacing:.12em}
+        .companion-note h2{margin:7px 0 6px;font:500 18px/1.25 Georgia,"Songti SC",serif}
+        .companion-note p{margin:0;color:var(--companion-ink);font-size:11px;line-height:1.62}
+        .companion-note .lead p{color:var(--companion-faded)}
+        .embedded.is-active .demo-main{grid-template-columns:minmax(390px,.83fr) minmax(560px,1.17fr);gap:0;flex:1;min-height:0;height:0;overflow:hidden}
+        .embedded.is-active .chat-interface{min-height:0;height:auto;border-radius:0;border:0;border-right:1px solid rgba(55,44,36,.2);padding:26px 28px;max-height:none;box-shadow:none}
+        .embedded.is-active .perception-panel{border-radius:0;border:0;padding:26px 28px;box-shadow:none}
+    .embedded.is-active .chat-messages{flex:1 1 0;min-height:0;height:0;max-height:none;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:#984536 rgba(156,142,123,.10)}
+    .embedded.is-active .chat-messages::-webkit-scrollbar{width:5px}
+    .embedded.is-active .chat-messages::-webkit-scrollbar-track{background:rgba(156,142,123,.10)}
+    .embedded.is-active .chat-messages::-webkit-scrollbar-thumb{background:#984536;border:1px solid transparent;background-clip:padding-box;border-radius:5px}
+        .embedded.is-active .demo-footer{display:none}
+        body:not(.is-active) .companion-note{visibility:hidden;opacity:0;max-height:0;overflow:hidden;pointer-events:none}
+        @media(max-width:960px){.companion-note{grid-template-columns:1fr 1fr}.companion-note .lead{grid-column:1/-1;border-right:0;border-bottom:1px solid rgba(55,44,36,.16)}.companion-note > div:nth-child(3){border-right:0}.companion-note > div:nth-child(4){grid-column:1/-1;border-top:1px solid rgba(55,44,36,.16)}}
+        @media(max-width:700px){.embedded.is-active .demo-header{grid-template-columns:1fr;gap:7px}.embedded.is-active .demo-header::after{display:none}.embedded.is-active .demo-header h1,.embedded.is-active .demo-header p{grid-column:1;grid-row:auto}.embedded.is-active .demo-main{grid-template-columns:1fr;height:auto;overflow-y:auto;overflow-x:hidden}.embedded.is-active .chat-interface{height:560px;min-height:560px;flex:0 0 560px;border-right:0;border-bottom:1px solid rgba(55,44,36,.2)}.embedded.is-active .perception-panel{min-height:560px;border-right:0;border-bottom:1px solid rgba(55,44,36,.2)}.companion-note{grid-template-columns:1fr}.companion-note .lead,.companion-note > div:nth-child(4){grid-column:auto;border-right:0}.companion-note > div{border-right:0;border-top:1px solid rgba(55,44,36,.16)}}
+        .window-lights{position:absolute;top:14px;left:18px}
+    </style>
+  <style>
+    .entry-copy { display:grid; grid-template-columns:108px 1px minmax(0,1fr); gap:26px; align-items:stretch; width:min(760px,calc(100vw - 54px)); max-width:none; min-height:350px; padding:44px 48px 40px; text-align:left; }
+    .entry-number { align-self:start; color:rgba(54,85,75,.58); font:500 clamp(72px,10vw,112px)/.78 Georgia,"Songti SC",serif; letter-spacing:-.08em; }
+    .entry-divider { width:1px; min-height:230px; background:rgba(54,85,75,.34); }
+    .entry-body { min-width:0; }
+    .entry-kicker { margin-top:2px; color:#36554B; }
+    .entry-copy h2 { margin:25px 0 14px; font-size:clamp(27px,4vw,46px); line-height:1.05; }
+    .entry-copy p { max-width:390px; margin:0; font-size:12px; line-height:1.75; }
+    .entry-list { display:grid; gap:5px; margin-top:22px; color:#36554B; font:10px/1.4 "Courier New",monospace; }
+    .entry-list span { display:flex; justify-content:space-between; border-bottom:1px solid rgba(54,85,75,.16); padding-bottom:4px; }
+    .entry-hint { margin-top:25px; }
+    @media(max-width:600px){.entry-copy{grid-template-columns:55px 1px minmax(0,1fr);gap:14px;width:min(440px,calc(100vw - 42px));padding:28px 22px 25px}.entry-number{font-size:72px}.entry-divider{min-height:220px}.entry-copy h2{font-size:28px;margin-top:20px}.entry-copy p{font-size:11px}.entry-list{font-size:9px;margin-top:18px}}
+  </style>
+    <style>
+        /* Final mobile overrides for the embedded demo, after the desktop embed rules. */
+        @media(max-width:700px){
+            .embedded .demo-container{height:auto;min-height:100%;overflow:visible}
+            .embedded.is-active .demo-main{height:auto!important;min-height:0;flex:0 0 auto;overflow:visible}
+            .embedded.is-active .chat-interface{height:clamp(500px,70svh,560px);min-height:clamp(500px,70svh,560px);flex:0 0 clamp(500px,70svh,560px);padding:18px 14px}
+            .embedded.is-active .perception-panel{min-height:500px;padding:18px 14px}
+            .embedded.is-active .demo-header{padding:14px 16px 13px;min-height:0}
+            .embedded.is-active .demo-header h1{font-size:17px}
+            .embedded.is-active .demo-header p{font-size:10px;line-height:1.45}
+            .chat-interface,.perception-panel{border-radius:0;box-shadow:none}
+            .chat-messages{padding-right:5px;margin-bottom:12px}
+            .message{max-width:92%;font-size:13px}
+            .message.other,.message.user{padding:11px 13px}
+            .input-area{padding:14px;border-radius:10px}
+            .metrics-grid{gap:8px}
+            .metric-card{padding:11px;border-radius:9px}
+            .suggestion-actions{gap:8px}
+            .suggestion-btn{min-height:44px;padding:10px 8px}
+            .agent-suggestion{padding:16px;width:min(340px,calc(100vw - 24px));max-height:calc(100svh - 32px)}
+            .window-light{width:30px;height:30px;background:transparent!important;box-shadow:none;display:grid;place-items:center;position:relative}
+            .window-light::before{content:"";width:13px;height:13px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(37,32,29,.2),0 1px 4px rgba(37,32,29,.16)}
+            .window-light.red::before{background:#ef5b60}.window-light.yellow::before{background:#e8b52f}.window-light.green::before{background:#35bf62}
+        }
+    </style>
+</head>
+<body>
+    <div class="window-lights" aria-label="窗口控制"><button class="window-light red" id="closeLight" aria-label="返回介绍页" title="返回介绍页"></button><span class="window-light yellow" aria-hidden="true"></span><span class="window-light green" aria-hidden="true"></span></div>
+    <div class="entry-screen" id="entryScreen" role="dialog" aria-modal="true" aria-label="陪伴 Agent 介绍"><div class="entry-copy" id="entryCopy" role="button" tabindex="0" aria-label="点击进入陪伴 Agent 演示"><div class="entry-number">02</div><div class="entry-divider" aria-hidden="true"></div><div class="entry-body"><div class="entry-kicker">HUMAN-CENTERED AGENT · OBSERVATION 03</div><h2>真正的陪伴，<br>知道什么时候出现</h2><p>一段十轮脚本化场景：系统先保持安静，再判断是否有必要向前走一步。</p><div class="entry-list" aria-label="陪伴 Agent 内容目录"><span>01 / 静默观察</span><span>02 / 感知停顿</span><span>03 / 试探介入</span><span>04 / 留下选择</span></div><span class="entry-hint">CLICK CARD TO ENTER</span></div></div></div>
+    <div class="embed-ribbon" aria-label="演示信息">
+        <span><strong>SYSTEM LOG</strong> / INPUT DYNAMICS &amp; INTERVENTION</span>
+        <span class="round-progress"><span id="roundLabel">ROUND 01 / 10</span><span class="round-track"><span class="round-fill" id="roundFill"></span></span></span>
+    </div>
+    <div class="demo-container">
+        <header class="demo-header">
+            <h1>鹅宝 Companion Agent Demo</h1>
+            <p>真正的陪伴，不是一直说话，而是知道什么时候出现</p>
+        </header>
+
+        <section class="companion-note" aria-label="陪伴 Agent 设计说明">
+            <div class="lead"><span class="note-kicker">WHY THIS AGENT</span><h2>让陪伴变成一种克制的出现</h2><p>系统不只理解用户说了什么，也观察那些没有被发送出去的话。</p></div>
+            <div><span class="note-kicker">01 / 出发点</span><p>先保持安静，给用户自己完成表达的空间，而不是一开始就打断。</p></div>
+            <div><span class="note-kicker">02 / 为什么这样做</span><p>删除、停顿和输入速度只是线索，只有信号持续累积，Agent 才会试探性地出现。</p></div>
+            <div><span class="note-kicker">03 / 介入边界</span><p>建议可以被采用，也可以被忽略；系统提供下一步，但不替用户做决定。</p></div>
+        </section>
+
+        <main class="demo-main">
+            <!-- 聊天界面 -->
+            <section class="chat-interface">
+                <div class="chat-messages" id="chatMessages">
+                    <!-- 消息会动态添加 -->
+                </div>
+
+                <div class="input-area">
+                    <div class="input-display" id="inputDisplay">
+                        <span class="current"></span><span class="cursor"></span>
+                    </div>
+                    <div class="input-hint" id="inputHint">试着输入回复...</div>
+                </div>
+            </section>
+
+            <!-- 感知面板 -->
+            <section class="perception-panel">
+                <div class="panel-title">系统感知状态</div>
+
+                <div class="status-indicator">
+                    <div class="status-dot" id="statusDot"></div>
+                    <div class="status-text" id="statusText">静默观察中</div>
+                </div>
+
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">删除次数</div>
+                        <div class="metric-value" id="deletionCount">0</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">犹豫指数</div>
+                        <div class="metric-value" id="hesitationIndex">0.00</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">停顿时长</div>
+                        <div class="metric-value" id="pauseDuration">0s</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">心理负荷</div>
+                        <div class="metric-value" id="loadIndex">0%</div>
+                    </div>
+                </div>
+
+                <div class="load-chart">
+                    <svg viewBox="0 0 400 80" preserveAspectRatio="none">
+                        <line class="threshold-line" x1="0" y1="20" x2="400" y2="20" />
+                        <path class="load-line" id="loadLine" d="M0,60 L400,60" />
+                    </svg>
+                </div>
+            </section>
+        </main>
+
+        <footer class="demo-footer">
+            COMPANION AGENT / 2026 | 双击输入框开始体验
+        </footer>
+    </div>
+
+    <!-- Agent 建议弹窗 -->
+    <div class="agent-suggestion" id="agentSuggestion">
+        <div class="suggestion-header">
+            <div class="suggestion-icon">🐣</div>
+            <div>
+                <div class="suggestion-title">鹅宝</div>
+                <div class="suggestion-subtitle">智能陪伴助手</div>
+            </div>
+        </div>
+        <div class="suggestion-content">
+            <div class="suggestion-text">
+                我注意到你反复编辑回复，要不要试试这样表达：
+            </div>
+            <div class="suggestion-text" style="margin-top: 10px; padding: 10px; background: rgba(116, 63, 67, 0.1); border-radius: 4px;">
+                "是啊，虽然有点可惜，但和你一起玩真的很开心。下周末再一起？"
+            </div>
+            <div class="suggestion-reasoning">
+                分析：删除3次，犹豫指数0.68，可能需要帮助组织表达
+            </div>
+        </div>
+        <div class="suggestion-actions">
+            <button class="suggestion-btn primary" id="acceptBtn">采用建议</button>
+            <button class="suggestion-btn secondary" id="declineBtn">下次再问</button>
+        </div>
+    </div>
+
+    <script>
+        // 获取URL参数
+        const urlParams = new URLSearchParams(window.location.search);
+        const isEmbedded = urlParams.get('embed') === '1';
+        const parentTargetOrigin = window.location.origin === 'null' ? '*' : window.location.origin;
+        const autoPlay = urlParams.get('autoplay') !== '0';
+        const TOTAL_ROUNDS = 10;
+        const RESTART_DELAY = 2800;
+
+        if (isEmbedded) {
+            document.body.classList.add('embedded');
+            document.documentElement.classList.add('embedded-root');
+        }
+
+        // 核心状态
+        const state = {
+            deletionCount: 0,
+            hesitationIndex: 0.0,
+            pauseDuration: 0,
+            loadIndex: 0,
+            status: 'silent', // silent, sensing, testing, acting
+            userInput: '',
+            userInputHistory: [],
+            demoStarted: false,
+            demoPhase: 0,
+            conversationRound: 0,
+            isLongConversation: false,
+            autoSendTimer: null, // 自动发送定时器
+            restartTimer: null,
+            cycleComplete: false
+        };
+
+        // DOM 元素
+        const elements = {
+            inputDisplay: document.getElementById('inputDisplay'),
+            inputHint: document.getElementById('inputHint'),
+            deletionCount: document.getElementById('deletionCount'),
+            hesitationIndex: document.getElementById('hesitationIndex'),
+            pauseDuration: document.getElementById('pauseDuration'),
+            loadIndex: document.getElementById('loadIndex'),
+            statusDot: document.getElementById('statusDot'),
+            statusText: document.getElementById('statusText'),
+            loadLine: document.getElementById('loadLine'),
+            agentSuggestion: document.getElementById('agentSuggestion'),
+            chatMessages: document.getElementById('chatMessages'),
+            roundLabel: document.getElementById('roundLabel'),
+            roundFill: document.getElementById('roundFill'),
+            entryScreen: document.getElementById('entryScreen'),
+            entryCopy: document.getElementById('entryCopy')
+        };
+
+        function updateRoundMarker() {
+            const currentRound = Math.min(TOTAL_ROUNDS, state.conversationRound + 1);
+            elements.roundLabel.textContent = `ROUND ${String(currentRound).padStart(2, '0')} / ${TOTAL_ROUNDS}`;
+            elements.roundFill.style.width = `${(currentRound / TOTAL_ROUNDS) * 100}%`;
+            if (isEmbedded && window.parent !== window) {
+                window.parent.postMessage({
+                    source: 'companion-agent',
+                    type: 'round:change',
+                    payload: { round: currentRound, total: TOTAL_ROUNDS }
+                }, parentTargetOrigin);
+            }
+        }
+
+        // 更新指标显示
+        function updateMetrics() {
+            elements.deletionCount.textContent = state.deletionCount;
+            elements.hesitationIndex.textContent = state.hesitationIndex.toFixed(2);
+            elements.pauseDuration.textContent = Math.floor(state.pauseDuration) + 's';
+            elements.loadIndex.textContent = Math.floor(state.loadIndex) + '%';
+
+            if (state.loadIndex > 50) {
+                elements.loadIndex.classList.add('warning');
+            }
+
+            // 更新心理负荷曲线
+            const points = [];
+            for (let i = 0; i <= 20; i++) {
+                const x = i * 20;
+                const baseLoad = state.loadIndex / 100;
+                const noise = Math.sin(i * 0.5) * 5;
+                const y = 60 - (baseLoad * 35) + noise;
+                points.push(`${x},${Math.max(10, Math.min(70, y))}`);
+            }
+            elements.loadLine.setAttribute('d', 'M' + points.join(' L'));
+
+            // 更新状态指示
+            updateStatus();
+        }
+
+        // 更新状态显示
+        function updateStatus() {
+            const statusConfig = {
+                silent: { text: '静默观察中', color: 'var(--companion-green)' },
+                sensing: { text: '感知信号中', color: 'var(--companion-green)' },
+                testing: { text: '试探介入', color: 'var(--companion-blush)' },
+                acting: { text: '准备建议', color: 'var(--companion-wine)' }
+            };
+
+            const config = statusConfig[state.status];
+            elements.statusText.textContent = config.text;
+            elements.statusDot.style.background = config.color;
+        }
+
+        // 获取当前对话阶段的配置
+        function getCurrentConversation() {
+            const conversations = [
+                // 第一轮：游戏失利后的安慰回复
+                {
+                    otherMessage: '昨天那局真的太可惜了...感觉我们都尽力了',
+                    userPhases: [
+                        { text: '是啊，下次一定', action: 'type', duration: 1000 },
+                        { text: '是啊，下次一定', action: 'delete', duration: 400 },
+                        { text: '虽然可惜', action: 'type', duration: 800 },
+                        { text: '虽然可惜', action: 'delete', duration: 400 },
+                        { action: 'showSuggestion', duration: 1500 }
+                    ],
+                    suggestion: '要不要试试这样表达：',
+                    suggestionText: '是啊，虽然有点可惜，但和你一起玩真的很开心。下周末再一起？'
+                },
+                // 第二轮：约时间的犹豫
+                {
+                    otherMessage: '好啊！周末什么时间比较合适？',
+                    userPhases: [
+                        { text: '周六下午', action: 'type', duration: 800 },
+                        { text: '周六下午', action: 'delete', duration: 300 },
+                        { text: '看情况', action: 'type', duration: 500 },
+                        { text: '看情况', action: 'delete', duration: 300 },
+                        { action: 'showSuggestion', duration: 1200 }
+                    ],
+                    suggestion: '试试这样说：',
+                    suggestionText: '我周六下午比较有空，你觉得呢？'
+                },
+                // 第三轮：邀请朋友 - 直接发送，不犹豫
+                {
+                    otherMessage: '对了，我还想再找两个朋友一起，你觉得怎么样？',
+                    userPhases: [
+                        { text: '可以呀', action: 'type', duration: 700 },
+                        { action: 'directSend', duration: 800 }
+                    ],
+                    suggestion: '',
+                    suggestionText: '可以呀！人多热闹点。',
+                    directSend: true
+                },
+                // 第四轮：担心大家合不合得来
+                {
+                    otherMessage: '其实我还担心一个事...就是不知道大家合不合得来',
+                    userPhases: [
+                        { text: '应该合得来', action: 'type', duration: 600 },
+                        { text: '应该合得来', action: 'delete', duration: 500 },
+                        { text: '我也有点担心', action: 'type', duration: 700 },
+                        { text: '我也有点担心', action: 'delete', duration: 600 },
+                        { text: '嗯...', action: 'type', duration: 500 },
+                        { text: '嗯...', action: 'delete', duration: 800 },
+                        { action: 'autoReply', duration: 1500 }
+                    ],
+                    suggestion: '检测到你比较犹豫，让我帮你回复：',
+                    suggestionText: '理解你的担心！不过大家都是来玩的，慢慢熟悉就好了。',
+                    isAutoReply: true
+                },
+                // 第五轮：讨论吃什么
+                {
+                    otherMessage: '说得对！那我们先想想要吃什么，我来安排',
+                    userPhases: [
+                        { text: '我想吃火锅', action: 'type', duration: 600 },
+                        { text: '我想吃火锅', action: 'delete', duration: 300 },
+                        { text: '烧烤？', action: 'type', duration: 400 },
+                        { action: 'directSend', duration: 600 }
+                    ],
+                    suggestion: '',
+                    suggestionText: '烧烤？',
+                    directSend: true
+                },
+                // 第六轮：确定具体时间地点
+                {
+                    otherMessage: '烧烤不错！那就周六下午5点，老地方怎么样？',
+                    userPhases: [
+                        { text: '好的', action: 'type', duration: 500 },
+                        { text: '好的', action: 'delete', duration: 400 },
+                        { text: '没问题', action: 'type', duration: 600 },
+                        { text: '没问题', action: 'delete', duration: 500 },
+                        { action: 'showSuggestion', duration: 1200 }
+                    ],
+                    suggestion: '可以这样表达：',
+                    suggestionText: '好的！到时候见，我已经开始期待了！'
+                },
+                // 第七轮：有人临时有事
+                {
+                    otherMessage: '不过我可能要晚一点到，大概6点左右，可以吗？',
+                    userPhases: [
+                        { text: '可以', action: 'type', duration: 400 },
+                        { text: '可以', action: 'delete', duration: 300 },
+                        { text: '没关系', action: 'type', duration: 500 },
+                        { text: '没关系', action: 'delete', duration: 400 },
+                        { text: '那就', action: 'type', duration: 600 },
+                        { text: '那就', action: 'delete', duration: 500 },
+                        { action: 'showSuggestion', duration: 1200 }
+                    ],
+                    suggestion: '试试这样说：',
+                    suggestionText: '当然可以！我们先到的话就先准备一下，等你来了再开始。'
+                },
+                // 第八轮：重新安排时间 - 直接回复
+                {
+                    otherMessage: '太好了！对了，如果你那边有什么好推荐的话，也可以告诉我',
+                    userPhases: [
+                        { text: '我想想', action: 'type', duration: 500 },
+                        { text: '我想想', action: 'delete', duration: 300 },
+                        { action: 'directSend', duration: 600 }
+                    ],
+                    suggestion: '',
+                    suggestionText: '好的，我会提前看看有没有什么好玩的推荐！',
+                    directSend: true
+                },
+                // 第九轮：表达期待
+                {
+                    otherMessage: '哈哈，那就这么说定了！我也要开始准备准备',
+                    userPhases: [
+                        { text: '嗯嗯', action: 'type', duration: 400 },
+                        { text: '嗯嗯', action: 'delete', duration: 300 },
+                        { text: '好的', action: 'type', duration: 500 },
+                        { text: '好的', action: 'delete', duration: 400 },
+                        { action: 'showSuggestion', duration: 1200 }
+                    ],
+                    suggestion: '可以表达一下期待：',
+                    suggestionText: '好的！已经开始期待周末的聚会了，到时候见！'
+                },
+                // 第十轮：最后的确认
+                {
+                    otherMessage: '周末见！记得准时哦~',
+                    userPhases: [
+                        { text: '一定', action: 'type', duration: 400 },
+                        { text: '一定', action: 'delete', duration: 300 },
+                        { action: 'directSend', duration: 600 }
+                    ],
+                    suggestion: '',
+                    suggestionText: '一定！不见不散~',
+                    directSend: true
+                }
+            ];
+
+            return conversations[state.conversationRound % conversations.length];
+        }
+
+        // 模拟用户输入和删除
+        function simulateInput() {
+            if (!autoPlay) return;
+
+            const currentConversation = getCurrentConversation();
+            const phases = currentConversation.userPhases;
+
+            if (state.demoPhase >= phases.length) {
+                // 当前对话阶段完成，准备下一轮
+                console.log(`Phase complete. Round: ${state.conversationRound}, Total: ${TOTAL_ROUNDS}`); // 调试日志
+
+                // 检查是否所有对话完成
+                const isLastRound = state.conversationRound + 1 >= TOTAL_ROUNDS;
+
+                setTimeout(() => {
+                    if (isLastRound) {
+                        finishCycle();
+                    } else {
+                        startNextConversation();
+                    }
+                }, 2000);
+                return;
+            }
+
+            const phase = phases[state.demoPhase];
+            if (!phase) return;
+
+            if (phase.action === 'type') {
+                typeText(phase.text, phase.duration);
+            } else if (phase.action === 'delete') {
+                deleteText(phase.duration);
+            } else if (phase.action === 'showSuggestion') {
+                showSuggestion(currentConversation);
+            } else if (phase.action === 'autoReply') {
+                showAutoReply(currentConversation);
+            } else if (phase.action === 'directSend') {
+                directSendMessage(currentConversation);
+                return; // 直接返回，不执行state.demoPhase++
+            }
+
+            state.demoPhase++;
+        }
+
+        // 输入文字
+        function typeText(text, duration) {
+            state.status = 'sensing';
+            state.userInput = text;
+            elements.inputDisplay.querySelector('.current').textContent = text;
+            elements.inputHint.textContent = '正在输入...';
+
+            // 更新心理负荷
+            state.loadIndex = Math.min(100, state.loadIndex + 15);
+            updateMetrics();
+
+            setTimeout(() => {
+                simulateInput();
+            }, duration + 500);
+        }
+
+        // 删除文字
+        function deleteText(duration) {
+            state.status = 'testing';
+            state.deletionCount++;
+            state.hesitationIndex = Math.min(1, state.hesitationIndex + 0.22);
+            state.pauseDuration = Math.min(12, state.pauseDuration + 2);
+            state.loadIndex = Math.min(100, state.loadIndex + 20);
+
+            const currentText = elements.inputDisplay.querySelector('.current').textContent;
+            elements.inputDisplay.querySelector('.current').innerHTML = '';
+
+            const deletedSpan = document.createElement('span');
+            deletedSpan.className = 'deleted';
+            deletedSpan.textContent = currentText;
+            elements.inputDisplay.insertBefore(deletedSpan, elements.inputDisplay.querySelector('.current'));
+
+            elements.inputHint.textContent = `已删除 ${state.deletionCount} 次...`;
+
+            updateMetrics();
+
+            setTimeout(() => {
+                simulateInput();
+            }, duration + 300);
+        }
+
+        // 显示建议
+        function showSuggestion(conversation) {
+            state.status = 'acting';
+            updateStatus();
+            elements.inputHint.textContent = '检测到困难，准备建议...';
+
+            setTimeout(() => {
+                // 更新建议内容
+                const suggestionContent = elements.agentSuggestion.querySelector('.suggestion-text');
+                const suggestionReasoning = elements.agentSuggestion.querySelector('.suggestion-reasoning');
+
+                suggestionContent.textContent = conversation.suggestion;
+                const suggestionTextBox = elements.agentSuggestion.querySelectorAll('.suggestion-text')[1];
+                suggestionTextBox.textContent = conversation.suggestionText;
+
+                suggestionReasoning.textContent =
+                    `分析：删除${state.deletionCount}次，犹豫指数${state.hesitationIndex.toFixed(2)}，可能需要帮助组织表达`;
+
+                elements.agentSuggestion.classList.add('visible');
+
+                // 3秒后自动发送
+                state.autoSendTimer = setTimeout(() => {
+                    if (elements.agentSuggestion.classList.contains('visible')) {
+                        autoAcceptSuggestion(conversation);
+                    }
+                }, 3000);
+            }, 800);
+        }
+
+        // 显示自动回复（当用户特别犹豫时）
+        function showAutoReply(conversation) {
+            state.status = 'acting';
+            updateStatus();
+            elements.inputHint.textContent = '检测到特别犹豫，准备替你回复...';
+
+            setTimeout(() => {
+                // 更新建议内容为自动回复模式
+                const suggestionContent = elements.agentSuggestion.querySelector('.suggestion-text');
+                const suggestionTextBox = elements.agentSuggestion.querySelectorAll('.suggestion-text')[1];
+                const suggestionReasoning = elements.agentSuggestion.querySelector('.suggestion-reasoning');
+                const acceptBtn = document.getElementById('acceptBtn');
+
+                suggestionContent.textContent = conversation.suggestion;
+                suggestionTextBox.textContent = conversation.suggestionText;
+                suggestionReasoning.textContent =
+                    `分析：删除${state.deletionCount}次，犹豫指数${state.hesitationIndex.toFixed(2)}，检测到特别犹豫，主动介入`;
+                acceptBtn.textContent = '使用这个回复';
+
+                elements.agentSuggestion.classList.add('visible');
+
+                // 3秒后自动发送
+                state.autoSendTimer = setTimeout(() => {
+                    if (elements.agentSuggestion.classList.contains('visible')) {
+                        autoAcceptSuggestion(conversation);
+                    }
+                }, 3000);
+            }, 1200);
+        }
+
+        // 自动接受建议（3秒后自动发送）
+        function autoAcceptSuggestion(conversation) {
+            elements.agentSuggestion.classList.remove('visible');
+
+            // 添加用户消息到聊天
+            const userMsg = document.createElement('div');
+            userMsg.className = 'message user';
+            userMsg.textContent = conversation.suggestionText;
+            elements.chatMessages.appendChild(userMsg);
+
+            setTimeout(() => {
+                userMsg.classList.add('visible');
+            }, 100);
+
+            // 清空输入区
+            elements.inputDisplay.innerHTML = '<span class="current"></span><span class="cursor"></span>';
+            elements.inputHint.textContent = '建议已自动发送';
+
+            // 开始下一轮对话
+            setTimeout(() => {
+                startNextConversation();
+            }, 1500);
+        }
+
+        // 直接发送消息（无需建议）
+        function directSendMessage(conversation) {
+            state.status = 'sensing';
+            updateStatus();
+            elements.inputDisplay.querySelector('.current').textContent = conversation.suggestionText;
+            elements.inputHint.textContent = '准备发送...';
+
+            // 获取当前阶段的duration
+            const currentConversation = getCurrentConversation();
+            const currentPhase = currentConversation.userPhases[state.demoPhase];
+            const duration = currentPhase ? currentPhase.duration : 600;
+
+            setTimeout(() => {
+                // 添加用户消息到聊天
+                const userMsg = document.createElement('div');
+                userMsg.className = 'message user';
+                userMsg.textContent = conversation.suggestionText;
+                elements.chatMessages.appendChild(userMsg);
+
+                setTimeout(() => {
+                    userMsg.classList.add('visible');
+                }, 100);
+
+                // 清空输入区
+                elements.inputDisplay.innerHTML = '<span class="current"></span><span class="cursor"></span>';
+                elements.inputHint.textContent = '消息已发送';
+
+                // 直接触发下一轮对话
+                setTimeout(() => {
+                    startNextConversation();
+                }, 1500);
+            }, duration);
+        }
+
+        // 按钮事件
+        document.getElementById('acceptBtn').addEventListener('click', () => {
+            const currentConversation = getCurrentConversation();
+            // 清除可能存在的自动发送定时器
+            if (state.autoSendTimer) {
+                clearTimeout(state.autoSendTimer);
+                state.autoSendTimer = null;
+            }
+
+            autoAcceptSuggestion(currentConversation);
+            elements.inputHint.textContent = '建议已采用';
+        });
+
+        document.getElementById('declineBtn').addEventListener('click', () => {
+            // 清除可能存在的自动发送定时器
+            if (state.autoSendTimer) {
+                clearTimeout(state.autoSendTimer);
+                state.autoSendTimer = null;
+            }
+
+            elements.agentSuggestion.classList.remove('visible');
+            elements.inputHint.textContent = '本次忽略，下次继续观察';
+            state.status = 'silent';
+            updateStatus();
+
+            // 即使忽略也进入下一轮
+            setTimeout(() => {
+                startNextConversation();
+            }, 1500);
+        });
+
+        // 开始下一轮对话
+        function startNextConversation() {
+            if (state.cycleComplete) return;
+            if (state.conversationRound >= TOTAL_ROUNDS - 1) {
+                finishCycle();
+                return;
+            }
+            console.log('Starting next conversation...'); // 调试日志
+            state.conversationRound++;
+            state.demoPhase = 0;
+            state.deletionCount = 0;
+            state.hesitationIndex = 0;
+            state.pauseDuration = 0;
+            state.loadIndex = 0;
+            state.status = 'silent';
+            updateRoundMarker();
+
+            // 清空输入区
+            elements.inputDisplay.innerHTML = '<span class="current"></span><span class="cursor"></span>';
+            elements.loadIndex.classList.remove('warning');
+            updateMetrics();
+
+            // 添加对方的下一条消息
+            const currentConversation = getCurrentConversation();
+            setTimeout(() => {
+                const otherMsg = document.createElement('div');
+                otherMsg.className = 'message other';
+                otherMsg.textContent = currentConversation.otherMessage;
+                elements.chatMessages.appendChild(otherMsg);
+
+                // 显示消息
+                setTimeout(() => {
+                    otherMsg.classList.add('visible');
+                }, 100);
+
+                // 滚动到底部
+                elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
+
+                // 开始用户输入模拟
+                setTimeout(() => {
+                    elements.inputHint.textContent = '对方发来新消息...';
+                    simulateInput();
+                }, 1500);
+            }, 500);
+        }
+
+        // 第 10 轮完成后，只刷新 iframe 内的演示，不影响外层个人网站
+        function finishCycle() {
+            if (state.cycleComplete) return;
+            state.cycleComplete = true;
+            state.status = 'silent';
+            elements.agentSuggestion.classList.remove('visible');
+            if (state.autoSendTimer) {
+                clearTimeout(state.autoSendTimer);
+                state.autoSendTimer = null;
+            }
+            elements.roundLabel.textContent = `ROUND ${TOTAL_ROUNDS} / ${TOTAL_ROUNDS}`;
+            elements.roundFill.style.width = '100%';
+            elements.inputDisplay.innerHTML = '<span class="current"></span>';
+            elements.inputHint.textContent = '十轮场景完成 · 即将从第一轮重新开始';
+            updateMetrics();
+            elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
+
+            if (isEmbedded && window.parent !== window) {
+                window.parent.postMessage({
+                    source: 'companion-agent',
+                    type: 'cycle:complete',
+                    payload: { total: TOTAL_ROUNDS, restartIn: RESTART_DELAY }
+                }, parentTargetOrigin);
+            }
+
+            state.restartTimer = setTimeout(() => {
+                window.location.reload();
+            }, RESTART_DELAY);
+        }
+
+        // 重置演示（完成所有对话后）
+        function resetDemo() {
+            console.log('Resetting demo...'); // 调试日志
+            state.conversationRound = 0;
+            state.demoPhase = 0;
+            state.deletionCount = 0;
+            state.hesitationIndex = 0;
+            state.pauseDuration = 0;
+            state.loadIndex = 0;
+            state.status = 'silent';
+            updateRoundMarker();
+
+            // 清空聊天记录
+            elements.chatMessages.innerHTML = '';
+
+            // 添加第一条消息
+            setTimeout(() => {
+                const firstMsg = document.createElement('div');
+                firstMsg.className = 'message other';
+                const firstConversation = getCurrentConversation();
+                firstMsg.textContent = firstConversation.otherMessage;
+                elements.chatMessages.appendChild(firstMsg);
+
+                // 显示第一条消息
+                setTimeout(() => {
+                    firstMsg.classList.add('visible');
+                }, 100);
+
+                elements.inputDisplay.innerHTML = '<span class="current"></span><span class="cursor"></span>';
+                elements.inputHint.textContent = '演示重新开始...';
+                elements.loadIndex.classList.remove('warning');
+                updateMetrics();
+
+                setTimeout(() => {
+                    console.log('Starting new round...'); // 调试日志
+                    simulateInput();
+                }, 1500);
+            }, 1000);
+        }
+
+        // 启动演示 - 完全自动运行
+        function startDemo() {
+            if (state.demoStarted) return;
+            state.demoStarted = true;
+
+            // 添加第一条消息
+            const firstConversation = getCurrentConversation();
+            const firstMsg = document.createElement('div');
+            firstMsg.className = 'message other';
+            firstMsg.textContent = firstConversation.otherMessage;
+            elements.chatMessages.appendChild(firstMsg);
+
+            // 自动开始演示，无需用户操作
+            setTimeout(() => {
+                elements.inputHint.textContent = '对方发来消息...';
+                simulateInput();
+            }, 1000);
+        }
+
+        // 移除手动输入支持，确保完全自动演示
+        // 用户只需观看即可
+
+        function enterDemo() {
+            if (state.demoStarted) return;
+            document.body.classList.add('is-active');
+            elements.entryScreen.classList.add('is-entering');
+            setTimeout(() => {
+                elements.entryScreen.classList.add('is-hidden');
+                startDemo();
+                if (isEmbedded && window.parent !== window) {
+                    window.parent.postMessage({ source: 'companion-agent', type: 'demo:entered' }, parentTargetOrigin);
+                }
+            }, 390);
+        }
+
+        function returnToEntry() {
+            // 重新载入会一次性清掉所有脚本化定时器，回到安静的入口页。
+            window.location.reload();
+        }
+
+        window.addEventListener('message', (event) => {
+            if (event.source === window.parent && (window.location.origin === 'null' || event.origin === window.location.origin || event.origin === 'null') && event.data?.type === 'demo:close') {
+                returnToEntry();
+            }
+        });
+
+        elements.entryCopy.addEventListener('click', enterDemo);
+        elements.entryCopy.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                enterDemo();
+            }
+        });
+        document.getElementById('closeLight').addEventListener('click', (event) => {
+            event.stopPropagation();
+            returnToEntry();
+        });
+
+        // 页面加载完成后只准备入口，不自动启动演示
+        window.addEventListener('load', () => {
+            updateMetrics();
+            updateRoundMarker();
+            elements.inputHint.textContent = '点击卡片进入演示...';
+            if (isEmbedded && window.parent !== window) {
+                window.parent.postMessage({ source: 'companion-agent', type: 'demo:ready' }, parentTargetOrigin);
+            }
+        });
+
+        const phases = [
+            { text: '是啊，下次一定', action: 'type', duration: 1000 },
+            { text: '是啊，下次一定', action: 'delete', duration: 500 },
+            { text: '其实我想说', action: 'type', duration: 800 },
+            { text: '其实我想说', action: 'delete', duration: 500 },
+            { text: '下周末还是一起', action: 'type', duration: 1200 },
+            { text: '下周末还是一起', action: 'delete', duration: 500 },
+            { text: '虽然有点可惜', action: 'type', duration: 1500 },
+            { action: 'showSuggestion', duration: 500 }
+        ];
+    </script>
+</body>
+</html>

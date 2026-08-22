@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Companion Agent Cover</title>
+    <style>
+        :root {
+            --companion-paper: #E9DFCA;
+            --companion-ink: #25201D;
+            --companion-wine: #743F43;
+            --companion-blush: #C88F82;
+            --companion-green: #405248;
+            --companion-faded: #9C8E7B;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--companion-paper);
+            color: var(--companion-ink);
+            width: 1600px;
+            height: 1000px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .cover-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            padding: 80px 120px;
+        }
+
+        /* 顶部标记 */
+        .top-label {
+            font-family: monospace;
+            font-size: 14px;
+            color: var(--companion-faded);
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .top-label::after {
+            content: '';
+            display: block;
+            width: 360px;
+            height: 1px;
+            background: var(--companion-wine);
+            opacity: 0.3;
+            margin-top: 8px;
+        }
+
+        /* 主要内容区域 */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 60px;
+            height: 600px;
+        }
+
+        /* 左侧聊天演示 */
+        .chat-demo {
+            background: rgba(37, 32, 29, 0.03);
+            border-radius: 8px;
+            padding: 40px;
+            position: relative;
+        }
+
+        .chat-bubble {
+            background: rgba(64, 82, 72, 0.15);
+            padding: 20px 25px;
+            border-radius: 8px;
+            max-width: 400px;
+            margin-bottom: 40px;
+        }
+
+        .chat-bubble .text {
+            font-size: 16px;
+            color: var(--companion-ink);
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+
+        .input-area {
+            border: 1px solid var(--companion-blush);
+            border-radius: 8px;
+            padding: 25px;
+            background: rgba(200, 143, 130, 0.1);
+            font-family: 'Courier New', monospace;
+            position: relative;
+        }
+
+        .input-text {
+            font-size: 14px;
+            color: var(--companion-ink);
+            line-height: 1.6;
+        }
+
+        .input-text .deleted {
+            text-decoration: line-through;
+            color: var(--companion-wine);
+            opacity: 0.5;
+        }
+
+        .input-text .current {
+            color: var(--companion-ink);
+        }
+
+        .input-text .cursor {
+            display: inline-block;
+            width: 2px;
+            height: 16px;
+            background: var(--companion-wine);
+            vertical-align: middle;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        .status-bar {
+            position: absolute;
+            bottom: 30px;
+            left: 40px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--companion-green);
+            opacity: 0.6;
+        }
+
+        .status-text {
+            font-family: monospace;
+            font-size: 12px;
+            color: var(--companion-green);
+            opacity: 0.7;
+        }
+
+        /* 右侧数据面板 */
+        .data-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .panel-card {
+            background: rgba(37, 32, 29, 0.02);
+            border-radius: 4px;
+            padding: 30px;
+            border: 1px solid rgba(156, 142, 123, 0.1);
+        }
+
+        .panel-title {
+            font-size: 13px;
+            color: var(--companion-faded);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        /* 负荷曲线图 */
+        .load-chart {
+            height: 150px;
+            position: relative;
+            border: 1px solid rgba(156, 142, 123, 0.3);
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            padding: 10px;
+        }
+
+        .chart-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* 决策状态 */
+        .state-flow {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 25px;
+        }
+
+        .state-node {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .state-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+        }
+
+        .state-dot.silent { background: var(--companion-green); opacity: 0.4; }
+        .state-dot.sense { background: var(--companion-green); opacity: 0.6; }
+        .state-dot.test { background: var(--companion-blush); opacity: 0.8; }
+        .state-dot.act { background: var(--companion-wine); }
+
+        .state-label {
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .state-label.silent { color: var(--companion-faded); }
+        .state-label.sense { color: var(--companion-ink); }
+        .state-label.test { color: var(--companion-wine); }
+        .state-label.act { color: var(--companion-wine); font-weight: bold; }
+
+        .connection-line {
+            flex: 1;
+            height: 1px;
+            background: var(--companion-faded);
+            opacity: 0.3;
+        }
+
+        .trigger-list {
+            font-family: monospace;
+            font-size: 11px;
+            color: var(--companion-ink);
+            opacity: 0.8;
+        }
+
+        .trigger-list li {
+            margin-bottom: 8px;
+        }
+
+        /* 底部核心语句 */
+        .bottom-statement {
+            position: absolute;
+            bottom: 100px;
+            left: 120px;
+            right: 120px;
+        }
+
+        .statement-line {
+            height: 1px;
+            background: var(--companion-wine);
+            opacity: 0.2;
+            margin-bottom: 30px;
+        }
+
+        .statement-text {
+            font-size: 22px;
+            color: var(--companion-ink);
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .statement-sub {
+            font-family: monospace;
+            font-size: 13px;
+            color: var(--companion-faded);
+        }
+
+        /* 水印 */
+        .watermark {
+            position: absolute;
+            bottom: 30px;
+            right: 80px;
+            font-family: monospace;
+            font-size: 11px;
+            color: var(--companion-faded);
+        }
+
+        /* 打印样式 */
+        @media print {
+            body {
+                width: 1600px;
+                height: 1000px;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .cover-container {
+                padding: 80px 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cover-container">
+        <!-- 顶部标记 -->
+        <div class="top-label">GLOBAL COMPANION / OBSERVATION 03</div>
+
+        <!-- 主要内容 -->
+        <div class="main-content">
+            <!-- 左侧聊天演示 -->
+            <div class="chat-demo">
+                <div class="chat-bubble">
+                    <div class="text">昨天那局真的太可惜了...<br>感觉我们都尽力了</div>
+                </div>
+
+                <div class="input-area">
+                    <div class="input-text">
+                        <span class="deleted">是啊，下次一定</span><br>
+                        <span class="deleted">其实我想说</span><br>
+                        <span class="current">下周末还是一起</span><span class="cursor"></span>
+                    </div>
+                </div>
+
+                <div class="status-bar">
+                    <div class="status-dot"></div>
+                    <div class="status-text">● 静默观察中 | 已删除 2 次 | 犹豫指数 0.45</div>
+                </div>
+            </div>
+
+            <!-- 右侧数据面板 -->
+            <div class="data-panel">
+                <!-- 负荷曲线 -->
+                <div class="panel-card">
+                    <div class="panel-title">心理负荷轨迹</div>
+                    <div class="load-chart">
+                        <svg class="chart-svg" viewBox="0 0 340 130">
+                            <!-- 坐标轴 -->
+                            <line x1="10" y1="120" x2="330" y2="120" stroke="var(--companion-faded)" stroke-width="1" opacity="0.3"/>
+                            <line x1="10" y1="10" x2="10" y2="120" stroke="var(--companion-faded)" stroke-width="1" opacity="0.3"/>
+
+                            <!-- 阈值线 -->
+                            <line x1="10" y1="30" x2="330" y2="30" stroke="var(--companion-green)" stroke-width="1" stroke-dasharray="4,4" opacity="0.5"/>
+                            <text x="200" y="25" font-family="monospace" font-size="9" fill="var(--companion-green)" opacity="0.6">介入阈值</text>
+
+                            <!-- 负荷曲线 -->
+                            <path d="M10,100 Q40,90 60,95 T110,80 Q130,70 150,85 T190,60 Q210,40 230,70 T270,30 Q290,10 310,40 L330,35"
+                                  fill="none" stroke="var(--companion-blush)" stroke-width="2" opacity="0.7"/>
+
+                            <!-- 关键点 -->
+                            <circle cx="190" cy="60" r="4" fill="var(--companion-wine)"/>
+                            <text x="200" y="55" font-family="monospace" font-size="8" fill="var(--companion-wine)">删除1</text>
+
+                            <circle cx="270" cy="30" r="4" fill="var(--companion-wine)"/>
+                            <text x="280" y="25" font-family="monospace" font-size="8" fill="var(--companion-wine)">删除2</text>
+
+                            <!-- 时间标签 -->
+                            <text x="10" y="135" font-family="monospace" font-size="9" fill="var(--companion-faded)">20:42</text>
+                            <text x="290" y="135" font-family="monospace" font-size="9" fill="var(--companion-faded)">20:48</text>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- 决策状态 -->
+                <div class="panel-card">
+                    <div class="panel-title">系统决策状态</div>
+                    <div class="state-flow">
+                        <div class="state-node">
+                            <div class="state-dot silent"></div>
+                            <div class="state-label silent">静默</div>
+                        </div>
+                        <div class="connection-line"></div>
+                        <div class="state-node">
+                            <div class="state-dot sense"></div>
+                            <div class="state-label sense">感知</div>
+                        </div>
+                        <div class="connection-line"></div>
+                        <div class="state-node">
+                            <div class="state-dot test"></div>
+                            <div class="state-label test">试探</div>
+                        </div>
+                        <div class="connection-line"></div>
+                        <div class="state-node">
+                            <div class="state-dot act"></div>
+                            <div class="state-label act">介入</div>
+                        </div>
+                    </div>
+                    <ul class="trigger-list">
+                        <li>• 删除次数 ≥ 3</li>
+                        <li>• 犹豫指数 0.68 > 0.5</li>
+                        <li>• 心理负荷 > 阈值</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部核心语句 -->
+        <div class="bottom-statement">
+            <div class="statement-line"></div>
+            <div class="statement-text">真正的陪伴，不是一直说话，而是知道什么时候出现。</div>
+            <div class="statement-sub">20:45 | ● 静默观察 | "你已经输入又删除了三次。"</div>
+        </div>
+
+        <!-- 水印 -->
+        <div class="watermark">COMPANION AGENT / 2026</div>
+    </div>
+</body>
+</html>

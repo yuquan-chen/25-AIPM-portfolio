@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LLM 学习与实验记录</title>
+  <link rel="stylesheet" href="./styles/index.css">
+</head>
+<body>
+  <div class="container">
+    <!-- 头部 -->
+    <header class="header" id="main-header">
+      <h1 class="title">LLM 学习与实验记录</h1>
+      <p class="subtitle">提出问题 — 观察现象 — 形成假设 — 实验验证 — 记录 Bad Case — 得到阶段性判断</p>
+      <p class="note">说明：本项目笔记记录了2025年4-5月期间的学习和研究发现。随着LLM领域快速发展，部分具体结论可能已有新的研究进展或更新。</p>
+    </header>
+
+    <!-- 索引卡桌面 -->
+    <section class="index-cards" id="index-cards">
+      <article class="index-card" data-note="sft" tabindex="0">
+        <div class="card-top">
+          <span class="note-id">NOTE 001</span>
+          <span class="date">2025.04</span>
+        </div>
+        <h3 class="card-title">SFT 到底改变了什么？</h3>
+        <p class="card-summary">SFT改变的是表达方式而非能力本身</p>
+        <p class="card-tags">训练数据 · 行为边界 · 对齐</p>
+        <p class="read-time">→ 05min</p>
+        <p class="red-ink">它学到的是"能力"还是"表达方式"？</p>
+      </article>
+
+      <article class="index-card" data-note="token" tabindex="0">
+        <div class="card-top">
+          <span class="note-id">NOTE 002</span>
+          <span class="date">2025.05</span>
+        </div>
+        <h3 class="card-title">Token 分布训练规律的发现</h3>
+        <p class="card-summary">SFT让分布散开，RL让分布集中</p>
+        <p class="card-tags">Token分布 · UMAP · 可视化</p>
+        <p class="read-time">→ 04min</p>
+        <p class="red-ink">训练不一定是"收敛"</p>
+      </article>
+
+      <article class="index-card" data-note="ppl" tabindex="0">
+        <div class="card-top">
+          <span class="note-id">NOTE 003</span>
+          <span class="date">2025.04</span>
+        </div>
+        <h3 class="card-title">如何看见模型的"纠结"与"确定"</h3>
+        <p class="card-summary">PPL与注意力方差结合，可视化模型内部状态</p>
+        <p class="card-tags">PPL · 注意力方差 · 颜色编码</p>
+        <p class="read-time">→ 04min</p>
+        <p class="red-ink">能"看见"模型的犹豫吗？</p>
+      </article>
+    </section>
+
+    <!-- 笔记详情区域 -->
+    <section class="note-detail" id="note-detail">
+      <div class="note-detail-header">
+        <button class="back-btn" id="back-btn">← 返回索引卡</button>
+      </div>
+      <article class="note-content" id="note-content">
+        <!-- 笔记内容将在这里渲染 -->
+      </article>
+    </section>
+  </div>
+
+  <script src="./scripts/notes-data.js"></script>
+  <script src="./scripts/main.js"></script>
+</body>
+</html>

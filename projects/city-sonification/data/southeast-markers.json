@@ -1,0 +1,66 @@
+{
+  "sourceCrop": {
+    "sourceWidth": 3840,
+    "sourceHeight": 2160,
+    "cropX": 1920,
+    "cropY": 1080,
+    "cropWidth": 1920,
+    "cropHeight": 1080
+  },
+  "zones": [
+    {
+      "id": "city-mall",
+      "type": "commercial",
+      "label": "CITY MALL",
+      "polygon": "325,0 835,0 825,142 760,190 605,185 520,213 380,184 315,130",
+      "labelPosition": [350, 34],
+      "note": "商业核心 / 高密度短距离流动"
+    },
+    {
+      "id": "hospital",
+      "type": "public",
+      "label": "HOSPITAL",
+      "polygon": "520,275 820,255 1115,315 1110,510 1015,570 770,555 525,515",
+      "labelPosition": [760, 330],
+      "note": "公共服务 / 全天稳定连接"
+    },
+    {
+      "id": "police-east",
+      "type": "public",
+      "label": "POLICE",
+      "polygon": "1270,390 1595,395 1640,465 1615,575 1415,600 1260,545",
+      "labelPosition": [1400, 430],
+      "note": "公共服务 / 东侧稳定节点"
+    },
+    {
+      "id": "police-south",
+      "type": "public",
+      "label": "POLICE 02",
+      "polygon": "590,720 965,715 1005,780 985,875 775,900 570,850",
+      "labelPosition": [700, 760],
+      "note": "公共服务 / 南侧节点"
+    },
+    {
+      "id": "school",
+      "type": "education",
+      "label": "SCHOOL",
+      "polygon": "0,620 285,625 345,700 300,930 0,940",
+      "labelPosition": [42, 690],
+      "note": "教育空间 / 早晚高峰节点"
+    }
+  ],
+  "markers": [
+    { "id": "city-mall", "type": "commercial", "label": "CITY MALL", "x": 345, "y": 78, "note": "商业核心 / 高密度短距离流动" },
+    { "id": "hospital", "type": "public", "label": "HOSPITAL", "x": 760, "y": 340, "note": "公共服务 / 全天稳定连接" },
+    { "id": "police-east", "type": "public", "label": "POLICE", "x": 1400, "y": 520, "note": "公共服务 / 稳定节点" },
+    { "id": "police-south", "type": "public", "label": "POLICE 02", "x": 585, "y": 735, "note": "公共服务 / 南侧节点" },
+    { "id": "school", "type": "education", "label": "SCHOOL", "x": 48, "y": 715, "note": "教育空间 / 早晚高峰节点" },
+    { "id": "office-core", "type": "commercial", "label": "OFFICE CORE", "x": 1135, "y": 175, "note": "办公混合区 / 工作日流量" },
+    { "id": "south-junction", "type": "transport", "label": "SOUTH JUNCTION", "x": 1010, "y": 910, "note": "交通节点 / OD 汇聚" }
+  ],
+  "flows": [
+    { "id": "school-morning", "origin": "residential-south", "destination": "school", "originPoint": [930, 900], "destinationPoint": [175, 700], "label": "RESIDENTIAL → SCHOOL", "value": 34, "period": "07:00–09:00", "color": "red", "particleCount": 9, "path": "M 45 875 C 105 845 160 805 215 765 C 270 726 335 714 405 735 C 465 752 510 795 585 820" },
+    { "id": "mall-evening", "origin": "office-core", "destination": "city-mall", "originPoint": [1120, 230], "destinationPoint": [365, 110], "label": "OFFICE → CITY MALL", "value": 27, "period": "17:00–20:00", "color": "blue", "particleCount": 8, "path": "M 1110 230 C 1045 185 970 150 880 125 C 790 100 710 95 625 105 C 550 114 475 120 395 105" },
+    { "id": "service-all-day", "origin": "city-mall", "destination": "hospital", "originPoint": [365, 180], "destinationPoint": [850, 430], "label": "CITY MALL → HOSPITAL", "value": 14, "period": "ALL DAY", "color": "green", "particleCount": 6, "path": "M 410 205 C 450 260 500 310 565 350 C 640 395 710 430 795 435 C 885 440 965 410 1030 365" }
+  ]
+}

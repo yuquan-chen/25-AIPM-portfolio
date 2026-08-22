@@ -1,0 +1,1239 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="设计有边界的自主性：25点学习的 AI 产品、Agent 系统与可视化实验档案。">
+  <title>设计有边界的自主性｜25点学习</title>
+  <style>
+    :root {
+      --paper: #eee4cc;
+      --paper-light: #f6efdf;
+      --paper-deep: #dbccb0;
+      --ink: #211e19;
+      --muted: #887c69;
+      --red: #984536;
+      --wine: #743f43;
+      --green: #405248;
+      --blue: #53666a;
+      --line: rgba(33, 30, 25, .48);
+      --line-soft: rgba(33, 30, 25, .17);
+      --page: min(1440px, calc(100vw - 44px));
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+      line-height: 1.55;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 10;
+      opacity: .38;
+      background-image:
+        radial-gradient(circle at 18% 14%, rgba(152,69,54,.09), transparent 21%),
+        radial-gradient(circle at 82% 30%, rgba(64,82,72,.07), transparent 25%),
+        repeating-linear-gradient(0deg, rgba(60,45,25,.025), rgba(60,45,25,.025) 1px, transparent 1px, transparent 5px);
+      mix-blend-mode: multiply;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { color: inherit; font: inherit; }
+    .page { width: var(--page); margin: 0 auto; padding-bottom: 44px; }
+    .mono, .eyebrow, .section-index, .tag, .frame-meta, .nav-links, .project-meta, .ghost-label {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .eyebrow, .section-index, .ghost-label { font-size: 11px; }
+    .serif, h1, h2, h3 { font-family: Georgia, "Songti SC", "STSong", serif; font-weight: 500; }
+    .site-nav {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      border-bottom: 1px solid var(--line);
+    }
+    .identity { font: 600 19px/1 Georgia, "Songti SC", serif; }
+    .nav-links { display: flex; gap: 28px; font-size: 10px; }
+    .nav-links a { position: relative; padding: 7px 0; }
+    .nav-links a::after { content: ""; position: absolute; left: 0; right: 100%; bottom: 0; height: 1px; background: var(--red); transition: right .22s ease; }
+    .nav-links a:hover::after { right: 0; }
+    .toc-menu { position: relative; }
+    .toc-menu summary { list-style: none; cursor: pointer; padding: 7px 0; }
+    .toc-menu summary::-webkit-details-marker { display: none; }
+    .toc-menu summary::after { content: " +"; color: var(--red); }
+    .toc-menu[open] summary::after { content: " −"; }
+    .toc-panel { position: absolute; top: 31px; right: -12px; z-index: 30; width: 270px; padding: 10px; border: 1px solid var(--line); background: rgba(246,239,223,.97); box-shadow: 8px 10px 0 rgba(33,30,25,.08); }
+    .toc-panel a { display: grid; grid-template-columns: 28px 1fr; gap: 1px 8px; padding: 10px 9px; border-bottom: 1px solid var(--line-soft); }
+    .toc-panel a:last-child { border-bottom: 0; }
+    .toc-panel a::after { display: none; }
+    .toc-panel a:hover { background: rgba(152,69,54,.08); }
+    .toc-panel span { grid-row: span 2; color: var(--red); font: 10px/1.4 monospace; }
+    .toc-panel b { font: 600 11px/1.3 var(--project-ui-font, sans-serif); letter-spacing: .01em; text-transform: none; }
+    .toc-panel small { color: var(--muted); font: 10px/1.35 var(--project-ui-font, sans-serif); letter-spacing: 0; }
+    .floating-toc { position: fixed; top: 92px; left: 24px; z-index: 40; user-select: none; -webkit-user-select: none; }
+    .floating-toc summary { position: relative; width: 58px; min-height: 96px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 11px 8px; border: 1px solid rgba(64,82,72,.28); background: rgba(246,239,223,.50); box-shadow: 4px 5px 0 rgba(64,82,72,.09), 0 10px 24px rgba(33,30,25,.11); backdrop-filter: blur(8px); cursor: grab; touch-action: none; }
+    .floating-toc summary:active { cursor: grabbing; }
+    .floating-toc .toc-label { writing-mode: vertical-rl; text-orientation: upright; letter-spacing: .16em; font: 600 17px/1 Georgia, "Songti SC", serif; }
+    .floating-toc .toc-toggle { color: var(--red); font: 13px/1 monospace; }
+    .floating-toc .toc-toggle::before { content: "+"; }
+    .floating-toc[open] .toc-toggle::before { content: "−"; }
+    .floating-toc summary::before, .floating-toc summary::after { content: none !important; display: none; }
+    .floating-toc .toc-label, .floating-toc .toc-panel { user-select: none; -webkit-user-select: none; }
+    .toc-leaves { position: absolute; top: 7px; bottom: 7px; width: 21px; pointer-events: none; }
+    .toc-leaves-left { left: -17px; }
+    .toc-leaves-right { right: -17px; }
+    .toc-leaves::after { content: ""; position: absolute; left: 9px; top: 8px; bottom: 5px; width: 1px; background: linear-gradient(to bottom, rgba(83,159,94,.65), rgba(83,159,94,.12)); transform: rotate(-8deg); }
+    .toc-leaves i { position: absolute; z-index: 1; display: block; width: 11px; height: 31px; background: linear-gradient(155deg, #83bf78 0%, #5aa865 55%, #478c59 100%); border: 1px solid rgba(55,125,67,.48); border-radius: 100% 0 100% 0; transform-origin: 50% 100%; box-shadow: 1px 2px 4px rgba(44,92,50,.14); }
+    .toc-leaves-left i:nth-child(1) { top: 2px; left: 8px; height: 27px; transform: rotate(23deg); }
+    .toc-leaves-left i:nth-child(2) { display: none; }
+    .toc-leaves-left i:nth-child(3) { top: 55px; left: 10px; height: 24px; transform: rotate(39deg); opacity: .68; }
+    .toc-leaves-right i:nth-child(1) { top: 12px; left: 1px; height: 35px; transform: rotate(-34deg); opacity: .9; }
+    .toc-leaves-right i:nth-child(2) { top: 39px; left: 9px; height: 26px; transform: rotate(46deg); }
+    .toc-leaves-right i:nth-child(3) { top: 62px; left: 3px; height: 18px; transform: rotate(-18deg); opacity: .58; }
+    .floating-toc .toc-panel { top: 34px; left: 0; right: auto; border-color: rgba(64,82,72,.28); background: rgba(246,239,223,.76); box-shadow: 6px 8px 0 rgba(64,82,72,.09), 0 14px 28px rgba(33,30,25,.14); backdrop-filter: blur(10px); }
+    main > section[id] { scroll-margin-top: 28px; display: flow-root; }
+    @keyframes part-arrive { from { opacity: .42; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+    main > section.part-arriving { animation: part-arrive .58s cubic-bezier(.22,.7,.24,1) both; }
+    .page-turn { position: fixed; inset: 0; z-index: 80; pointer-events: none; visibility: hidden; opacity: 0; overflow: hidden; }
+    .page-turn::before { content: ""; position: absolute; inset: -8% 0 -8% 0; background: linear-gradient(90deg, rgba(238,228,204,.04) 0%, rgba(238,228,204,.86) 43%, rgba(70,92,107,.12) 49%, rgba(152,69,54,.16) 50%, rgba(238,228,204,.75) 54%, rgba(238,228,204,.02) 100%); transform: translateX(-105%) skewX(-3deg); transform-origin: 50% 50%; filter: drop-shadow(20px 0 24px rgba(47,34,25,.14)); }
+    .page-turn::after { content: ""; position: absolute; top: 8%; bottom: 8%; left: 50%; width: 1px; background: linear-gradient(to bottom, transparent, rgba(64,82,72,.34) 24%, rgba(152,69,54,.46) 50%, rgba(64,82,72,.24) 76%, transparent); transform: scaleY(.2); opacity: 0; box-shadow: 0 0 18px rgba(152,69,54,.22); }
+    .page-turn span { position: absolute; left: 50%; top: 50%; z-index: 1; color: rgba(54,85,75,.78); font: 10px/1 monospace; letter-spacing: .18em; transform: translate(-50%,-50%); opacity: 0; }
+    .page-turn.is-turning { visibility: visible; opacity: 1; }
+    .page-turn.is-turning::before { animation: page-fold .78s cubic-bezier(.2,.72,.22,1) both; }
+    .page-turn.is-turning::after { animation: crease-mark .78s ease both; }
+    .page-turn.is-turning span { animation: turn-label .78s ease both; }
+    @keyframes page-fold { 0% { transform: translateX(-105%) skewX(-3deg); opacity: 0; } 14% { opacity: 1; } 48% { transform: translateX(0) skewX(-3deg); } 68% { transform: translateX(8%) skewX(2deg); opacity: .9; } 100% { transform: translateX(105%) skewX(3deg); opacity: 0; } }
+    @keyframes crease-mark { 0%,18% { opacity: 0; transform: scaleY(.2); } 45% { opacity: 1; transform: scaleY(1); } 78% { opacity: .42; transform: scaleY(.9); } 100% { opacity: 0; transform: scaleY(.2); } }
+    @keyframes turn-label { 0%,20% { opacity: 0; transform: translate(-50%,-50%) translateY(8px); } 48% { opacity: .72; transform: translate(-50%,-50%); } 75%,100% { opacity: 0; transform: translate(-50%,-50%) translateY(-8px); } }
+    @media (prefers-reduced-motion: reduce) { .page-turn { display: none; } }
+
+    .hero { display: grid; grid-template-columns: minmax(0, 1.18fr) minmax(360px, .82fr); margin-top: 30px; }
+    .hero-copy, .hero-art, .currently, .manifest, .placeholder, .project-frame, .journey-shell, .about {
+      position: relative;
+      border: 1px solid var(--line);
+    }
+    .box-label {
+      position: absolute;
+      top: -9px;
+      left: 14px;
+      z-index: 2;
+      padding: 1px 7px;
+      color: var(--red);
+      background: var(--paper);
+      font: 10px/1.35 "SFMono-Regular", Consolas, monospace;
+      letter-spacing: .08em;
+    }
+    .hero-copy { min-height: 600px; padding: 72px 58px 52px; display: flex; flex-direction: column; justify-content: center; border-right: 0; }
+    .hero-copy { position: relative; }
+    .city-inline-page { position: absolute; top: 50%; right: 0; left: auto; z-index: 4; display: block; width: var(--city-inline-width, 100%); height: var(--city-inline-height, 100%); padding: 0; border: 1px solid rgba(37,33,27,.48); border-right: 0; outline: none; color: var(--ink); background: #f4ead8; box-shadow: -8px 12px 0 rgba(64,82,72,.08), inset -16px 0 22px rgba(37,33,27,.055); opacity: 0; pointer-events: none; transform: translateY(-50%) translateX(-18px); transform-style: preserve-3d; perspective: 1200px; transition: opacity .32s ease, transform .46s cubic-bezier(.2,.74,.2,1); }
+    .hero.city-inline-open .city-inline-page { opacity: 1; pointer-events: auto; transform: translateY(-50%) translateX(0); }
+    .city-page-sheet { position: absolute; inset: 22px; z-index: 1; display: grid; align-content: center; justify-items: start; padding: 42px 42px 34px 58px; overflow: hidden; color: var(--ink); text-align: left; background-color: #f4ead8; border: 1px solid rgba(64,82,72,.24); opacity: 0; pointer-events: none; backface-visibility: hidden; transform-origin: right center; transform-style: preserve-3d; }
+    .city-page-sheet::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(to bottom, transparent 0, transparent 35px, rgba(64,82,72,.10) 36px, transparent 37px); pointer-events: none; }
+    .city-page-sheet::after { content: ""; position: absolute; top: 0; bottom: 0; left: 86px; width: 1px; background: rgba(152,69,54,.30); pointer-events: none; }
+    .city-page-sheet[data-page="1"], .city-page-sheet[data-page="2"] { opacity: 1; pointer-events: auto; }
+    .hero:not(.city-inline-open) .city-page-sheet { opacity: 0; pointer-events: none; }
+    .hero[data-city-spread="2"] .city-page-sheet[data-page="1"], .hero[data-city-spread="2"] .city-page-sheet[data-page="2"],
+    .hero[data-city-spread="3"] .city-page-sheet[data-page="1"], .hero[data-city-spread="3"] .city-page-sheet[data-page="2"] { opacity: 0; pointer-events: none; }
+    .hero[data-city-spread="2"] .city-page-sheet[data-page="3"], .hero[data-city-spread="2"] .city-page-sheet[data-page="4"],
+    .hero[data-city-spread="3"] .city-page-sheet[data-page="5"] { opacity: 1; pointer-events: auto; }
+    .hero[data-city-spread="3"] .city-page-sheet[data-page="3"], .hero[data-city-spread="3"] .city-page-sheet[data-page="4"] { opacity: 0; pointer-events: none; }
+    .hero[data-city-spread="3"] .city-page-sheet[data-page="blank"] { opacity: 1; pointer-events: auto; }
+    .city-page-kicker { position: relative; z-index: 1; margin-bottom: 22px; color: var(--red); font: 10px/1.3 monospace; letter-spacing: .13em; text-transform: uppercase; }
+    .city-page-sheet h3 { position: relative; z-index: 1; margin: 0; color: var(--ink); font: 500 clamp(38px, 4.5vw, 66px)/.98 Georgia, "Songti SC", serif; letter-spacing: -.035em; }
+    .city-page-sheet[data-page="2"] h3, .city-page-sheet[data-page="4"] h3 { color: var(--red); }
+    .city-page-sheet[data-page="1"] { display: block; overflow: hidden; padding: 42px 42px 58px 124px; }
+    .city-page-sheet[data-page="1"] h3 { max-width: 510px; margin: 0 0 24px; font-size: clamp(32px, 3.6vw, 54px); line-height: 1.08; }
+    .city-page-sheet[data-page="1"]::before { pointer-events: none; }
+    .city-chapter-mark { position: absolute; top: 50%; left: 28px; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 10px; color: var(--red); transform: translateY(-50%); }
+    .city-chapter-roman { font: 14px/1 monospace; letter-spacing: .12em; }
+    .city-chapter-name { writing-mode: vertical-rl; text-orientation: upright; font: 500 30px/1 Georgia, "Songti SC", serif; letter-spacing: .12em; }
+    .city-chapter-title { writing-mode: vertical-rl; text-orientation: upright; white-space: nowrap; font: 500 30px/1 Georgia, "Songti SC", serif; letter-spacing: .12em; }
+    .city-page-copy { position: relative; z-index: 1; max-width: 510px; margin: 0 0 18px; color: #51493d; font-size: 13px; line-height: 1.9; text-indent: 2em; }
+    .city-page-copy .key-point { color: var(--green); font-weight: 700; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    .city-method-page { display: block; padding: 28px 26px 44px 124px; }
+    .city-method-page .city-page-kicker { margin-bottom: 9px; }
+    .city-method-page h3 { max-width: 100%; margin: 0 0 10px; color: var(--ink); font-size: clamp(24px, 3vw, 38px); line-height: 1.05; letter-spacing: -.02em; }
+    .city-method-lead { position: relative; z-index: 1; margin: 0; color: #51493d; font-size: 11px; line-height: 1.55; text-indent: 2em; }
+    .city-method-lead .key-point { color: var(--green); font-weight: 700; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    .city-method-grid { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 14px; }
+    .city-method-card { display: block; min-width: 0; margin: 0; }
+    .city-method-card img { display: block; width: 100%; height: auto; object-fit: initial; border: 0; background: transparent; mix-blend-mode: multiply; }
+    .city-method-card-label { display: block; margin-top: 6px; color: var(--green); font: 10px/1.35 var(--project-ui-font, sans-serif); }
+    .city-method-card-label b { display: block; margin-bottom: 2px; color: var(--red); font: 10px/1 monospace; letter-spacing: .04em; }
+    .city-method-source { position: relative; z-index: 1; margin: 13px 0 0; color: rgba(64,82,72,.78); font: 9px/1.4 monospace; }
+    .city-method-page[data-page="3"] { padding: 12px 26px 20px 58px; }
+    .city-method-page[data-page="3"] h3 { margin-bottom: 6px; font-size: clamp(22px, 2.7vw, 34px); }
+    .city-method-page[data-page="3"] .city-method-lead { font-size: 16px; line-height: 1.9; }
+    .city-method-page[data-page="3"] .city-method-grid { width: 140px; grid-template-columns: 1fr; gap: 4px; margin: 2px auto 0; }
+    .city-method-page[data-page="3"] .city-method-card img { height: auto; }
+    .city-method-page[data-page="3"] .city-method-source { margin-top: 5px; font-size: 8px; }
+    .city-method-page[data-page="2"] .city-method-card:first-child,
+    .city-method-page[data-page="3"] .city-method-card:first-child { transform: translateX(-50px); }
+    .city-method-page[data-page="2"] .city-method-card:nth-child(2),
+    .city-method-page[data-page="3"] .city-method-card:nth-child(2) { transform: translateX(50px); }
+    .city-traversal-page { padding: 28px 42px 38px 124px; }
+    .city-traversal-page h3 { max-width: 430px; margin-bottom: 18px; }
+    .city-traversal-page .city-method-lead { max-width: 430px; margin-bottom: 13px; font-size: 14px; line-height: 1.78; }
+    .city-traversal-page .city-method-lead:last-of-type { margin-bottom: 0; }
+    .city-traversal-status { position: relative; z-index: 1; max-width: 430px; margin-top: 21px; padding: 12px 14px; border-left: 2px solid var(--green); color: var(--green); background: rgba(64,82,72,.06); font: 10px/1.6 monospace; }
+    .city-traversal-status b { color: var(--red); font-weight: 500; }
+    .city-traversal-figure { position: relative; z-index: 1; width: min(100%, 300px); margin: 8px auto 11px; }
+    .city-traversal-figure img { display: block; width: 100%; height: auto; mix-blend-mode: multiply; }
+    .city-result-page { display: block; padding: 26px 38px 34px 124px; }
+    .city-result-copy { position: relative; z-index: 1; max-width: 430px; margin: 0 0 10px; color: #51493d; font-size: 12px; line-height: 1.65; text-indent: 2em; }
+    .city-result-copy .key-point { color: var(--green); font-weight: 700; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    .city-result-figure { position: relative; z-index: 1; width: min(100%, 310px); aspect-ratio: 16 / 9; margin: 10px auto 12px; overflow: hidden; border: 1px solid rgba(64,82,72,.32); background: #d8ccb6; }
+    .city-result-figure > img, .city-result-mask-layer { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+    .city-result-figure > img { object-fit: cover; }
+    .city-result-road { z-index: 1; filter: saturate(.78) contrast(.96); }
+    .city-result-city { z-index: 2; opacity: .75; mix-blend-mode: multiply; filter: saturate(.78) contrast(.98); }
+    .city-result-mask-layer { z-index: 3; pointer-events: none; }
+    .city-result-mask { mix-blend-mode: screen; filter: url(#cityResultGlow); }
+    .city-result-mask.red { fill: rgba(152,69,54,.9); animation: cityResultMaskRed 2.4s steps(1,end) infinite; }
+    .city-result-mask.yellow { fill: rgba(197,210,119,.95); opacity: 0; animation: cityResultMaskYellow 2.4s steps(1,end) infinite; }
+    @keyframes cityResultMaskRed { 0%,49.99% { opacity: .46; } 50%,100% { opacity: 0; } }
+    @keyframes cityResultMaskYellow { 0%,49.99% { opacity: 0; } 50%,100% { opacity: .7; } }
+    .city-result-limit { position: relative; z-index: 1; max-width: 430px; margin-top: 11px; padding: 9px 11px; border-left: 2px solid var(--red); color: #51493d; background: rgba(152,69,54,.06); font: 9px/1.55 monospace; }
+    .city-result-limit b { color: var(--red); font-weight: 500; }
+    @media (max-width: 680px) {
+      .city-traversal-page { padding: 24px 24px 28px 72px; }
+      .city-traversal-page h3 { margin-bottom: 12px; font-size: 27px; }
+      .city-traversal-page .city-method-lead { margin-bottom: 10px; font-size: 11px; line-height: 1.58; }
+      .city-traversal-status { margin-top: 14px; padding: 9px 10px; font-size: 8px; line-height: 1.45; }
+      .city-traversal-figure { width: min(100%, 250px); margin: 6px auto 9px; }
+      .city-result-page { padding: 24px 24px 28px 72px; }
+      .city-result-copy { margin-bottom: 8px; font-size: 10.5px; line-height: 1.55; }
+      .city-result-figure { width: min(100%, 250px); margin: 8px auto 10px; }
+      .city-result-limit { margin-top: 8px; padding: 8px 9px; font-size: 8px; line-height: 1.45; }
+      .city-method-page[data-page="2"] .city-method-lead { font-size: 13px; line-height: 1.65; }
+      .city-method-page[data-page="2"] .city-method-source { margin-top: 2px; }
+    }
+    .city-method-page[data-page="2"] { padding: 8px 26px 8px 124px; }
+    .city-method-page[data-page="2"] .city-method-lead { font-size: 16px; line-height: 1.9; }
+    .city-method-page[data-page="2"] .city-method-grid { width: 140px; grid-template-columns: 1fr; gap: 4px; margin: 2px auto 0; }
+    .city-method-page[data-page="2"] .city-method-source { max-width: calc(100% - 40px); margin-top: 4px; font-size: 7px; line-height: 1.2; }
+    @media (min-width: 981px) {
+      .city-method-page[data-page="2"] { padding: 16px 26px 20px 124px; }
+      .city-method-page[data-page="2"] .city-method-grid { width: 220px; gap: 7px; margin-top: 10px; }
+      .city-method-page[data-page="2"] .city-method-source { margin-top: 8px; font-size: 8px; line-height: 1.25; }
+      .city-method-page[data-page="3"] .city-method-grid { width: 220px; gap: 7px; margin-top: 8px; }
+    }
+    .city-page-copy:last-of-type { margin-bottom: 0; }
+    .city-page-count { position: absolute; right: 18px; bottom: 8px; z-index: 7; color: rgba(64,82,72,.82); font: 10px/1 monospace; letter-spacing: .1em; opacity: 0; pointer-events: none; }
+    .city-inline-page > .city-page-count,
+    .city-book-right-page > .city-page-count { opacity: 0; }
+    .hero.city-inline-open .city-inline-page > .city-page-count[data-page-count="1"],
+    .hero.city-inline-open .city-book-right-page > .city-page-count[data-page-count="2"] { opacity: 1; }
+    .hero[data-city-spread="2"] .city-inline-page > .city-page-count[data-page-count="1"],
+    .hero[data-city-spread="2"] .city-book-right-page > .city-page-count[data-page-count="2"],
+    .hero[data-city-spread="3"] .city-inline-page > .city-page-count[data-page-count="1"],
+    .hero[data-city-spread="3"] .city-book-right-page > .city-page-count[data-page-count="2"] { opacity: 0; }
+    .hero[data-city-spread="2"] .city-inline-page > .city-page-count[data-page-count="3"],
+    .hero[data-city-spread="2"] .city-book-right-page > .city-page-count[data-page-count="4"],
+    .hero[data-city-spread="3"] .city-inline-page > .city-page-count[data-page-count="5"],
+    .hero[data-city-spread="3"] .city-book-right-page > .city-page-count[data-page-count="blank"] { opacity: 1; }
+    .city-book-window-controls { position: absolute; top: 8px; left: 8px; z-index: 3; display: flex; align-items: center; gap: 8px; }
+    .city-book-window-dot { display: block; width: 14px; height: 14px; border: 1px solid rgba(33,30,25,.24); border-radius: 50%; box-shadow: inset 0 1px 1px rgba(255,255,255,.46), 1px 2px 3px rgba(33,30,25,.12); }
+    .city-book-window-dot-red { border-color: rgba(166,54,59,.55); background: #e85d64; cursor: pointer; transition: transform .2s, filter .2s; }
+    .city-book-window-dot-yellow { background: #e4b42b; }
+    .city-book-window-dot-green { background: #3ab967; }
+    .city-book-window-dot-red:hover { filter: saturate(1.15) brightness(.96); transform: scale(1.12); }
+    .city-book-turn { position: absolute; right: 27px; bottom: 25px; z-index: 3; display: grid; place-items: center; width: 30px; height: 30px; border: 1px solid rgba(64,82,72,.34); color: var(--green); background: rgba(246,239,223,.82); font: 18px/1 monospace; cursor: pointer; transition: color .2s, background .2s, transform .2s; }
+    .city-book-turn-prev { left: 27px; right: auto; }
+    .city-book-close-inline:hover, .city-book-turn:hover { color: var(--paper-light); background: var(--red); transform: translateY(-2px); }
+    .hero.city-page-flipping-next .city-page-current { animation: city-page-flip-next .72s cubic-bezier(.2,.72,.2,1) both; }
+    .hero.city-page-flipping-prev .city-page-current { animation: city-page-flip-prev .72s cubic-bezier(.2,.72,.2,1) both; }
+    @keyframes city-page-flip-next { 0% { transform: rotateY(0); opacity: 1; } 42% { transform: rotateY(-88deg); opacity: .2; } 58% { transform: rotateY(88deg); opacity: .2; } 100% { transform: rotateY(0); opacity: 1; } }
+    @keyframes city-page-flip-prev { 0% { transform: rotateY(0); opacity: 1; } 42% { transform: rotateY(88deg); opacity: .2; } 58% { transform: rotateY(-88deg); opacity: .2; } 100% { transform: rotateY(0); opacity: 1; } }
+    .hero-copy h1 { max-width: 780px; margin: 26px 0 26px; font-size: clamp(58px, 6.5vw, 112px); line-height: .9; letter-spacing: -.05em; }
+    .hero-copy h1 em { display: block; color: var(--red); font-style: normal; }
+    .hero-copy p { max-width: 580px; margin: 0; font-size: 16px; }
+    .hero-copy p .key-point { color: var(--green); font-weight: 700; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    .hero-bottom { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-top: 44px; }
+    .enter { width: 118px; aspect-ratio: 1; border: 1px solid var(--ink); border-radius: 50%; display: grid; place-items: center; font: 10px/1.2 monospace; transition: background .22s, color .22s; }
+    .enter:hover { color: var(--paper-light); background: var(--ink); }
+    .hero-location { color: var(--muted); font: 10px/1.5 monospace; text-align: right; }
+    .hero-open { color: var(--red); font-size: 9px; letter-spacing: .05em; }
+    .hero-right { position: relative; display: block; }
+    .hero-art { overflow: hidden; min-height: 440px; color: var(--red); background: linear-gradient(135deg, rgba(255,255,255,.12), transparent); }
+    .city-note { display: block; width: 100%; min-height: 600px; padding: 42px 42px 34px; overflow: visible; border: 0; color: var(--green); text-align: left; font: inherit; background-color: #f4ead8; background-image: repeating-linear-gradient(to bottom, transparent 0, transparent 35px, rgba(64,82,72,.10) 36px, transparent 37px); box-shadow: 10px 12px 0 rgba(64,82,72,.10); transform: rotate(.35deg); transition: transform .24s ease, box-shadow .24s ease; cursor: pointer; }
+    .city-note::before { content: ""; position: absolute; inset: 22px; border: 1px solid rgba(64,82,72,.24); pointer-events: none; }
+    .city-note::after { content: ""; position: absolute; top: 22px; bottom: 22px; left: 86px; width: 1px; background: rgba(152,69,54,.30); pointer-events: none; }
+    .city-note:hover { color: var(--green); transform: rotate(0) translateY(-3px); box-shadow: 12px 16px 0 rgba(64,82,72,.12), 0 14px 28px rgba(33,30,25,.10); }
+    .city-note .box-label { color: var(--red); }
+    .city-note-head, .city-note-foot { position: relative; z-index: 1; display: flex; justify-content: space-between; align-items: center; gap: 14px; color: var(--green); font: 10px/1.2 monospace; letter-spacing: .08em; }
+    .city-note-head { padding: 7px 0 15px 58px; border-bottom: 1px solid rgba(64,82,72,.28); }
+    .city-note-body { position: relative; z-index: 1; display: grid; align-content: center; min-height: 410px; padding: 36px 38px 38px 58px; }
+    .city-note-kicker { margin-bottom: 22px; color: var(--red); font: 10px/1.3 monospace; letter-spacing: .13em; text-transform: uppercase; }
+    .city-note h2 { max-width: 420px; margin: 0 0 20px; color: var(--ink); font: 500 clamp(38px, 4.5vw, 66px)/.98 Georgia, "Songti SC", serif; letter-spacing: -.035em; }
+    .city-note h2 em { color: var(--red); font-style: normal; }
+    .city-note-copy { max-width: 400px; margin: 0; color: #51493d; font-size: 14px; line-height: 1.75; }
+    .city-note-chain { display: flex; flex-wrap: wrap; gap: 8px 14px; margin-top: 28px; color: var(--green); font: 10px/1.3 monospace; letter-spacing: .06em; }
+    .city-note-chain span { position: relative; }
+    .city-note-chain span + span::before { content: "→"; position: absolute; left: -12px; color: var(--red); }
+    .city-note-foot { padding: 14px 0 0 58px; border-top: 1px solid rgba(64,82,72,.24); color: rgba(64,82,72,.78); }
+    .city-note-open { color: var(--red); }
+    .city-note-open:hover { text-decoration: underline; text-underline-offset: 4px; }
+    .city-note { transform-style: preserve-3d; transform-origin: left center; }
+    .hero.city-inline-open .city-note { transform: rotateY(-88deg) rotate(.35deg); opacity: 0; pointer-events: none; transition: transform .72s cubic-bezier(.2,.72,.2,1), opacity .18s ease .46s; }
+    .city-book-right-page { position: absolute; inset: 0; z-index: 5; overflow: hidden; color: var(--ink); background: #f4ead8; border: 1px solid rgba(37,33,27,.48); box-shadow: 8px 12px 0 rgba(64,82,72,.08), inset 16px 0 22px rgba(37,33,27,.055); opacity: 0; pointer-events: none; perspective: 1200px; transform-style: preserve-3d; }
+    .hero.city-inline-open .city-book-right-page { opacity: 1; pointer-events: auto; }
+    .city-book-right-page .city-page-sheet { transform-origin: left center; }
+    .city-book-right-page .city-page-sheet::after { left: 86px; }
+    .city-book-right-page::before { content: ""; position: absolute; top: 0; bottom: 0; left: -1px; z-index: 6; width: 2px; background: linear-gradient(to bottom, transparent 0, rgba(37,33,27,.22) 10%, rgba(37,33,27,.38) 50%, rgba(37,33,27,.16) 90%, transparent 100%); box-shadow: 0 0 14px rgba(37,33,27,.16); pointer-events: none; }
+    .city-note-modal { position: fixed; inset: 0; z-index: 75; display: grid; place-items: center; padding: 24px; background: rgba(37,33,27,.22); backdrop-filter: blur(13px) saturate(.76); opacity: 0; visibility: hidden; transition: opacity .28s ease, visibility .28s ease; }
+    .city-note-modal.is-open { opacity: 1; visibility: visible; }
+    .city-note-backdrop { position: absolute; inset: 0; }
+    body.city-note-open { overflow: hidden; }
+    .city-book { position: relative; width: min(1160px, calc(100vw - 48px)); height: min(720px, calc(100vh - 48px)); perspective: 1800px; transform: translate(var(--city-start-x, 0px), var(--city-start-y, 22px)) scale(var(--city-start-scale, .94)); transition: transform .68s cubic-bezier(.2,.74,.2,1); }
+    .city-note-modal.is-open .city-book { transform: translate(0, 0) scale(1); }
+    .city-book-spread { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 1fr; transform-style: preserve-3d; filter: drop-shadow(16px 20px 0 rgba(33,30,25,.13)); }
+    .city-book-page { position: relative; min-width: 0; overflow-y: auto; overflow-x: hidden; padding: 36px 44px 32px; color: var(--ink); background-color: #f4ead8; background-image: repeating-linear-gradient(to bottom, transparent 0, transparent 35px, rgba(64,82,72,.095) 36px, transparent 37px); backface-visibility: hidden; transform-style: preserve-3d; scrollbar-width: thin; scrollbar-color: rgba(64,82,72,.42) transparent; }
+    .city-book-page::before { content: ""; position: absolute; top: 0; bottom: 0; width: 1px; background: rgba(152,69,54,.28); pointer-events: none; }
+    .city-book-left { border: 1px solid rgba(37,33,27,.38); border-right: 0; transform-origin: right center; transform: rotateY(84deg); opacity: 0; }
+    .city-book-left::before { left: 74px; }
+    .city-book-right { border: 1px solid rgba(37,33,27,.38); border-left: 0; transform-origin: left center; transform: rotateY(-84deg); opacity: 0; }
+    .city-book-right::before { left: 42px; }
+    .city-note-modal.is-open .city-book-left { animation: city-page-left .74s cubic-bezier(.2,.76,.2,1) .06s forwards; }
+    .city-note-modal.is-open .city-book-right { animation: city-page-right .74s cubic-bezier(.2,.76,.2,1) .14s forwards; }
+    .city-book-spread::after { content: ""; position: absolute; top: 12px; bottom: 12px; left: 50%; width: 2px; z-index: 4; background: linear-gradient(to bottom, transparent, rgba(37,33,27,.22) 16%, rgba(37,33,27,.12) 50%, transparent 84%); box-shadow: 0 0 16px rgba(37,33,27,.16); transform: translateX(-50%) scaleY(.82); pointer-events: none; }
+    .city-book-head, .city-book-foot { position: relative; z-index: 1; display: flex; justify-content: space-between; align-items: center; gap: 14px; color: var(--green); font: 10px/1.3 monospace; letter-spacing: .08em; }
+    .city-book-head { padding-bottom: 14px; border-bottom: 1px solid rgba(64,82,72,.28); }
+    .city-book-foot { position: relative; right: auto; bottom: auto; left: auto; margin: 22px 48px 0; padding-top: 12px; border-top: 1px solid rgba(64,82,72,.24); color: rgba(64,82,72,.72); }
+    .city-book-title { position: relative; z-index: 1; max-width: 440px; margin: 48px 0 18px 32px; font: 500 clamp(34px, 4vw, 58px)/1 Georgia, "Songti SC", serif; letter-spacing: -.035em; }
+    .city-book-title em { color: var(--red); font-style: normal; }
+    .city-book-copy { position: relative; z-index: 1; max-width: 430px; margin: 0 0 0 32px; color: #51493d; font-size: 14px; line-height: 1.8; }
+    .city-book-section { position: relative; z-index: 1; margin: 28px 0 0 32px; color: var(--red); font: 10px/1.3 monospace; letter-spacing: .1em; }
+    .city-book-flow { position: relative; z-index: 1; margin: 15px 0 0 32px; padding: 13px 14px; border-left: 2px solid var(--green); color: var(--green); background: rgba(64,82,72,.06); font: 12px/1.7 monospace; }
+    .city-book-list { position: relative; z-index: 1; display: grid; gap: 7px; margin: 14px 0 0 32px; padding: 0; color: #51493d; font-size: 12px; list-style: none; }
+    .city-book-list li::before { content: ""; display: inline-block; width: 6px; height: 6px; margin: 0 9px 2px 0; border-radius: 50%; background: var(--red); }
+    .city-book-right .city-book-copy { margin-left: 18px; }
+    .city-book-figure { position: relative; z-index: 1; height: 208px; margin: 24px 0 0 18px; overflow: hidden; border: 1px solid rgba(37,33,27,.34); background: #d9c8a8; }
+    .city-book-figure img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: cover; }
+    .city-book-figure .book-road { filter: saturate(.82) contrast(.98); }
+    .city-book-figure .book-city { opacity: .76; mix-blend-mode: multiply; filter: saturate(.88) contrast(.98); }
+    .city-book-figure::after { content: "ROAD + CITY / IMAGE PROTOTYPE"; position: absolute; right: 10px; bottom: 9px; padding: 5px 7px; color: var(--green); background: rgba(248,240,223,.88); font: 9px/1 monospace; letter-spacing: .07em; }
+    .city-book-note { position: relative; z-index: 1; margin: 14px 0 0 18px; color: #51493d; font: 12px/1.6 Georgia, "Songti SC", serif; }
+    .city-book-close { position: absolute; top: -18px; right: -18px; z-index: 8; width: 38px; height: 38px; border: 1px solid rgba(37,33,27,.48); border-radius: 50%; color: var(--ink); background: #f4ead8; box-shadow: 4px 5px 0 rgba(33,30,25,.12); font: 22px/1 Georgia, serif; cursor: pointer; }
+    .city-book-close:hover { color: var(--paper-light); background: var(--red); }
+    @keyframes city-page-left { 0% { opacity: 0; transform: rotateY(84deg); } 100% { opacity: 1; transform: rotateY(0); } }
+    @keyframes city-page-right { 0% { opacity: 0; transform: rotateY(-84deg); } 100% { opacity: 1; transform: rotateY(0); } }
+    @media (prefers-reduced-motion: reduce) { .city-book-left, .city-book-right { animation: none !important; opacity: 1; transform: none; } }
+    .city-art { display: grid; grid-template-rows: auto 1fr auto; gap: 14px; padding: 28px 30px 22px; color: var(--green); background: linear-gradient(145deg, rgba(246,239,223,.26), rgba(216,199,170,.22)); }
+    .city-art-top, .city-art-bottom { display: flex; align-items: center; justify-content: space-between; gap: 12px; color: var(--green); font: 10px/1.2 monospace; letter-spacing: .08em; }
+    .city-art-top { padding-bottom: 11px; border-bottom: 1px solid rgba(64,82,72,.28); }
+    .city-art-bottom { padding-top: 10px; border-top: 1px solid rgba(64,82,72,.24); color: rgba(64,82,72,.78); font-size: 9px; }
+    .city-play { border: 1px solid rgba(152,69,54,.56); padding: 6px 10px; color: var(--red); background: transparent; font: 9px/1 monospace; letter-spacing: .1em; cursor: pointer; transition: color .2s, background .2s, transform .2s; }
+    .city-play:hover, .city-play[aria-pressed="true"] { color: var(--paper-light); background: var(--red); transform: translateY(-1px); }
+    .city-actions { display: flex; align-items: center; gap: 8px; }
+    .city-open { padding: 6px 0; color: var(--red); font: 9px/1 monospace; letter-spacing: .08em; }
+    .city-open:hover { text-decoration: underline; text-underline-offset: 4px; }
+    .city-map { position: relative; min-height: 288px; overflow: hidden; background-image: linear-gradient(30deg, rgba(64,82,72,.09) 1px, transparent 1px), linear-gradient(150deg, rgba(64,82,72,.09) 1px, transparent 1px); background-size: 34px 22px; }
+    .city-map::after { content: none; }
+    .city-map svg { width: 100%; height: 100%; display: block; }
+    .city-road, .city-flow { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .city-road { fill: none; stroke: #d7b98e; stroke-linecap: round; stroke-linejoin: round; opacity: .92; }
+    .city-road.arterial { stroke-width: 19; }
+    .city-road.collector { stroke-width: 11; }
+    .city-road.local { stroke-width: 6; opacity: .82; }
+    .city-road.local-soft { stroke-width: 4; opacity: .68; }
+    .city-road::after { content: none; }
+    .city-building { cursor: pointer; transition: filter .2s, transform .2s; transform-box: fill-box; transform-origin: center; }
+    .city-building:hover { filter: drop-shadow(2px 3px 2px rgba(42,48,40,.22)); transform: translateY(-2px); }
+    .city-building .building-shadow { fill: rgba(64,82,72,.16); }
+    .city-building .building-front { fill: #e8dfcf; stroke: rgba(64,82,72,.46); stroke-width: 1; }
+    .city-building .building-side { fill: #c9d1c8; stroke: rgba(64,82,72,.42); stroke-width: 1; }
+    .city-building .building-top { fill: #f5eee0; stroke: rgba(64,82,72,.42); stroke-width: 1; }
+    .city-building .window { fill: #78969a; opacity: .86; }
+    .city-building .building-sign { fill: #f5e8d3; stroke: #984536; stroke-width: .7; }
+    .city-building .sign-text { fill: #984536; font: 600 7px/1 monospace; letter-spacing: .02em; text-anchor: middle; }
+    .city-building.school .building-front, .city-building.school .building-side { fill: #e6dfc9; }
+    .city-building.school .building-top { fill: #d9c39d; }
+    .city-building.school .building-sign { fill: #d8c7aa; stroke: #587b68; }
+    .city-building.school .sign-text { fill: #405d50; }
+    .city-building.hospital .building-front { fill: #e5e4d9; }
+    .city-building.hospital .building-side { fill: #c9d7d5; }
+    .city-building.hospital .building-top { fill: #d2e2e2; }
+    .city-building.hospital .building-sign { fill: #c95b4e; stroke: #9a4938; }
+    .city-building.hospital .sign-text { fill: #fff6e7; font-size: 10px; }
+    .city-building.police .building-front { fill: #d8d8d2; }
+    .city-building.police .building-side { fill: #b9c4d0; }
+    .city-building.police .building-top { fill: #b3c3d7; }
+    .city-building.police .building-sign { fill: #465c6b; stroke: #334b5c; }
+    .city-building.police .sign-text { fill: #f5eee0; font-size: 6px; }
+    .city-building.mall .building-front { fill: #e8d8c8; }
+    .city-building.mall .building-side { fill: #cfbca8; }
+    .city-building.mall .building-top { fill: #e5c4aa; }
+    .city-building.mall .building-sign { fill: #c27a32; stroke: #965c2b; }
+    .city-building.mall .sign-text { fill: #fff3df; }
+    .city-residence .building-front { fill: #e6ddce; }
+    .city-residence .building-side { fill: #c9cdbf; }
+    .city-residence .building-top { fill: #eee6d7; }
+    .city-green { fill: #73996f; stroke: #557d5d; stroke-width: .7; }
+    .city-green-light { fill: #9bb777; }
+    .city-building .building-label { fill: rgba(64,82,72,.75); font: 6px/1 monospace; letter-spacing: .05em; text-anchor: middle; }
+    .city-flow { stroke: var(--red); stroke-width: 1.9; stroke-dasharray: 2 14; animation: city-flow 5.6s linear infinite; animation-play-state: paused; opacity: .82; }
+    .city-flow.flow-b { stroke: #465C6B; animation-duration: 7.2s; animation-direction: reverse; }
+    .city-flow.flow-c { stroke: #75966f; animation-duration: 6.4s; }
+    .city-art.is-playing .city-flow { animation-play-state: running; }
+    .city-nodes circle { fill: var(--paper-light); stroke: var(--red); stroke-width: 2; transform-box: fill-box; transform-origin: center; animation: city-node 2.8s ease-in-out infinite; animation-play-state: paused; }
+    .city-nodes circle:nth-child(2n) { stroke: #465C6B; animation-delay: -.9s; }
+    .city-art.is-playing .city-nodes circle { animation-play-state: running; }
+    .city-map-note { position: absolute; right: 10px; bottom: 9px; color: rgba(64,82,72,.68); font: 9px/1 monospace; letter-spacing: .08em; }
+    @keyframes city-flow { to { stroke-dashoffset: -96; } }
+    @keyframes city-node { 0%,100% { transform: scale(.82); opacity: .72; } 50% { transform: scale(1.35); opacity: 1; } }
+    @media (prefers-reduced-motion: reduce) { .city-flow, .city-nodes circle { animation: none; } }
+    .art-orbit { position: absolute; inset: 9% 9%; border: 1px solid currentColor; border-radius: 50%; transform: rotate(-18deg); }
+    .art-orbit::before, .art-orbit::after { content: ""; position: absolute; inset: 18%; border: 1px solid currentColor; border-radius: 50%; transform: rotate(60deg); }
+    .art-orbit::after { inset: 36%; background: var(--paper); }
+    .art-line { position: absolute; left: 8%; right: 8%; top: 50%; height: 1px; background: currentColor; transform-origin: center; }
+    .art-line:nth-of-type(2) { transform: rotate(32deg); }
+    .art-line:nth-of-type(3) { transform: rotate(68deg); }
+    .art-line:nth-of-type(4) { transform: rotate(112deg); }
+    .art-center { position: absolute; inset: 0; display: grid; place-items: center; z-index: 1; text-align: center; color: var(--green); font: 11px/1.65 monospace; }
+    .currently { padding: 28px 30px; border-top: 0; display: grid; gap: 8px; }
+    .currently strong { max-width: 460px; font-family: Georgia, "Songti SC", serif; font-size: 23px; line-height: 1.18; }
+    .currently small { color: var(--green); }
+    .manifest { margin: 74px 0 0; min-height: 116px; padding: 38px; display: flex; align-items: center; justify-content: space-around; gap: 20px; color: var(--green); font: 600 clamp(14px, 2vw, 25px)/1 Georgia, serif; }
+    .manifest i { color: var(--red); font-style: normal; }
+
+    .section-head { display: grid; grid-template-columns: .32fr .68fr; gap: 40px; align-items: start; margin: 112px 0 30px; }
+    .section-head-aside { min-width: 0; }
+    .section-index { display: block; color: var(--red); padding-top: 8px; }
+    .project-reference { min-height: 168px; margin-top: 18px; padding: 14px 16px 13px; display: flex; flex-direction: column; justify-content: space-between; border: 2px solid var(--red); background: rgba(246,239,223,.30); box-shadow: inset 0 0 24px rgba(90,65,34,.05); }
+    .project-reference-kicker { color: var(--muted); font: 9px/1.35 monospace; letter-spacing: .1em; text-transform: uppercase; }
+    .project-reference-title { margin: 11px 0 6px; color: var(--ink); font: 500 clamp(20px, 2vw, 28px)/1.04 Georgia, "Songti SC", serif; }
+    .project-reference-note { margin: 0; color: var(--muted); font-size: 10px; line-height: 1.4; }
+    .project-reference-link { align-self: flex-start; display: inline-flex; align-items: center; gap: 7px; padding-bottom: 2px; border-bottom: 1px solid currentColor; color: var(--green); font: 700 9px/1.3 monospace; letter-spacing: .06em; text-transform: uppercase; }
+    .project-reference-link:hover { color: var(--red); }
+    .project-reference-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .project-reference-warning { color: var(--red); font-size: 10px; line-height: 1.35; }
+    .project-reference.is-pending { border-color: var(--red); }
+    .project-reference.is-pending .project-reference-title { color: var(--muted); }
+    .project-reference-status { align-self: flex-start; color: var(--muted); font: 700 10px/1.35 monospace; letter-spacing: .06em; text-transform: uppercase; }
+    .section-head h2 { max-width: 900px; margin: 0; font-size: clamp(38px, 5vw, 76px); line-height: .98; letter-spacing: -.035em; }
+    .section-head h2 small { display: block; margin-top: 18px; color: var(--muted); font: 13px/1.55 ui-sans-serif, sans-serif; letter-spacing: 0; }
+    /* Part 之间的章节边界：像纸页上的折痕，提醒读者已经进入下一段。 */
+    .part-boundary { display: flex; align-items: center; gap: 16px; margin-top: 82px; color: var(--green); opacity: .82; }
+    .part-boundary-line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(64,82,72,.34) 22%, rgba(152,69,54,.3) 78%, transparent); }
+    .part-boundary-mark { width: 34px; height: 23px; display: grid; place-items: center; border: 1px solid rgba(64,82,72,.28); background: rgba(246,239,223,.56); box-shadow: 3px 3px 0 rgba(64,82,72,.08); color: var(--red); font: 17px/1 Georgia, "Songti SC", serif; transform: rotate(-3deg); }
+    .part-boundary-label { color: rgba(64,82,72,.78); font: 9px/1 monospace; letter-spacing: .12em; white-space: nowrap; }
+    .part-boundary + .section-head { margin-top: 28px; }
+    .placeholder { min-height: 430px; display: grid; place-items: center; padding: 40px; background-image: linear-gradient(var(--line-soft) 1px, transparent 1px), linear-gradient(90deg, var(--line-soft) 1px, transparent 1px); background-size: 34px 34px; }
+    .placeholder-inner { max-width: 680px; text-align: center; background: var(--paper); border: 1px solid var(--line); padding: 30px; }
+    .placeholder-inner strong { display: block; margin: 12px 0; font: 500 28px/1.15 Georgia, serif; }
+    .placeholder-inner span { color: var(--muted); font-size: 13px; }
+
+    .project-intro { display: grid; grid-template-columns: 1.05fr .95fr; gap: 50px; margin-bottom: 26px; }
+    .project-statement { margin: 0; font: 500 clamp(29px, 3.6vw, 53px)/1.05 Georgia, "Songti SC", serif; }
+    .project-copy { margin: 0; max-width: 620px; color: #4d4539; }
+    .project-copy .key-point { color: var(--green); font-weight: 700; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+    .tag { border: 1px solid var(--line); padding: 6px 9px; font-size: 9px; background: rgba(246,239,223,.38); }
+
+    .project-frame { padding: 12px; background: rgba(246,239,223,.38); box-shadow: inset 0 0 56px rgba(90,65,34,.09); }
+    .frame-top, .frame-bottom { min-height: 42px; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 0 7px; }
+    .frame-top { border-bottom: 1px solid var(--line); }
+    .frame-bottom { border-top: 1px solid var(--line); }
+    .frame-meta { font-size: 9px; }
+    .live-mark { display: inline-flex; align-items: center; gap: 7px; color: var(--green); }
+    .frame-window-lights { display: inline-flex; align-items: center; gap: 7px; flex: 0 0 auto; }
+    .frame-window-light { width: 12px; height: 12px; padding: 0; border: 0; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(37,32,29,.2), 0 1px 4px rgba(37,32,29,.16); }
+    .frame-window-light.red { background: #ef5b60; cursor: pointer; }
+    .frame-window-light.yellow { background: #e8b52f; }
+    .frame-window-light.green { background: #35bf62; }
+    .frame-window-light.red:hover { filter: brightness(1.08); transform: scale(1.08); }
+    .project-frame:not(.is-entry) .frame-window-lights { display: inline-flex; }
+    .frame-window-lights + .frame-meta { margin-left: 3px; }
+    .scenario-badges { margin-left: auto; }
+    .scenario-badges { display: flex; flex-wrap: wrap; gap: 7px; }
+    .scenario-badges span { border: 1px solid var(--wine); color: var(--wine); padding: 5px 8px; font: 700 9px/1 monospace; letter-spacing: .06em; }
+    .demo-shell { position: relative; overflow: hidden; background: #e9dfca; }
+    .demo-shell iframe { width: 100%; border: 0; display: block; background: transparent; }
+    #finance-demo { height: 900px; }
+    #companion-demo { height: 690px; }
+    #editing-demo { height: 1080px; }
+    #works .project-frame { background: rgba(246,239,223,.38); }
+    #editing .project-statement { max-width: 560px; }
+    #editing .project-frame { background: rgba(33,30,25,.08); }
+    .frame-bottom strong { color: var(--red); font: 10px/1.2 monospace; letter-spacing: .07em; }
+
+    /* 入口态保留项目说明，只把真正的工作台收起成中央红卡 */
+    .project-frame.is-entry { padding: 0; background: transparent !important; border: 0 !important; box-shadow: none; }
+    #editing .project-frame.is-entry { background: transparent !important; border: 0; }
+    .project-frame.is-entry .frame-top,
+    .project-frame.is-entry .frame-bottom { display: none; }
+    .project-frame.is-entry .demo-shell { background: transparent; }
+    .project-frame.is-entry .demo-shell iframe { height: 420px !important; }
+    section.agent-entry-only > .system-reading { display: none; }
+    section.agent-entry-only > .section-head { margin-bottom: 26px; }
+    section.agent-entry-only > .project-intro { margin-bottom: 18px; }
+    section.agent-entry-only > .project-frame { margin-top: 0; }
+
+    .system-reading { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid var(--line); border-top: 0; background: #D8C7AA; }
+    #companion > .system-reading { background: transparent; }
+    .system-reading article { min-height: 140px; padding: 24px 20px; border-right: 1px solid rgba(55,44,36,.24); }
+    .system-reading article:last-child { border-right: 0; }
+    .system-reading b { display: block; margin: 12px 0 7px; font-family: Georgia, "Songti SC", serif; font-size: 18px; }
+    .system-reading p { margin: 0; color: var(--muted); font-size: 12px; }
+
+    .journey-shell { background: rgba(246,239,223,.34); }
+    /* LLM 区域的阅读层级：只保留一个主标题，其余信息逐级收敛 */
+    #notes .section-head h2 { max-width: 760px; font-size: clamp(42px, 4.2vw, 60px); line-height: 1; }
+    #notes .journey-thesis blockquote { max-width: 760px; font-size: clamp(24px, 2.25vw, 34px); line-height: 1.18; }
+    #notes .journey-facts strong { font-size: 20px; }
+    .journey-overview { display: grid; grid-template-columns: .7fr .3fr; min-height: 180px; border-bottom: 1px solid var(--line); }
+    .journey-thesis { padding: 36px 40px; border-right: 1px solid var(--line); }
+    .journey-thesis blockquote { max-width: 870px; margin: 12px 0 0; font: 500 clamp(27px, 3vw, 46px)/1.08 Georgia, "Songti SC", serif; }
+    .journey-facts { display: grid; grid-template-columns: 1fr 1fr; }
+    .journey-facts div { display: flex; flex-direction: column; justify-content: space-between; padding: 24px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .journey-facts div:nth-child(even) { border-right: 0; }
+    .journey-facts div:nth-last-child(-n+2) { border-bottom: 0; }
+    .journey-facts strong { font: 500 24px/1 Georgia, serif; }
+    .journey-facts span { color: var(--muted); font: 9px/1.35 monospace; letter-spacing: .07em; text-transform: uppercase; }
+    .journey-nav { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--line); }
+    .journey-step { position: relative; min-height: 150px; padding: 25px 22px; text-align: left; border: 0; border-right: 1px solid var(--line); background: transparent; cursor: pointer; }
+    .journey-step:last-child { border-right: 0; }
+    .journey-step::after { content: ""; position: absolute; left: 22px; right: 100%; bottom: -1px; height: 4px; background: var(--red); transition: right .25s ease; }
+    .journey-step[aria-selected="true"] { background: var(--paper-deep); }
+    .journey-step[aria-selected="true"]::after { right: 22px; }
+    .journey-step span { display: block; color: var(--red); font: 9px/1.3 monospace; letter-spacing: .08em; text-transform: uppercase; }
+    .journey-step b { display: block; margin: 16px 0 8px; font: 500 17px/1.2 Georgia, "Songti SC", serif; }
+    .journey-step small { color: var(--muted); font-size: 10px; line-height: 1.35; }
+    .journey-detail { display: grid; grid-template-columns: .43fr .57fr; height: 760px; min-height: 0; }
+    .journey-copy { height: 100%; padding: 42px 40px; border-right: 1px solid var(--line); overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--red) var(--paper-deep); }
+    .journey-copy h3 { max-width: 580px; margin: 18px 0 22px; font-size: clamp(30px, 2.8vw, 42px); line-height: 1.1; letter-spacing: -.02em; }
+    .journey-copy > p { max-width: 520px; color: #4f473a; }
+    .journey-article { min-height: 0; max-height: 820px; overflow-y: auto; scrollbar-color: var(--red) var(--paper-deep); }
+    .journey-article .article-lede { max-width: 560px; margin: 0 0 24px; color: #4f473a; font-size: 14px; line-height: 1.78; font-weight: 600; }
+    .journey-article .article-body { max-width: 560px; }
+    .journey-article .article-body p { margin: 0 0 18px; color: #4f473a; font-size: 14px; line-height: 1.78; }
+    .journey-article .key-point { color: var(--green); font-weight: 700; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    .journey-article .article-body code { color: var(--green); font: 11px/1.4 "SFMono-Regular", Consolas, monospace; }
+    .journey-article .article-quote { max-width: 560px; margin: 25px 0 27px; padding: 13px 0 13px 18px; border-left: 3px solid var(--red); color: var(--green); font-size: 14px; line-height: 1.78; font-weight: 600; }
+    .journey-article .article-quote cite { display: block; margin-top: 9px; color: var(--muted); font: 9px/1.3 monospace; letter-spacing: .08em; text-transform: uppercase; font-style: normal; }
+    .journey-article .article-end { margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; line-height: 1.78; }
+    .evidence-list { display: grid; margin-top: 32px; border-top: 1px solid var(--line); }
+    .evidence-list div { display: grid; grid-template-columns: 86px 1fr; gap: 14px; padding: 15px 0; border-bottom: 1px solid var(--line-soft); }
+    .evidence-list dt { color: var(--muted); font: 9px/1.45 monospace; letter-spacing: .06em; text-transform: uppercase; }
+    .evidence-list dd { margin: 0; font-size: 12px; }
+    .journey-link { display: inline-block; margin-top: 26px; color: var(--red); font: 10px/1.3 monospace; letter-spacing: .08em; text-transform: uppercase; }
+    .journey-artifact { height: 100%; min-width: 0; padding: 28px; display: grid; place-items: start center; overflow-y: auto; overflow-x: hidden; scrollbar-width: thin; scrollbar-color: var(--red) var(--paper-deep); background-image: linear-gradient(var(--line-soft) 1px, transparent 1px), linear-gradient(90deg, var(--line-soft) 1px, transparent 1px); background-size: 32px 32px; }
+    .journey-artifact::-webkit-scrollbar, .journey-copy::-webkit-scrollbar { width: 5px; }
+    .journey-artifact::-webkit-scrollbar-track, .journey-copy::-webkit-scrollbar-track { background: rgba(219,204,176,.42); }
+    .journey-artifact::-webkit-scrollbar-thumb, .journey-copy::-webkit-scrollbar-thumb { background: rgba(152,69,54,.72); border: 1px solid transparent; background-clip: padding-box; border-radius: 5px; }
+    .journey-artifact:not(:has(.tensor-flow)) { place-items: center; overflow: hidden; }
+    .artifact-figure { width: 100%; height: 100%; min-height: 500px; margin: 0; display: grid; grid-template-rows: 1fr auto; border: 1px solid var(--line); background: var(--paper-light); }
+    .artifact-figure img { width: 100%; height: 100%; min-height: 0; object-fit: contain; padding: 12px; }
+    .artifact-figure figcaption { display: flex; justify-content: space-between; gap: 20px; padding: 12px 14px; border-top: 1px solid var(--line); color: var(--muted); font: 9px/1.4 monospace; text-transform: uppercase; }
+    .artifact-code { width: 100%; min-height: 420px; padding: 28px; border: 1px solid var(--line); background: var(--paper-light); font: 12px/1.8 monospace; white-space: pre-wrap; }
+    .artifact-code .red { color: var(--red); }
+    .artifact-code .blue { color: var(--blue); }
+    .artifact-code .green { color: var(--green); }
+    .journey-artifact:has(.tensor-flow) {
+      background-image:
+        linear-gradient(rgba(33,30,25,.075) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(33,30,25,.075) 1px, transparent 1px),
+        linear-gradient(rgba(152,69,54,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(152,69,54,.035) 1px, transparent 1px);
+      background-size: 32px 32px, 32px 32px, 8px 8px, 8px 8px;
+    }
+    .tensor-flow { width: 100%; display: grid; gap: 0; --flow-gap: 58px; }
+    .tensor-legend { margin-bottom: 28px; padding: 14px 16px; border: 1px solid var(--red); color: #51483b; background: rgba(246,239,223,.9); font: 10px/1.65 monospace; }
+    .tensor-section { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 14px; margin: 7px 0 22px; color: var(--red); font: 10px/1.3 monospace; letter-spacing: .09em; text-transform: uppercase; }
+    .tensor-section::before, .tensor-section::after { content: ""; height: 1px; background: var(--red); opacity: .55; }
+    .tensor-stage { position: relative; display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: var(--flow-gap); align-items: start; margin-bottom: 54px; }
+    .tensor-stage::before, .tensor-stage::after { content: ""; position: absolute; left: calc(45% - var(--flow-gap) / 2); right: calc(55% - var(--flow-gap) / 2); height: 1px; background: var(--line); transform: rotate(8deg); transform-origin: left center; }
+    .tensor-stage::before { top: 45px; }
+    .tensor-stage::after { top: 53px; opacity: .72; }
+    .tensor-card { position: relative; z-index: 1; min-height: 92px; padding: 16px 17px; border: 1px solid var(--line); background: rgba(246,239,223,.96); box-shadow: 4px 4px 0 rgba(152,69,54,.06); }
+    .tensor-connector { position: absolute; z-index: 0; width: 2px; min-height: 20px; background: var(--red); opacity: .82; pointer-events: none; transition: top .28s ease, height .28s ease, left .28s ease; }
+    .tensor-connector::after { content: ""; position: absolute; left: 50%; bottom: -11px; width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 11px solid var(--red); transform: translateX(-50%); }
+    .tensor-action { display: grid; align-content: center; cursor: pointer; transition: width .28s ease, margin .28s ease, border-color .22s ease, background .22s ease, box-shadow .22s ease; }
+    .tensor-action::after { content: "查看说明  +"; position: absolute; right: 14px; bottom: 11px; color: var(--red); font: 9px/1.2 monospace; letter-spacing: .06em; }
+    .tensor-action.is-open::after { content: "收起说明  −"; }
+    .tensor-action:hover, .tensor-action:focus-visible, .tensor-action.is-open { z-index: 4; border-color: var(--red); background: #f8f0df; box-shadow: 6px 6px 0 rgba(152,69,54,.11); outline: none; }
+    .tensor-action.is-open { width: calc(100% + 54px); margin-right: -54px; }
+    .tensor-action small { color: var(--red); font: 9px/1.2 monospace; letter-spacing: .08em; }
+    .tensor-action b { display: block; margin-top: 8px; font: 500 17px/1.2 Georgia, "Songti SC", serif; }
+    .tensor-shape { --shape-shift: 16px; display: block; padding-top: 18px; color: var(--green); font: 11px/1.55 monospace; text-align: center; transform: translateY(var(--shape-shift)); cursor: pointer; transition: width .28s ease, margin .28s ease, transform .22s ease, border-color .22s ease, background .22s ease, box-shadow .22s ease; }
+    .tensor-stage:nth-of-type(even) .tensor-shape { --shape-shift: 24px; }
+    .tensor-shape:hover, .tensor-shape:focus-visible { border-color: var(--red); background: #f8f0df; box-shadow: 6px 6px 0 rgba(152,69,54,.11); outline: none; }
+    .tensor-shape.is-open { z-index: 4; width: calc(100% + 54px); margin-left: -54px; border-color: var(--red); background: #f8f0df; }
+    .tensor-shape strong { color: var(--ink); font: 500 11px/1.45 monospace; }
+    .tensor-shape .shape-arrow { display: block; width: 100%; margin: 9px 0; color: var(--red); font-size: 15px; line-height: 1; text-align: center; }
+    .tensor-open { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 13px; padding-top: 10px; border-top: 1px dashed var(--line-soft); color: var(--red); font: 9px/1.3 monospace; letter-spacing: .08em; text-align: left; text-transform: uppercase; }
+    .tensor-open::after { content: "+"; font-size: 15px; line-height: 1; transition: transform .2s ease; }
+    .tensor-shape.is-open .tensor-open::after { transform: rotate(45deg); }
+    .tensor-detail { max-height: 0; overflow: hidden; opacity: 0; color: var(--ink); text-align: left; transition: max-height .32s ease, opacity .22s ease, margin .32s ease, padding .32s ease; }
+    .tensor-shape.is-open .tensor-detail { max-height: 520px; margin-top: 13px; padding-top: 13px; border-top: 1px solid var(--line); opacity: 1; }
+    .tensor-action-detail { max-height: 0; overflow: hidden; opacity: 0; margin-top: 0; color: #4f473a; font-size: 12px; line-height: 1.65; transition: max-height .32s ease, opacity .22s ease, margin .32s ease, padding .32s ease; }
+    .tensor-action.is-open .tensor-action-detail { max-height: 240px; margin-top: 15px; padding-top: 13px; border-top: 1px solid var(--line); opacity: 1; }
+    .tensor-action-detail strong { display: block; margin: 0 0 4px; color: var(--red); font: 9px/1.3 monospace; letter-spacing: .08em; text-transform: uppercase; }
+    .tensor-action-detail p { margin: 0 0 10px; }
+    .tensor-action-detail p:last-child { margin-bottom: 0; }
+    .tensor-detail-label { display: block; margin: 0 0 7px; color: var(--red); font: 9px/1.3 monospace; letter-spacing: .08em; text-transform: uppercase; }
+    .tensor-formula { display: block; margin-bottom: 13px; padding: 10px 11px; color: var(--green); background: rgba(64,82,72,.065); border-left: 2px solid var(--green); font: 11px/1.6 "SFMono-Regular", Consolas, monospace; overflow-wrap: anywhere; }
+    .tensor-detail pre { margin: 0; padding: 12px; overflow-x: auto; color: #4b4338; background: rgba(33,30,25,.045); font: 10px/1.65 "SFMono-Regular", Consolas, monospace; white-space: pre; tab-size: 2; }
+    .ppl-plot { width: 100%; min-height: 430px; border: 1px solid var(--line); background: var(--paper-light); display: grid; grid-template-rows: 1fr auto; }
+    .ppl-plot svg { width: 100%; height: 100%; min-height: 360px; }
+    .ppl-plot footer { padding: 13px 16px; border-top: 1px solid var(--line); color: var(--muted); font: 9px/1.4 monospace; text-transform: uppercase; }
+
+    main > section.about { margin-top: 116px; min-height: 270px; padding: 50px; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: stretch; }
+    .about-story { display: flex; flex-direction: column; justify-content: center; min-width: 0; }
+    .about h2 { margin: 0 0 24px; font-size: clamp(38px, 5vw, 70px); line-height: 1; }
+    .about p { max-width: 580px; margin: 0; line-height: 1.5; }
+    .about-contact { min-width: 0; padding: 24px 0 24px 30px; border-left: 1px solid var(--line); display: flex; flex-direction: column; justify-content: center; gap: 12px; }
+    .about-contact-kicker { color: var(--red); font: 10px/1.3 monospace; letter-spacing: .12em; text-transform: uppercase; }
+    .about-contact h3 { margin: 0 0 8px; color: var(--ink); font: 500 clamp(28px, 3vw, 42px)/1.05 Georgia, "Songti SC", serif; }
+    .contact-item { width: 100%; min-height: 48px; padding: 10px 0; display: grid; grid-template-columns: 82px minmax(0, 1fr) auto; align-items: center; gap: 12px; border: 0; border-bottom: 1px solid var(--line-soft); background: transparent; text-align: left; }
+    button.contact-item { cursor: pointer; }
+    button.contact-item:hover { background: rgba(152,69,54,.06); }
+    .contact-label { color: var(--red); font: 700 10px/1.2 monospace; letter-spacing: .1em; }
+    .contact-value { min-width: 0; overflow-wrap: anywhere; color: var(--green); font: 600 13px/1.35 var(--project-ui-font, sans-serif); }
+    .contact-action { color: var(--muted); font: 9px/1.2 monospace; letter-spacing: .06em; }
+    .contact-feedback { min-height: 16px; color: var(--red); font: 9px/1.3 monospace; }
+    .site-footer { display: flex; justify-content: space-between; gap: 20px; margin-top: 72px; padding: 22px 0; border-top: 1px solid var(--line); font: 10px/1.4 monospace; letter-spacing: .08em; }
+
+    @media (max-width: 980px) {
+      :root { --page: min(100% - 26px, 900px); }
+      .hero { grid-template-columns: 1fr; }
+      .hero-copy { min-height: 520px; border-right: 1px solid var(--line); }
+      .currently { border-top: 1px solid var(--line); border-left: 0; }
+      .section-head, .project-intro { grid-template-columns: 1fr; gap: 18px; }
+      .project-reference { min-height: 150px; margin-top: 14px; }
+      .system-reading { grid-template-columns: repeat(2, 1fr); }
+      .system-reading article:nth-child(2) { border-right: 0; }
+      .system-reading article:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+      .journey-overview, .journey-detail { grid-template-columns: 1fr; }
+      .journey-detail { height: auto; }
+      .journey-thesis, .journey-copy { border-right: 0; border-bottom: 1px solid var(--line); }
+      .journey-nav { grid-template-columns: repeat(2, 1fr); }
+      .journey-step:nth-child(2) { border-right: 0; }
+      .journey-step:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+      #companion-demo { height: 760px; }
+      #finance-demo { height: 1040px; }
+      #editing-demo { height: 1280px; }
+    }
+
+    @media (max-width: 680px) {
+      .page { width: calc(100% - 18px); }
+      .site-nav { min-height: 60px; }
+      .nav-links { gap: 14px; }
+      .toc-panel { right: -42px; width: min(270px, calc(100vw - 36px)); }
+      .floating-toc { top: 72px; left: 12px; }
+      .floating-toc summary { width: 50px; min-height: 82px; padding: 9px 6px; }
+      .floating-toc .toc-label { font-size: 15px; }
+      .floating-toc .toc-leaves { transform: scale(.84); transform-origin: center; }
+      .floating-toc .toc-panel { left: 0; right: auto; }
+      .nav-links a:not(:first-child):not(:last-child) { display: none; }
+      .hero { margin-top: 20px; }
+      .hero-copy { min-height: 510px; padding: 52px 24px 30px; }
+      .hero-copy h1 { font-size: 56px; }
+      .hero-art { min-height: 340px; }
+      .city-note { min-height: 520px; padding: 34px 24px 26px; }
+      .city-note::after { left: 58px; }
+      .city-note-head, .city-note-foot { padding-left: 30px; }
+      .city-note-body { min-height: 340px; padding: 28px 24px 30px 30px; }
+      .city-note-modal { padding: 16px; overflow-y: auto; place-items: start center; }
+      .city-book { width: min(100%, 560px); height: auto; min-height: calc(100vh - 32px); margin: 16px 0; perspective: none; }
+      .city-book-spread { position: relative; display: block; overflow: hidden; filter: drop-shadow(8px 12px 0 rgba(33,30,25,.12)); }
+      .city-book-page { min-height: 540px; padding: 30px 26px 34px; }
+      .city-book-left, .city-book-right { border: 1px solid rgba(37,33,27,.38); transform: none; opacity: 1; animation: none !important; }
+      .city-book-right { border-top: 0; }
+      .city-book-left::before { left: 52px; }
+      .city-book-right::before { left: 32px; }
+      .city-book-title { margin: 48px 0 18px 24px; font-size: 42px; }
+      .city-book-copy, .city-book-section, .city-book-flow, .city-book-list { margin-left: 24px; }
+      .city-book-foot { margin: 22px 26px 0; }
+      .city-book-figure { margin-left: 12px; }
+      .city-book-close { top: -10px; right: -4px; }
+      .currently { border-left: 1px solid var(--line); border-top: 0; }
+      .manifest { margin-top: 50px; padding: 30px 16px; flex-wrap: wrap; text-align: center; }
+      .section-head { margin-top: 82px; }
+      .part-boundary { gap: 9px; margin-top: 58px; }
+      .part-boundary-label { font-size: 8px; letter-spacing: .07em; }
+      .part-boundary-mark { width: 29px; height: 21px; font-size: 15px; }
+      .part-boundary + .section-head { margin-top: 24px; }
+      .section-head h2 { font-size: 44px; }
+      .project-reference { min-height: 132px; padding: 12px 14px 11px; }
+      .project-reference-title { margin-top: 8px; font-size: 24px; }
+      .placeholder { min-height: 330px; padding: 16px; }
+      .project-intro { margin-bottom: 18px; }
+      .project-statement { font-size: 34px; }
+      .project-frame { padding: 7px; }
+      .frame-top { align-items: flex-start; flex-direction: column; padding: 10px 4px; }
+      .frame-window-lights + .frame-meta { margin-left: 0; }
+      .scenario-badges { gap: 5px; }
+      .scenario-badges span { font-size: 8px; }
+      #companion-demo { height: 1010px; }
+      #finance-demo { height: 1280px; }
+      #editing-demo { height: 1600px; }
+      .system-reading { grid-template-columns: 1fr; }
+      .system-reading article { border-right: 0; border-bottom: 1px solid var(--line); }
+      .system-reading article:last-child { border-bottom: 0; }
+      .journey-thesis, .journey-copy { padding: 28px 22px; }
+      .journey-article { max-height: none; overflow: visible; }
+      .journey-overview { min-height: 0; }
+      .journey-nav { grid-template-columns: 1fr; }
+      .journey-step { min-height: 112px; border-right: 0; border-bottom: 1px solid var(--line); }
+      .journey-step:last-child { border-bottom: 0; }
+      .journey-step b { margin: 10px 0 5px; }
+      .journey-detail { height: auto; min-height: 0; }
+      .journey-artifact { padding: 12px; }
+      .artifact-figure { min-height: 360px; }
+      .artifact-figure figcaption { flex-direction: column; gap: 4px; }
+      .artifact-code, .ppl-plot { min-height: 350px; }
+      .tensor-flow { --flow-gap: 0px; }
+      .tensor-legend { margin-bottom: 22px; }
+      .tensor-section { margin-top: 4px; }
+      .tensor-stage { grid-template-columns: 1fr; gap: 8px; margin-bottom: 44px; }
+      .tensor-stage::before, .tensor-stage::after { display: none; }
+      .tensor-card { min-height: 0; }
+      .tensor-action { border-bottom-color: var(--red); }
+      .tensor-shape, .tensor-stage:nth-of-type(even) .tensor-shape { transform: none; }
+      .tensor-shape.is-open { width: 100%; margin-left: 0; }
+      .tensor-connector-left { display: none; }
+      .site-footer { flex-direction: column; }
+    }
+
+    @media (max-width: 600px) {
+      main > section.about { grid-template-columns: 1fr; padding: 32px 24px; gap: 28px; }
+      .about-contact { padding: 24px 0 0; border-top: 1px solid var(--line); border-left: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+    }
+  </style>
+  <style>
+    :root{--project-ui-font:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+    body,.project-frame,.project-intro,.frame-top,.frame-bottom{font-family:var(--project-ui-font)}
+  </style>
+  <style>
+    /* LLM 学习区使用更冷的深蓝，和数据图、维度流的研究感呼应。 */
+    #notes .section-index,
+    #notes .box-label,
+    #notes .journey-thesis .eyebrow,
+    #notes .journey-step span { color:#465C6B; }
+    #notes .journey-step::after { background:#465C6B; }
+    #notes .journey-step[aria-selected="true"] { background:rgba(70,92,107,.10); }
+    #notes .journey-shell { border-color:rgba(70,92,107,.42); }
+  </style>
+  <style>
+    .city-method-page[data-page="2"] .city-method-lead { font-size:13px; line-height:1.5; }
+    @media (max-width:680px){
+      .city-method-page[data-page="2"] .city-method-lead { font-size:13px; line-height:1.65; }
+      .city-method-page[data-page="2"] .city-method-source { margin-top:2px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <nav class="site-nav" aria-label="网站导航">
+      <a class="identity" href="#top">25点学习.的产品作品集</a>
+      <div class="nav-links">
+        <a href="#works">Works</a>
+        <a href="#notes">Notes</a>
+        <a href="#about">About Me</a>
+        <a href="https://github.com/yuquan-chen" target="_blank" rel="noreferrer">GitHub ↗</a>
+      </div>
+    </nav>
+
+    <details class="toc-menu floating-toc" aria-label="作品目录">
+      <summary><span class="toc-leaves toc-leaves-left" aria-hidden="true"><i></i><i></i><i></i></span><span class="toc-label">目录</span><span class="toc-leaves toc-leaves-right" aria-hidden="true"><i></i><i></i><i></i></span></summary>
+      <div class="toc-panel" aria-label="作品目录">
+        <a href="#top"><span>TOP</span><b>回到开头</b><small>重新看一遍首页</small></a>
+        <a href="#works"><span>01</span><b>Finance Agent</b><small>行动可以走到哪一步</small></a>
+        <a href="#companion"><span>02</span><b>Companion Agent</b><small>什么时候该出现</small></a>
+        <a href="#editing"><span>03</span><b>Editing Agent</b><small>如何在确认后继续创作</small></a>
+        <a href="#notes"><span>04</span><b>LLM Learning</b><small>理解模型的能力与限制</small></a>
+      </div>
+    </details>
+    <div class="page-turn" id="pageTurn" aria-hidden="true"><span>TURNING THE PAGE</span></div>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-copy">
+          <span class="box-label">B / PRIMARY IDENTITY</span>
+          <span class="eyebrow">AI PRODUCT MANAGER / AGENT RUNTIME / FULL-STACK / AI NATIVE</span>
+          <h1>设计有边界的<br><em>自主性。</em></h1>
+          <p>我是一个能全栈的<span class="key-point">AIPM</span>，做产品，也同时把它写出来。我的工作始终围绕一个问题：如何<span class="key-point">限制 AI</span>，让其能发挥出它真正的<span class="key-point">有界自主能力</span>。即它能够<span class="key-point">看见、判断、提议和行动</span>，同时<span class="key-point">知道什么时候该停下来</span>，<span class="key-point">把控制权还给人</span>，形成<span class="key-point">Human in the loop</span>；<span class="key-point">不只是 human 在 loop，它也同时会 loop</span>。</p>
+          <div class="hero-bottom">
+            <a class="enter" href="#works">ENTER<br>WORKS ↓</a>
+            <span class="hero-location">SHENZHEN<br>25点学习<br><span class="hero-open">AI NATIVE / TOC / AGENT ORCHESTRATE / CITY STUDY</span></span>
+          </div>
+          <button class="city-inline-page" id="cityInlinePage" type="button" aria-label="左侧城市可听化研究笔记页面">
+            <span class="city-book-window-controls" aria-label="书本窗口控制"><span class="city-book-window-dot city-book-window-dot-red city-book-close-inline" role="button" tabindex="0" title="关闭笔记" aria-label="关闭笔记"></span><span class="city-book-window-dot city-book-window-dot-yellow" aria-hidden="true"></span><span class="city-book-window-dot city-book-window-dot-green" aria-hidden="true"></span></span>
+            <span class="city-page-sheet" data-page="1"><span class="city-chapter-mark" aria-label="第一章 序 如果城市是声音"><span class="city-chapter-roman">I</span><span class="city-chapter-name">序</span><span class="city-chapter-title">如果城市是声音？</span></span><p class="city-page-copy">我的专业是<span class="key-point">测绘工程</span>，研究课题是关于<span class="key-point">城市领域</span>；同时，我也一直喜欢<span class="key-point">声音</span>。</p><p class="city-page-copy">偶然的一次路上，我突然迸发出一个想法：<span class="key-point">如果把一座城市做成声音，它会是什么样子？</span></p><p class="city-page-copy">可能会随着城市高低此起披伏，有可能有“高新园“站的<span class="key-point">PTSD</span>，亦或是早起的噪鹃。我想先从简单的做起，将<span class="key-point">POI</span>和<span class="key-point">OD流</span>作为我原始的研究数据，<span class="key-point">希尔伯特曲线</span>作为<span class="key-point">空间遍历</span>的<span class="key-point">时序单元</span>，逐步遍历整座城市得到这幅声音。未来，我想我会融合<span class="key-point">Agent</span>，将一天的路径做成一段声音，让你间接就可以感同身受！！</p><p class="city-page-copy">目前<span class="key-point">Urban Ensemble</span>仍处于<span class="key-point">Demo</span>阶段。我已经完成了<span class="key-point">空间映射</span>和<span class="key-point">时序关系建模</span>，并生成了<span class="key-point">MIDI文件</span>。这一版先记录研究思路，以及城市如何从数据逐步走向声音。</p></span><span class="city-page-count" data-page-count="1">01 / 05</span>
+            <span class="city-page-sheet city-method-page" data-page="3"><p class="city-method-lead">第一层映射区分城市系统，第二层进入具体元素：公园和河流都属于自然环境，也需要不同的听觉标识。<span class="key-point">音高</span>、<span class="key-point">响度</span>、<span class="key-point">持续时间</span> 和 <span class="key-point">音色</span>，让城市从系统进入具体的声音参数。</p><span class="city-method-grid"><span class="city-method-card"><img src="./projects/city-sonification/assets/research/urban-orchestra-level2.png" alt="论文 P98 城市元素到声音参数的映射"><span class="city-method-card-label"><b>03 / LEVEL 2</b>具体元素与声音参数</span></span><span class="city-method-card"><img src="./projects/city-sonification/assets/research/urban-orchestra-overview.png" alt="论文 P05 城市声音设计策略"><span class="city-method-card-label"><b>04 / SONIC CODE</b>城市要素到声音设计</span></span></span><p class="city-method-source">参考：Adhitya S.《Sonifying Urban Rhythms》2013，p.98；Adhitya S.《A Sonified Urban Masterplan for Paris》2014，p.05。</p><span class="city-book-turn city-book-turn-prev" role="button" tabindex="0" title="上一页" aria-label="上一页">←</span></span><span class="city-page-count" data-page-count="3">03 / 05</span>
+            <span class="city-page-sheet city-result-page" data-page="5"><span class="city-chapter-mark" aria-label="第四章 结果与不足"><span class="city-chapter-roman">IV</span><span class="city-chapter-name">结果与不足</span></span><p class="city-result-copy">这一版 Demo 先把<span class="key-point">道路</span>作为城市空间的底层，再叠加<span class="key-point">建筑图层</span>，用道路蒙版把可被读取的路网区域标记出来。</p><div class="city-result-figure" aria-label="道路、建筑与道路蒙版叠加的视觉原型"><img class="city-result-road" src="./projects/city-sonification/assets/roads-southeast.png" alt="道路底图"><img class="city-result-city" src="./projects/city-sonification/assets/city-southeast.png" alt="叠加的城市建筑图层"><svg class="city-result-mask-layer" viewBox="0 0 1920 1080" preserveAspectRatio="none" aria-label="道路蒙版高亮"><defs><mask id="cityResultRoadMask" maskUnits="userSpaceOnUse"><rect width="1920" height="1080" fill="black"></rect><image href="./projects/city-sonification/assets/road-surface-mask.png" x="0" y="0" width="1920" height="1080" preserveAspectRatio="none"></image></mask><filter id="cityResultGlow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="7" result="blur"></feGaussianBlur><feMerge><feMergeNode in="blur"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter></defs><rect class="city-result-mask red" width="1920" height="1080" mask="url(#cityResultRoadMask)"></rect><rect class="city-result-mask yellow" width="1920" height="1080" mask="url(#cityResultRoadMask)"></rect></svg></div><p class="city-result-copy">它证明了空间层叠和道路高亮可以先被看见，成为后续声音映射的视觉入口。</p><div class="city-result-limit"><b>仍未完成</b>　可视化还没有形成完整界面；空间映射虽已生成 MIDI，但 MIDI 转换为真实音色时，听觉效果仍不够理想。</div><span class="city-book-turn city-book-turn-prev" role="button" tabindex="0" title="上一页" aria-label="上一页">←</span></span><span class="city-page-count" data-page-count="5">05 / 05</span>
+          </button>
+        </div>
+        <div class="hero-right">
+          <button class="hero-art city-note" id="cityPreview" type="button" aria-controls="cityInlinePage" aria-expanded="false" aria-label="在左侧展开城市可听化研究笔记">
+            <span class="box-label">C / RESEARCH NOTE</span>
+            <div class="city-note-head"><span>FIELD NOTE / 01</span><span>URBAN ENSEMBLE</span></div>
+            <div class="city-note-body">
+              <span class="city-note-kicker">CITYVIBE · A SMALL EXPERIMENT</span>
+              <h2>如果把城市<br>变成声音，<br><em>它会是什么样子？</em></h2>
+              <p class="city-note-copy">从测绘工程出发，借鉴 Urban Orchestra，把城市的功能与流动关系，转译成一套可以被听见的空间规则。</p>
+              <div class="city-note-chain"><span>POI</span><span>OD</span><span>HILBERT</span><span>MIDI</span></div>
+            </div>
+            <div class="city-note-foot"><span>RESEARCH NOTE / 01</span><span class="city-note-open">OPEN NOTE ↗</span></div>
+          </button>
+          <div class="city-book-right-page" id="cityBookRightPage" aria-label="城市可听化研究笔记右侧页面">
+            <span class="city-page-sheet city-method-page" data-page="2"><span class="city-chapter-mark" aria-label="第二章 声音建模"><span class="city-chapter-roman">II</span><span class="city-chapter-name">声音建模</span></span><p class="city-method-lead">这个问题并不是从零开始。<span class="key-point">Adhitya</span> 先把<span class="key-point">城市拆成不同系统</span>，再将系统对应到<span class="key-point">管弦乐声部</span>。先回答“<span class="key-point">城市由什么组成</span>”，再回答“<span class="key-point">这些系统如何被听见</span>”。重点不是给城市添加一段背景音乐，而是让不同城市系统拥有<span class="key-point">可以被区分的听觉角色</span>。</p><span class="city-method-grid"><span class="city-method-card"><img src="./projects/city-sonification/assets/research/urban-systems.png" alt="论文 P103 城市系统分类"><span class="city-method-card-label"><b>01 / URBAN SYSTEMS</b>先把城市拆成不同系统</span></span><span class="city-method-card"><img src="./projects/city-sonification/assets/research/urban-orchestra-level1.png" alt="论文 P97 城市系统到管弦乐声部的映射"><span class="city-method-card-label"><b>02 / LEVEL 1</b>让不同系统拥有不同声部</span></span></span><p class="city-method-source">参考：Adhitya S.《Sonifying Urban Rhythms》2013，p.103 / p.97 · Urban Orchestra。</p><span class="city-book-turn" role="button" tabindex="0" title="下一页" aria-label="下一页">→</span></span><span class="city-page-count" data-page-count="2">02 / 05</span>
+            <span class="city-page-sheet city-method-page city-traversal-page" data-page="4"><span class="city-chapter-mark" aria-label="第三章 城市序列化"><span class="city-chapter-roman">III</span><span class="city-chapter-name">城市序列化</span></span><p class="city-method-lead">城市数据是静态的，但声音需要沿着时间展开。为了把空间单元组织成一条连续的序列，我选择<span class="key-point">希尔伯特曲线</span>作为遍历路径。</p><figure class="city-traversal-figure"><img src="./projects/city-sonification/assets/research/hilbert-curve.png" alt="希尔伯特曲线从低阶到高阶的空间填充过程"></figure><p class="city-method-lead">它会在不同尺度上填充二维空间，并保持<span class="key-point">局部连续性</span>：空间上相邻的单元，在曲线上也尽量相邻。这样，<span class="key-point">POI</span> 和 <span class="key-point">OD 流</span>可以沿着一条稳定的路径逐步进入声音系统。</p><p class="city-method-lead">这一版先用曲线完成城市空间的序列化。未来，我希望加入<span class="key-point">Agent</span>与真实人的轨迹数据，让同一座城市同时拥有结构性的扫描路径，以及“人的一天”这样的叙事路径。</p><span class="city-book-turn" role="button" tabindex="0" title="下一页" aria-label="下一页">→</span></span><span class="city-page-count" data-page-count="4">04 / 05</span>
+            <span class="city-page-sheet" data-page="blank"><span class="city-page-kicker">RESEARCH NOTE / BACK</span><h3>封底</h3><span class="city-book-turn city-book-turn-prev" role="button" tabindex="0" title="上一页" aria-label="上一页">←</span></span><span class="city-page-count" data-page-count="blank">05 / 05</span>
+          </div>
+        </div>
+      </section>
+
+      <div class="part-boundary" aria-hidden="true"><span class="part-boundary-line"></span><span class="part-boundary-mark">❧</span><span class="part-boundary-label">TURN / 01 · FINANCE AGENT</span><span class="part-boundary-line"></span></div>
+      <section id="works">
+        <header class="section-head">
+          <div class="section-head-aside">
+            <span class="section-index">01 / FEATURED SYSTEM</span>
+            <div class="project-reference">
+              <span class="project-reference-kicker">REAL PROJECT / 01</span>
+              <div>
+                <h3 class="project-reference-title">财务查询 Agent</h3>
+                <p class="project-reference-note">实习项目：记录系统边界、查询链路与审计闭环。</p>
+              </div>
+              <a class="project-reference-link" href="https://my.feishu.cn/wiki/Th8vw2gsIik8fdkhmAiccuqYnog" target="_blank" rel="noreferrer">打开真实项目 ↗</a>
+            </div>
+          </div>
+          <h2>一个被规则限制且能自检的<br>财务查询 Agent<small>测试环境中注册 170+ 张表、1000+ 个字段，完成约 50 条单表查询与约 100 条关联表查询，准确率达 90%；全链路可运行，并保留 Mock 数据试跑与审计追踪闭环。</small></h2>
+        </header>
+        <div class="project-intro">
+          <p class="project-statement">AI 可以行动，但不能越过边界。</p>
+          <div>
+            <p class="project-copy">一条查询请求进入系统后，会先和<span class="key-point">实际业务语言对齐</span>，再通过“<span class="key-point">查表 → 查字段</span>”的逐层披露完成二次对齐，确认查询的<span class="key-point">规范性与真实性</span>。<span class="key-point">LLM 只能提出方案</span>，只有<span class="key-point">被授权的动作才会进入只读执行</span>；查询统一通过 API 调用数据库，并在<span class="key-point">隔离沙箱</span>中完成，<span class="key-point">执行后立即销毁</span>。结果采用 <span class="key-point">Memory Throw Away</span> 机制，不让<span class="key-point">真实数据和敏感数据</span>留在上下文里。<br><br>我关心的不是让 Agent 看起来无所不能，而是把它<span class="key-point">可以做什么、不能做什么</span>，以及<span class="key-point">人在其中的授权和确认</span>，明确地放进系统里，即所谓的“<span class="key-point">Human in the Execute</span>”。</p>
+            <div class="tag-row"><span class="tag">Harness Engineering</span><span class="tag">Human in the Execute</span><span class="tag">Evidence Track</span><span class="tag">Review Gate</span></div>
+          </div>
+        </div>
+
+        <div class="project-frame is-entry">
+          <div class="frame-top">
+            <div class="frame-window-lights" aria-label="Finance Agent 窗口控制"><button class="frame-window-light red" type="button" data-close-agent="finance-agent" aria-label="返回 Finance Agent 介绍卡"></button><span class="frame-window-light yellow" aria-hidden="true"></span><span class="frame-window-light green" aria-hidden="true"></span></div>
+            <span class="frame-meta">Interactive system map / finance agent</span>
+            <div class="scenario-badges"><span>INTERACTIVE SYSTEM DEMO</span><span>2D RUNTIME MAP</span></div>
+          </div>
+          <div class="demo-shell">
+            <iframe id="finance-demo" src="./projects/finance-agent/index.html?embed=1&amp;v=20260823-finance-kicker" title="Finance Agent 2D 系统运行地图" loading="lazy"></iframe>
+          </div>
+          <div class="frame-bottom"><span class="frame-meta">可点击模块、职责分区与线路图例 · 支持主路径播放</span><strong>TRACE THE RUNTIME →</strong></div>
+        </div>
+
+        <div class="system-reading finance-stages" aria-label="Finance Agent 四个阅读阶段">
+          <article><span class="ghost-label">01 / REQUEST</span><b>先接住请求</b><p>API 先建立上下文，系统明确这次请求究竟需要什么。</p></article>
+          <article><span class="ghost-label">02 / REVIEW</span><b>再审查方法</b><p>模型可以提出方案，但方法和边界要先经过检查。</p></article>
+          <article><span class="ghost-label">03 / APPROVE</span><b>交给用户确认</b><p>只有用户知道将要读取什么，执行才会真正开始。</p></article>
+          <article><span class="ghost-label">04 / EVIDENCE</span><b>留下可追溯结果</b><p>结果、状态和审计记录一起返回，方便之后复核。</p></article>
+        </div>
+      </section>
+
+      <section id="companion">
+        <div class="part-boundary" aria-hidden="true"><span class="part-boundary-line"></span><span class="part-boundary-mark">❧</span><span class="part-boundary-label">TURN / 02 · COMPANION AGENT</span><span class="part-boundary-line"></span></div>
+        <header class="section-head">
+          <div class="section-head-aside">
+            <span class="section-index">02 / HUMAN-CENTERED AGENT</span>
+            <div class="project-reference is-pending">
+              <span class="project-reference-kicker">REAL PROJECT / 02</span>
+              <div>
+                <h3 class="project-reference-title">陪伴 Agent · 鹅宝</h3>
+                <p class="project-reference-note">Tencent 比赛项目：记录输入信号、介入阈值与陪伴逻辑。</p>
+              </div>
+              <div class="project-reference-actions">
+                <a class="project-reference-link" href="./projects/companion-agent/assets/ebo.pdf" target="_blank" rel="noreferrer">打开 PDF ↗</a>
+                <span class="project-reference-warning">PDF 中的 Demo 链接已失效，如需体验请联系作者</span>
+              </div>
+            </div>
+          </div>
+          <h2>从输入侧识别犹豫，静默识别聊天场景，并及时提供帮助的陪伴型 Agent——鹅宝。<small>系统先观察真实数据中的输入信号，达到介入阈值后再分析上下文，决定是否递出一条可接受、也可忽略的建议。</small></h2>
+        </header>
+
+        <div class="project-intro">
+          <p class="project-statement">AI 知道，什么时候该保持安静。</p>
+          <div>
+            <p class="project-copy">系统先保持安静，观察删除、停顿和输入速度等信号，从<span class="key-point">输入侧识别犹豫</span>；当这些指标累积超过<span class="key-point">介入阈值</span>后，再<span class="key-point">分析上下文</span>，判断用户是否真的需要帮助。十轮场景是 Mock，但其中的判断指标和介入逻辑来自真实数据机制。AI 可以主动递出下一步，却不能把一次停顿直接解释成“你需要帮助”；建议出现之后，用户仍然可以采用、忽略，或继续自己的表达。</p>
+            <div class="tag-row"><span class="tag">Input Dynamics</span><span class="tag">Proactive Agent</span><span class="tag">Human-AI Boundary</span><span class="tag">State Machine</span></div>
+          </div>
+        </div>
+
+        <div class="project-frame is-entry">
+          <div class="frame-top">
+            <div class="frame-window-lights" aria-label="陪伴 Agent 窗口控制"><button class="frame-window-light red" type="button" data-close-agent="companion-agent" aria-label="返回陪伴 Agent 介绍卡"></button><span class="frame-window-light yellow" aria-hidden="true"></span><span class="frame-window-light green" aria-hidden="true"></span></div>
+            <span class="frame-meta">Live system study / observation 03</span>
+            <div class="scenario-badges"><span>INTERACTIVE SCENARIO DEMO</span><span>10-ROUND SCRIPTED MOCK</span></div>
+          </div>
+          <div class="demo-shell">
+            <iframe id="companion-demo" src="./projects/companion-agent/index.html?embed=1&amp;v=20260823-companion-title" title="陪伴式 Agent 十轮连续场景演示" loading="lazy"></iframe>
+          </div>
+          <div class="frame-bottom"><span class="frame-meta">自动运行 · 可采用或忽略建议 · 10 轮后自动重置</span><strong>WATCH THE AGENT DECIDE →</strong></div>
+        </div>
+
+        <div class="system-reading" aria-label="系统四阶段">
+          <article><span class="ghost-label">01 / Silent</span><b>静默</b><p>默认不出现，保留用户自己完成表达的空间。</p></article>
+          <article><span class="ghost-label">02 / Sense</span><b>感知</b><p>读取删除、停顿和输入速度等行为信号。</p></article>
+          <article><span class="ghost-label">03 / Test</span><b>试探</b><p>判断困难是否真实，避免一次停顿就贸然介入。</p></article>
+          <article><span class="ghost-label">04 / Act</span><b>介入</b><p>只在跨过阈值时提供可以拒绝的轻量建议。</p></article>
+        </div>
+      </section>
+
+      <section id="editing">
+        <div class="part-boundary" aria-hidden="true"><span class="part-boundary-line"></span><span class="part-boundary-mark">❧</span><span class="part-boundary-label">TURN / 03 · EDITING AGENT</span><span class="part-boundary-line"></span></div>
+        <header class="section-head">
+          <div class="section-head-aside">
+            <span class="section-index">03 / EDITING AGENT</span>
+            <div class="project-reference is-pending">
+              <span class="project-reference-kicker">REAL PROJECT / 03</span>
+              <div>
+                <h3 class="project-reference-title">剪辑 Agent</h3>
+                <p class="project-reference-note">实习项目：当前保留页面内的二次创作交互 Demo。</p>
+              </div>
+              <span class="project-reference-status">暂未公开</span>
+            </div>
+          </div>
+          <h2>先用一句话创建分镜，制作视频；再不断对话，直到这个视频真正具有你的色彩。<small>先通过对话拆分镜并制作第一版，再把自然语言里的位置、节奏和感觉接回时间线，进入二次创作。</small></h2>
+        </header>
+
+        <div class="project-intro">
+          <p class="project-statement">AI 可以参与创作，但不能替创作者决定。</p>
+          <div>
+            <p class="project-copy">先通过对话把模糊的想法拆成分镜，再<span class="key-point">执行制作</span>，得到第一版视频。真正具体的感觉往往在看到第一版之后才出现：“这里慢一点”“在这里加一个标题”“换一段音乐”——这些还没有说完整的感觉，都可以直接交给 Agent。<span class="key-point">对话负责理解</span>，<span class="key-point">时间线负责留下每一次改变</span>；你可以<span class="key-point">确认这版提案、调整节奏，或换一版</span>继续比较。标题、文本、转场和 BGM 都只是候选操作，<span class="key-point">最终留下什么，仍然由创作者决定</span>。</p>
+            <div class="tag-row"><span class="tag">Second Creation</span><span class="tag">Conversation → Timeline</span><span class="tag">Iterative Mock</span></div>
+          </div>
+        </div>
+
+        <div class="project-frame is-entry">
+          <div class="frame-top">
+            <div class="frame-window-lights" aria-label="剪辑 Agent 窗口控制"><button class="frame-window-light red" type="button" data-close-agent="editing-agent" aria-label="返回剪辑 Agent 介绍卡"></button><span class="frame-window-light yellow" aria-hidden="true"></span><span class="frame-window-light green" aria-hidden="true"></span></div>
+            <span class="frame-meta">Interactive workbench / second-cut study</span>
+            <div class="scenario-badges"><span>CONVERSATION-DRIVEN</span><span>SECOND CREATION MOCK</span></div>
+          </div>
+          <div class="demo-shell">
+            <iframe id="editing-demo" src="./projects/editing-agent/index.html?embed=1&amp;v=20260823-window-controls" title="剪辑 Agent 二次创作交互演示" loading="lazy"></iframe>
+          </div>
+          <div class="frame-bottom"><span class="frame-meta">无真实视频渲染 · 对话与时间线可交互 · 支持多次二次修改</span><strong>KEEP MAKING →</strong></div>
+        </div>
+
+        <div class="system-reading editing-stages" aria-label="剪辑 Agent 四阶段">
+          <article><span class="ghost-label">01 / FIRST CUT</span><b>先看一版</b><p>先让画面出现，给下一步修改一个可以共同指认的起点。</p></article>
+          <article><span class="ghost-label">02 / NOTICE</span><b>说出感觉</b><p>不用重新写完整需求，只要指出位置、节奏或模糊的感受。</p></article>
+          <article><span class="ghost-label">03 / SECOND CUT</span><b>继续修改</b><p>标题、文本、转场和 BGM 都成为时间线上的独立候选。</p></article>
+          <article><span class="ghost-label">04 / KEEP MAKING</span><b>留下选择</b><p>每一次确认都可追踪、可回看，也可以继续往下一版走。</p></article>
+        </div>
+      </section>
+
+      <section id="notes">
+        <div class="part-boundary" aria-hidden="true"><span class="part-boundary-line"></span><span class="part-boundary-mark">❧</span><span class="part-boundary-label">TURN / 04 · LLM LEARNING</span><span class="part-boundary-line"></span></div>
+        <header class="section-head">
+          <div class="section-head-aside">
+            <span class="section-index">04 / LLM LEARNING PROJECT</span>
+            <div class="project-reference">
+              <span class="project-reference-kicker">REAL PROJECT / 04</span>
+              <div>
+                <h3 class="project-reference-title">LLM Learning Journey</h3>
+                <p class="project-reference-note">完整学习记录与代码仓库，包含数据处理、模型结构和训练实验。</p>
+              </div>
+              <a class="project-reference-link" href="https://github.com/yuquan-chen/LLM_Learning_Journey" target="_blank" rel="noreferrer">打开 GitHub ↗</a>
+            </div>
+          </div>
+          <h2>理解模型的能力，<br>也理解它的限制。<small>这是一组学习 LLM 时留下的记录：我从训练数据开始，沿着 Transformer 的路径往下追，再观察一个 token 如何参与生成，最后把不同训练阶段的输出放进同一张地图里比较。</small></h2>
+        </header>
+
+        <div class="journey-shell">
+          <span class="box-label">H / LLM TRAINING JOURNEY · APR—MAY 2025</span>
+          <div class="journey-overview">
+            <div class="journey-thesis">
+              <span class="eyebrow">NOTES FROM APRIL TO MAY</span>
+              <blockquote>在让系统自主行动之前，我想先把它的路径看清楚：我看到的结果，在模型里究竟是怎么一步步发生的？</blockquote>
+            </div>
+            <div class="journey-facts" aria-label="项目证据摘要">
+              <div><strong>04→05</strong><span>two months of notes</span></div>
+              <div><strong>4</strong><span>reasoning behaviours</span></div>
+              <div><strong>3</strong><span>model snapshots</span></div>
+              <div><strong>1</strong><span>visual study</span></div>
+            </div>
+          </div>
+
+          <div class="journey-nav" role="tablist" aria-label="LLM 学习路径">
+            <button class="journey-step" type="button" role="tab" aria-selected="false" data-journey="data"><span>01 / Early April</span><b>第一次转折：训练从定义一条数据开始</b><small>Reasoning Schema · Data Curation · First Training</small></button>
+            <button class="journey-step" type="button" role="tab" aria-selected="false" data-journey="structure"><span>02 / Mid April</span><b>后来，我开始跟着张量读 Transformer</b><small>Encoder–Decoder · Sinusoidal PE · MHA</small></button>
+            <button class="journey-step" type="button" role="tab" aria-selected="false" data-journey="state"><span>03 / Late April</span><b>再后来，我想看见生成的过程</b><small>Token NLL · Attention Statistics</small></button>
+            <button class="journey-step" type="button" role="tab" aria-selected="true" data-journey="distribution"><span>04 / May</span><b>到了五月，我把三组输出放进一张地图</b><small>Baseline · Training · LoRA SFT</small></button>
+          </div>
+          <div class="journey-detail" id="journey-detail" role="tabpanel" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <section class="about" id="about">
+        <span class="box-label">I / ABOUT</span>
+        <div class="about-story">
+          <h2>从系统的结构，<br>走到 AI 的边界。</h2>
+          <p>我做的不是几个彼此独立的 AI 项目，而是一组关于自主性的连续实验：城市可听化让我先把复杂系统变得可感知；Finance Agent 讨论行动边界；Companion Agent 讨论介入时机；Editing Agent 讨论如何在人的确认下继续创作；LLM 学习记录则让我回到模型本身，理解它的能力和不确定性。<br><br>我希望做出能运行的产品，也把“什么时候该主动、什么时候该停下”写进产品里。</p>
+        </div>
+        <div class="about-contact" aria-label="Contact Me">
+          <h3>Contact Me</h3>
+          <button class="contact-item" type="button" data-contact-copy="896183020@qq.com" aria-label="复制 Email 地址">
+            <span class="contact-label">EMAIL</span>
+            <strong class="contact-value">896183020@qq.com</strong>
+            <span class="contact-action">COPY</span>
+          </button>
+          <button class="contact-item" type="button" data-contact-copy="Macree2410" aria-label="复制 WeChat 号">
+            <span class="contact-label">WECHAT</span>
+            <strong class="contact-value">Macree2410</strong>
+            <span class="contact-action">COPY</span>
+          </button>
+          <a class="contact-item" href="https://github.com/yuquan-chen" target="_blank" rel="noreferrer" aria-label="打开 GitHub">
+            <span class="contact-label">GITHUB</span>
+            <strong class="contact-value">YUQUAN-CHEN</strong>
+            <span class="contact-action">OPEN ↗</span>
+          </a>
+          <span class="contact-feedback" aria-live="polite"></span>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer"><span>25点学习 / SHENZHEN</span><span>BUILDING SYSTEMS THAT KNOW WHEN TO STOP.</span><span>© 2026</span></footer>
+  </div>
+
+  <script src="./scripts/llm-journey.js?v=20260823-highlights"></script>
+  <script>
+    (() => {
+      const agents = {
+        'finance-agent': document.getElementById('finance-demo'),
+        'companion-agent': document.getElementById('companion-demo'),
+        'editing-agent': document.getElementById('editing-demo')
+      };
+      const setEntryMode = (frame, isEntry) => {
+        if (!frame) return;
+        frame.closest('.project-frame')?.classList.toggle('is-entry', isEntry);
+        frame.closest('section')?.classList.toggle('agent-entry-only', isEntry);
+      };
+      Object.values(agents).forEach((frame) => {
+        if (!frame) return;
+        setEntryMode(frame, true);
+        frame.addEventListener('load', () => {
+          try { setEntryMode(frame, !frame.contentDocument?.body?.classList.contains('is-active')); }
+          catch (_) { setEntryMode(frame, true); }
+        });
+      });
+      document.querySelectorAll('[data-close-agent]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const frame = agents[button.dataset.closeAgent];
+          if (!frame) return;
+          try { frame.contentWindow?.postMessage({ type: 'demo:close' }, window.location.origin === 'null' ? '*' : window.location.origin); }
+          catch (_) { /* iframe may still be loading; entry mode is restored below */ }
+          setEntryMode(frame, true);
+        });
+      });
+      window.addEventListener('message', (event) => {
+        const frame = agents[event.data?.source];
+        // file:// 页面使用 opaque origin（通常显示为 null），用具体 iframe
+        // 的 source 校验消息，保证本地文件和 8780 服务行为一致。
+        if (!frame || event.source !== frame.contentWindow) return;
+        if (window.location.origin !== 'null' && event.origin !== window.location.origin && event.origin !== 'null') return;
+        if (event.data.type === 'demo:ready') setEntryMode(frame, true);
+        if (event.data.type === 'demo:entered') setEntryMode(frame, false);
+      });
+      document.querySelectorAll('.toc-panel a').forEach((link) => {
+        link.addEventListener('click', () => link.closest('.toc-menu')?.removeAttribute('open'));
+      });
+      document.querySelectorAll('[data-contact-copy]').forEach((button) => {
+        button.addEventListener('click', async () => {
+          const value = button.dataset.contactCopy || '';
+          const feedback = button.closest('.about-contact')?.querySelector('.contact-feedback');
+          let copied = false;
+          try {
+            if (navigator.clipboard?.writeText) {
+              await navigator.clipboard.writeText(value);
+              copied = true;
+            }
+          } catch (_) { /* file:// and older browsers use the fallback below */ }
+          if (!copied) {
+            const input = document.createElement('textarea');
+            input.value = value;
+            input.setAttribute('readonly', '');
+            input.style.position = 'fixed';
+            input.style.opacity = '0';
+            document.body.appendChild(input);
+            input.select();
+            try { copied = document.execCommand('copy'); } catch (_) { copied = false; }
+            input.remove();
+          }
+          if (!feedback) return;
+          feedback.textContent = copied ? `${button.querySelector('.contact-label')?.textContent || 'CONTACT'} 已复制` : '复制失败，请手动复制';
+          window.setTimeout(() => { feedback.textContent = ''; }, 1800);
+        });
+      });
+      const pageTurn = document.getElementById('pageTurn');
+      const cityNoteTrigger = document.getElementById('cityPreview');
+      const cityInlinePage = document.getElementById('cityInlinePage');
+      const cityBookRightPage = document.getElementById('cityBookRightPage');
+      const hero = document.querySelector('.hero');
+      let citySpread = 1;
+      const syncCityInlineSize = () => {
+        if (!cityNoteTrigger || !cityInlinePage) return;
+        cityInlinePage.style.setProperty('--city-inline-width', `${cityNoteTrigger.offsetWidth}px`);
+        cityInlinePage.style.setProperty('--city-inline-height', `${cityNoteTrigger.offsetHeight}px`);
+      };
+      const setCitySpread = (spread, direction = null) => {
+        if (!hero) return;
+        const nextSpread = Math.max(1, Math.min(3, spread));
+        if (!direction || nextSpread === citySpread) {
+          citySpread = nextSpread;
+          hero.dataset.citySpread = String(nextSpread);
+          return;
+        }
+        const animationClass = direction === 'next' ? 'city-page-flipping-next' : 'city-page-flipping-prev';
+        const currentPages = [...document.querySelectorAll('.city-page-sheet')].filter((page) => getComputedStyle(page).opacity !== '0');
+        currentPages.forEach((page) => page.classList.add('city-page-current'));
+        hero.classList.remove('city-page-flipping-next', 'city-page-flipping-prev');
+        hero.classList.add(animationClass);
+        window.setTimeout(() => {
+          citySpread = nextSpread;
+          hero.dataset.citySpread = String(nextSpread);
+        }, 280);
+        window.setTimeout(() => {
+          hero.classList.remove(animationClass);
+          currentPages.forEach((page) => page.classList.remove('city-page-current'));
+        }, 760);
+      };
+      const setCityInlineOpen = (open) => {
+        if (!hero || !cityNoteTrigger || !cityInlinePage) return;
+        syncCityInlineSize();
+        hero.classList.toggle('city-inline-open', open);
+        cityNoteTrigger.setAttribute('aria-expanded', String(open));
+        if (open) setCitySpread(1);
+        else {
+          citySpread = 1;
+          delete hero.dataset.citySpread;
+          hero.classList.remove('city-page-flipping-next', 'city-page-flipping-prev');
+          document.querySelectorAll('.city-page-current').forEach((page) => page.classList.remove('city-page-current'));
+        }
+        if (open) cityInlinePage.focus({ preventScroll: true });
+        else cityNoteTrigger.focus({ preventScroll: true });
+      };
+      syncCityInlineSize();
+      window.addEventListener('resize', syncCityInlineSize);
+      cityNoteTrigger?.addEventListener('click', () => setCityInlineOpen(true));
+      const handleCityBookControl = (control) => {
+        if (!control) return;
+        if (control.classList.contains('city-book-close-inline')) {
+          setCityInlineOpen(false);
+          return;
+        }
+        if (control.classList.contains('city-book-turn-prev')) setCitySpread(citySpread - 1, 'prev');
+        else setCitySpread(citySpread + 1, 'next');
+      };
+      cityInlinePage?.addEventListener('click', (event) => {
+        const control = event.target.closest('.city-book-close-inline, .city-book-turn');
+        if (control) {
+          event.stopPropagation();
+          handleCityBookControl(control);
+          return;
+        }
+        setCityInlineOpen(false);
+      });
+      cityBookRightPage?.addEventListener('click', (event) => {
+        const control = event.target.closest('.city-book-turn');
+        if (!control) return;
+        event.stopPropagation();
+        handleCityBookControl(control);
+      });
+      document.addEventListener('keydown', (event) => {
+        const control = event.target.closest?.('.city-book-close-inline, .city-book-turn');
+        if (control && (event.key === 'Enter' || event.key === ' ')) {
+          event.preventDefault();
+          handleCityBookControl(control);
+        }
+      });
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && hero?.classList.contains('city-inline-open')) setCityInlineOpen(false);
+      });
+      const partNames = { top: 'HOME', works: 'FINANCE AGENT', companion: 'COMPANION AGENT', editing: 'EDITING AGENT', notes: 'LLM LEARNING', about: 'ABOUT' };
+      document.querySelectorAll('a[href^="#"]').forEach((link) => {
+        link.addEventListener('click', (event) => {
+          const hash = link.getAttribute('href');
+          const target = hash ? document.querySelector(hash) : null;
+          if (!target) return;
+          event.preventDefault();
+          link.closest('.toc-menu')?.removeAttribute('open');
+          target.classList.remove('part-arriving');
+          const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          if (!pageTurn || reduceMotion) {
+            target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+            history.pushState(null, '', hash);
+            requestAnimationFrame(() => target.classList.add('part-arriving'));
+            window.setTimeout(() => target.classList.remove('part-arriving'), 700);
+            return;
+          }
+          pageTurn.classList.remove('is-turning');
+          pageTurn.querySelector('span').textContent = `TURNING TO / ${partNames[target.id] || 'NEXT PART'}`;
+          void pageTurn.offsetWidth;
+          pageTurn.classList.add('is-turning');
+          window.setTimeout(() => {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            history.pushState(null, '', hash);
+            target.classList.add('part-arriving');
+            window.setTimeout(() => target.classList.remove('part-arriving'), 700);
+          }, 145);
+          window.setTimeout(() => pageTurn.classList.remove('is-turning'), 820);
+        });
+      });
+      const floatingToc = document.querySelector('.floating-toc');
+      const tocHandle = floatingToc?.querySelector('summary');
+      let tocDrag = null;
+      tocHandle?.addEventListener('pointerdown', (event) => {
+        if (event.button !== 0) return;
+        const rect = floatingToc.getBoundingClientRect();
+        tocDrag = { pointerId: event.pointerId, startX: event.clientX, startY: event.clientY, left: rect.left, top: rect.top, moved: false };
+        tocHandle.setPointerCapture?.(event.pointerId);
+      });
+      tocHandle?.addEventListener('pointermove', (event) => {
+        if (!tocDrag || event.pointerId !== tocDrag.pointerId) return;
+        const dx = event.clientX - tocDrag.startX;
+        const dy = event.clientY - tocDrag.startY;
+        if (!tocDrag.moved && Math.hypot(dx, dy) < 4) return;
+        tocDrag.moved = true;
+        event.preventDefault();
+        floatingToc.style.left = `${Math.max(8, Math.min(window.innerWidth - floatingToc.offsetWidth - 8, tocDrag.left + dx))}px`;
+        floatingToc.style.top = `${Math.max(58, Math.min(window.innerHeight - floatingToc.offsetHeight - 8, tocDrag.top + dy))}px`;
+      });
+      tocHandle?.addEventListener('pointerup', (event) => {
+        if (!tocDrag || event.pointerId !== tocDrag.pointerId) return;
+        if (tocDrag.moved) {
+          floatingToc.dataset.dragged = 'true';
+          window.setTimeout(() => delete floatingToc.dataset.dragged, 0);
+          event.preventDefault();
+        }
+        tocDrag = null;
+      });
+      tocHandle?.addEventListener('click', (event) => {
+        if (floatingToc.dataset.dragged === 'true') {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+      });
+      document.addEventListener('pointerdown', (event) => {
+        if (floatingToc?.open && !floatingToc.contains(event.target)) floatingToc.removeAttribute('open');
+      }, true);
+      document.addEventListener('click', (event) => {
+        if (floatingToc?.open && !floatingToc.contains(event.target)) floatingToc.removeAttribute('open');
+      });
+    })();
+  </script>
+</body>
+</html>

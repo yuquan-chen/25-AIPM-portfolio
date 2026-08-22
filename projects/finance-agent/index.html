@@ -1,0 +1,707 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#EEE4CC">
+  <title>Finance Agent · System Map</title>
+  <style>
+    :root {
+      --paper: #eee4cc;
+      --paper-light: #f7efdc;
+      --paper-deep: #d8c9a7;
+      --ink: #1f211d;
+      --muted: #6d705f;
+      --hairline: rgba(31, 33, 29, .34);
+      --rust: #9a4938;
+      --rust-soft: #d7a28e;
+      --indigo: #4d5d9e;
+      --teal: #19786e;
+      --orange: #c27a32;
+      --gold: #d4ad54;
+      --sage: #667565;
+      --sage-light: #d9dfd0;
+      --shadow: rgba(34, 34, 25, .16);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; margin: 0; }
+    body {
+      min-width: 320px;
+      color: var(--ink);
+      background: var(--paper);
+      font: 13px/1.5 Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    button { color: inherit; font: inherit; }
+    button:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--rust); outline-offset: 2px; }
+
+    .shell { min-height: 100dvh; display: grid; grid-template-rows: 62px minmax(0, 1fr) 28px; }
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between; gap: 20px;
+      padding: 0 18px; border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline);
+    }
+    .brand { display: flex; align-items: baseline; gap: 16px; min-width: 0; }
+    .brand h1 { margin: 0; font-size: 17px; line-height: 1; font-weight: 650; letter-spacing: .02em; }
+    .mono, .brand-kicker, .top-meta, .panel-kicker, .zone-no, .node-type, .zone-label, .flow-status, .legend, .footer {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      letter-spacing: .09em; text-transform: uppercase;
+    }
+    .brand-kicker, .top-meta { color: var(--muted); font-size: 9px; }
+    .top-meta { display: flex; gap: 16px; white-space: nowrap; }
+    .top-meta .live { color: var(--ink); }
+    .top-meta .live::before { display: inline-block; width: 6px; height: 6px; margin-right: 7px; border-radius: 50%; background: var(--gold); content: ""; }
+
+    .workspace { min-height: 0; display: grid; grid-template-columns: 176px minmax(560px, 1fr) 286px; }
+    .left-panel, .right-panel { min-width: 0; background: rgba(238, 228, 204, .88); }
+    .left-panel { border-right: 1px solid var(--hairline); padding: 16px 10px; }
+    .right-panel { border-left: 1px solid var(--hairline); padding: 0 16px 18px; overflow: auto; }
+    .panel-kicker { color: var(--muted); font-size: 8px; }
+    .panel-heading { margin: 5px 0 16px; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+
+    .zone-nav { display: grid; gap: 4px; }
+    .zone-button {
+      position: relative; display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 7px; width: 100%;
+      padding: 9px 7px; border: 1px solid var(--hairline); background: transparent; text-align: left; cursor: pointer;
+      transition: background .16s ease, border-color .16s ease;
+    }
+    .zone-button:hover, .zone-button.active { border-color: var(--ink); background: rgba(247, 239, 220, .72); }
+    .zone-button.active::before { position: absolute; inset: -1px auto -1px -1px; width: 3px; background: var(--rust); content: ""; }
+    .zone-no { padding-top: 1px; color: var(--rust); font-size: 8px; }
+    .zone-button strong { display: block; font-size: 10px; line-height: 1.25; font-weight: 680; }
+    .zone-button small { display: block; margin-top: 3px; color: var(--muted); font-size: 8px; line-height: 1.35; }
+
+    .run-box { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--hairline); }
+    .run-controls { display: grid; grid-template-columns: 1fr 34px; gap: 5px; margin-top: 9px; }
+    .run-button, .step-button {
+      min-height: 34px; border: 1px solid var(--ink); background: var(--ink); color: var(--paper-light); cursor: pointer;
+    }
+    .run-button { padding: 0 9px; text-align: left; font: 9px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .08em; }
+    .step-button { background: transparent; color: var(--ink); font-size: 15px; }
+    .run-button:hover { background: var(--rust); border-color: var(--rust); }
+    .step-button:hover { color: var(--rust); border-color: var(--rust); }
+    .flow-status { margin-top: 10px; color: var(--muted); font-size: 8px; line-height: 1.55; }
+    .flow-status b { color: var(--rust); font-weight: 700; }
+
+    .map-panel { position: relative; min-width: 0; min-height: 620px; overflow: hidden; background: rgba(247, 239, 220, .34); }
+    .map-panel::before {
+      position: absolute; inset: 0; z-index: 0; pointer-events: none; content: "";
+      background:
+        linear-gradient(rgba(31,33,29,.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(31,33,29,.055) 1px, transparent 1px);
+      background-size: 32px 32px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,.72), rgba(0,0,0,.18) 86%, transparent);
+    }
+    .map-head { position: absolute; z-index: 4; top: 14px; left: 16px; pointer-events: none; }
+    .map-head strong { display: block; font: 700 9px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .14em; }
+    .map-head span { display: block; margin-top: 4px; color: var(--muted); font-size: 9px; }
+    .map-tools { position: absolute; z-index: 5; top: 12px; right: 12px; display: flex; gap: 4px; }
+    .map-tool { display: grid; place-items: center; width: 30px; height: 30px; padding: 0; border: 1px solid var(--hairline); background: rgba(247,239,220,.92); cursor: pointer; }
+    .map-tool:hover { border-color: var(--rust); color: var(--rust); }
+    #systemMap { position: relative; z-index: 1; display: block; width: 100%; height: 100%; min-height: 620px; }
+
+    .zone-boundary { fill: rgba(247,239,220,.12); stroke: rgba(70,77,65,.55); stroke-width: 1.25; stroke-dasharray: 6 7; vector-effect: non-scaling-stroke; cursor: pointer; transition: .18s ease; }
+    .zone-boundary.support { fill: rgba(102,117,101,.035); stroke: rgba(70,77,65,.4); }
+    .zone-boundary:hover, .zone-boundary.active { fill: rgba(154,73,56,.055); stroke: var(--rust); stroke-width: 2; }
+    .zone-label { fill: var(--muted); stroke: var(--paper); stroke-width: 3px; paint-order: stroke fill; font-size: 9px; pointer-events: none; }
+    .zone-label.core { fill: var(--rust); font-size: 10px; font-weight: 700; }
+    .zone-title { fill: var(--ink); stroke: var(--paper); stroke-width: 4px; paint-order: stroke fill; font: 650 14px Inter, ui-sans-serif, sans-serif; pointer-events: none; }
+    .zone-title.core { fill: var(--rust); font-size: 19px; }
+
+    .edge { fill: none; vector-effect: non-scaling-stroke; transition: opacity .18s ease, stroke-width .18s ease; }
+    .edge-main { stroke: var(--rust); stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+    .main-direction { fill: none; stroke: var(--rust); stroke-width: 2.4; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+    .edge-branch { stroke: var(--rust); stroke-width: 1.7; stroke-dasharray: 8 7; opacity: .68; }
+    .branch-direction { fill: none; stroke: var(--rust); stroke-width: 1.6; stroke-linecap: round; vector-effect: non-scaling-stroke; opacity: .78; }
+    .edge-context { stroke: var(--indigo); stroke-width: 2; stroke-dasharray: 5 6; opacity: .65; }
+    .edge-guardrail { stroke: var(--teal); stroke-width: 2.2; stroke-dasharray: 11 5 2 5; opacity: .72; }
+    .edge-evidence { stroke: var(--orange); stroke-width: 2; stroke-dasharray: 9 7; opacity: .7; }
+    .evidence-direction { fill: none; stroke: var(--orange); stroke-width: 1.8; stroke-linecap: round; vector-effect: non-scaling-stroke; opacity: .82; }
+    .edge-label { stroke: var(--paper); stroke-width: 3px; paint-order: stroke fill; font: 700 8px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .09em; pointer-events: none; }
+    .label-branch { fill: var(--rust); opacity: .72; }
+    .label-context { fill: var(--indigo); }
+    .label-guardrail { fill: var(--teal); }
+    .label-evidence { fill: var(--orange); }
+    .route-number { fill: var(--rust); font: 700 8px ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+    #systemMap[data-focus="main"] .edge:not(.edge-main),
+    #systemMap[data-focus="branch"] .edge:not(.edge-branch),
+    #systemMap[data-focus="context"] .edge:not(.edge-context),
+    #systemMap[data-focus="guardrail"] .edge:not(.edge-guardrail),
+    #systemMap[data-focus="evidence"] .edge:not(.edge-evidence) { opacity: .08; }
+    #systemMap[data-focus="main"] .edge-main,
+    #systemMap[data-focus="branch"] .edge-branch,
+    #systemMap[data-focus="context"] .edge-context,
+    #systemMap[data-focus="guardrail"] .edge-guardrail,
+    #systemMap[data-focus="evidence"] .edge-evidence { opacity: 1; stroke-width: 3.4; }
+    #systemMap[data-focus="main"] .edge-main { stroke-width: 4.2; }
+    #systemMap[data-focus="branch"] .main-direction,
+    #systemMap[data-focus="context"] .main-direction,
+    #systemMap[data-focus="guardrail"] .main-direction,
+    #systemMap[data-focus="evidence"] .main-direction { opacity: .08; }
+    #systemMap[data-focus="main"] .evidence-direction,
+    #systemMap[data-focus="branch"] .evidence-direction,
+    #systemMap[data-focus="context"] .evidence-direction,
+    #systemMap[data-focus="guardrail"] .evidence-direction { opacity: .08; }
+    #systemMap[data-focus="main"] .branch-direction,
+    #systemMap[data-focus="context"] .branch-direction,
+    #systemMap[data-focus="guardrail"] .branch-direction,
+    #systemMap[data-focus="evidence"] .branch-direction { opacity: .08; }
+
+    .module { cursor: pointer; outline: none; }
+    .module:focus, .module:focus-visible { outline: none; }
+    .module:focus-visible .block-front { stroke: var(--rust); stroke-width: 2.2; }
+    .module .block-shadow { fill: var(--shadow); stroke: none; }
+    .module .block-front { fill: var(--paper-light); stroke: #4a5045; stroke-width: 1.25; transition: stroke .16s ease, filter .16s ease; }
+    .module .block-top { fill: url(#hatchLight); stroke: #4a5045; stroke-width: 1.15; }
+    .module .block-side { fill: #c9b998; stroke: #4a5045; stroke-width: 1.15; }
+    .module.support .block-front { fill: var(--sage-light); }
+    .module.support .block-top { fill: url(#hatchSage); }
+    .module.support .block-side { fill: #a8b09e; }
+    .module.core .block-front { fill: #f5e8d3; stroke: #784233; stroke-width: 1.5; }
+    .module.core .block-top { fill: url(#hatchRust); stroke: #784233; stroke-width: 1.4; }
+    .module.core .block-side { fill: var(--rust-soft); stroke: #784233; stroke-width: 1.4; }
+    .module:hover .block-front, .module.selected .block-front, .module.running .block-front { stroke: var(--rust); stroke-width: 2.4; filter: drop-shadow(0 5px 4px rgba(65,45,31,.18)); }
+    .module:hover .block-top, .module:hover .block-side, .module.selected .block-top, .module.selected .block-side, .module.running .block-top, .module.running .block-side { stroke: var(--rust); stroke-width: 2; }
+    .module.running .block-front { fill: #fae9d4; }
+    .node-title { fill: var(--ink); font: 700 13px Inter, ui-sans-serif, sans-serif; pointer-events: none; }
+    .node-type { fill: var(--muted); font-size: 7px; pointer-events: none; }
+    .node-index { fill: var(--rust); font: 700 7px ui-monospace, SFMono-Regular, Menlo, monospace; pointer-events: none; }
+
+    .checkpoint .checkpoint-ring { fill: var(--paper-light); stroke: var(--rust); stroke-width: 1.5; }
+    .checkpoint .checkpoint-dot { fill: var(--rust); }
+    .checkpoint.passed .checkpoint-ring { stroke: var(--rust); }
+    .checkpoint.passed .checkpoint-dot { fill: var(--rust); }
+    .flow-tracer { fill: var(--rust); stroke: var(--paper-light); stroke-width: 3; filter: drop-shadow(0 2px 2px rgba(56,40,25,.3)); }
+
+    .right-header { display: flex; justify-content: space-between; align-items: center; min-height: 61px; border-bottom: 2px solid var(--ink); }
+    .right-header h2 { margin: 0; font-size: 12px; letter-spacing: .13em; text-transform: uppercase; }
+    .right-header span { color: var(--rust); font: 9px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .08em; }
+    .overview { padding: 17px 0 18px; color: var(--muted); font-size: 11px; line-height: 1.75; border-bottom: 1px solid var(--hairline); }
+    .detail { padding: 18px 0 20px; border-bottom: 1px solid var(--hairline); }
+    .detail h3 { margin: 8px 0 0; font-size: 21px; line-height: 1.18; font-weight: 640; }
+    .detail p { margin: 11px 0 0; color: #5f6256; font-size: 12px; line-height: 1.72; }
+    .detail-meta { display: grid; grid-template-columns: 70px minmax(0, 1fr); gap: 7px 10px; margin: 16px 0 0; }
+    .detail-meta dt { color: var(--muted); font: 8px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .08em; text-transform: uppercase; }
+    .detail-meta dd { margin: 0; font-size: 10px; line-height: 1.45; }
+
+    .legend { display: grid; gap: 8px; padding-top: 18px; color: var(--muted); font-size: 8px; letter-spacing: .045em; }
+    .legend-button { display: grid; grid-template-columns: 28px minmax(0, 1fr); align-items: center; gap: 8px; padding: 4px 0; border: 0; background: transparent; text-align: left; cursor: pointer; }
+    .legend-button:hover, .legend-button.active { color: var(--ink); }
+    .legend-button i { display: block; width: 26px; height: 3px; background: var(--rust); }
+    .legend-button.branch i { background: repeating-linear-gradient(90deg, var(--rust) 0 6px, transparent 6px 10px); }
+    .legend-button.context i { background: repeating-linear-gradient(90deg, var(--indigo) 0 5px, transparent 5px 9px); }
+    .legend-button.guardrail i { background: repeating-linear-gradient(90deg, var(--teal) 0 8px, transparent 8px 11px, var(--teal) 11px 13px, transparent 13px 17px); }
+    .legend-button.evidence i { background: repeating-linear-gradient(90deg, var(--orange) 0 8px, transparent 8px 13px); }
+    .legend-button.event i { width: 9px; height: 9px; margin-left: 8px; border-radius: 50%; background: var(--rust); }
+    .legend-button.zone i { height: 0; border-top: 1px dashed var(--muted); background: none; }
+
+    .footer { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 0 18px; border-top: 1px solid var(--hairline); color: var(--muted); font-size: 7px; }
+
+    @media (max-width: 1120px) {
+      .workspace { grid-template-columns: minmax(560px, 1fr) 260px; }
+      .left-panel { display: none; }
+      .top-meta span:not(.live) { display: none; }
+    }
+    @media (max-width: 820px) {
+      .shell { display: block; }
+      .topbar { min-height: 62px; }
+      .brand-kicker { display: none; }
+      .workspace { display: block; }
+      .map-panel { min-height: 560px; border-bottom: 1px solid var(--hairline); }
+      #systemMap { min-height: 560px; }
+      .right-panel { border: 0; padding: 0 18px 24px; }
+      .footer { min-height: 30px; }
+    }
+    @media (max-width: 520px) {
+      .topbar { padding: 0 12px; }
+      .brand { width: 100%; }
+      .brand h1 { min-width: 0; overflow: hidden; font-size: 15px; white-space: nowrap; text-overflow: ellipsis; }
+      .top-meta { display: none; }
+      .map-panel, #systemMap { min-height: 360px; }
+      .map-head span { display: none; }
+      .footer span:last-child { display: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+    }
+
+    /* 首页嵌入态：先显示一张小的入口卡，点击后再展开完整地图。 */
+    body.embedded { background: transparent; overflow: hidden; }
+    body.embedded .shell { min-height: 100dvh; grid-template-rows: 62px minmax(0, 1fr); transition: opacity .38s ease, transform .48s cubic-bezier(.16,1,.3,1); }
+    body.embedded .footer { display: none; }
+    body.embedded:not(.is-active) .shell { visibility: hidden; opacity: 0; pointer-events: none; transform: translateY(22px) scale(.965); }
+    .entry-screen { position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; padding: 18px; background: transparent; }
+    .entry-copy { width: min(430px, calc(100vw - 42px)); padding: 25px 28px 23px; border: 1px solid rgba(85,65,43,.3); background: rgba(247,239,220,.82); box-shadow: 0 18px 38px rgba(68,51,38,.14), inset 0 0 26px rgba(90,65,34,.06); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); text-align: center; cursor: pointer; transform: scale(.9); transition: transform .42s cubic-bezier(.16,1,.3,1), opacity .3s ease; }
+    .entry-copy:hover { transform: scale(.94); }
+    .entry-screen.is-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+    .entry-screen.is-hidden .entry-copy { transform: translateY(-24px) scale(1.12); opacity: 0; }
+    .entry-kicker { color: var(--rust); font: 700 9px/1.35 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .13em; }
+    .entry-copy h2 { margin: 15px 0 10px; font: 500 clamp(25px, 4vw, 38px)/1.08 Georgia, "Songti SC", serif; }
+    .entry-copy p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.75; }
+    .entry-hint { display: inline-block; margin-top: 20px; color: var(--rust); font: 700 9px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .11em; }
+    .entry-hint::before { content: "↘  "; }
+    .window-lights { position: fixed; top: 15px; left: 18px; z-index: 10; display: flex; align-items: center; gap: 8px; }
+    .window-light { width: 13px; height: 13px; padding: 0; border: 0; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(37,32,29,.2), 0 1px 4px rgba(37,32,29,.16); }
+    .window-light.red { background: #ef5b60; cursor: pointer; }
+    .window-light.yellow { background: #e8b52f; }
+    .window-light.green { background: #35bf62; }
+    .window-light.red:hover { filter: brightness(1.08); transform: scale(1.08); }
+    .embedded .window-lights { display: none !important; }
+    @media (max-width: 600px) {
+      .entry-copy { width: min(390px, calc(100vw - 32px)); padding: 22px 20px 20px; }
+      .window-lights { top: 13px; left: 16px; }
+    }
+  </style>
+  <style>
+    .entry-copy { display:grid; grid-template-columns:108px 1px minmax(0,1fr); gap:26px; align-items:stretch; width:min(760px,calc(100vw - 54px)); min-height:350px; padding:44px 48px 40px; text-align:left; }
+    .entry-number { align-self:start; color:rgba(70,92,107,.58); font:500 clamp(72px,10vw,112px)/.78 Georgia,"Songti SC",serif; letter-spacing:-.08em; }
+    .entry-divider { width:1px; min-height:230px; background:rgba(70,92,107,.34); }
+    .entry-body { min-width:0; }
+    .entry-kicker { margin-top:2px; color:#465C6B; }
+    .entry-copy h2 { margin:25px 0 14px; font-size:clamp(28px,4vw,46px); line-height:1.05; }
+    .entry-copy p { max-width:390px; margin:0; font-size:12px; line-height:1.75; }
+    .entry-list { display:grid; gap:5px; margin-top:22px; color:#465C6B; font:10px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace; }
+    .entry-list span { display:flex; justify-content:space-between; border-bottom:1px solid rgba(70,92,107,.16); padding-bottom:4px; }
+    .entry-hint { margin-top:25px; }
+    @media(max-width:600px){.entry-copy{grid-template-columns:55px 1px minmax(0,1fr);gap:14px;width:min(440px,calc(100vw - 42px));padding:28px 22px 25px}.entry-number{font-size:72px}.entry-divider{min-height:220px}.entry-copy h2{font-size:28px;margin-top:20px}.entry-copy p{font-size:11px}.entry-list{font-size:9px;margin-top:18px}}
+  </style>
+  <style>
+    .right-panel { scrollbar-width: thin; scrollbar-color: #984536 rgba(156,142,123,.12); }
+    .right-panel::-webkit-scrollbar { width: 5px; }
+    .right-panel::-webkit-scrollbar-track { background: rgba(156,142,123,.12); }
+    .right-panel::-webkit-scrollbar-thumb { background: #984536; border: 1px solid transparent; background-clip: padding-box; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <div class="entry-screen" id="entryScreen" role="dialog" aria-modal="true" aria-label="Finance Agent 系统地图介绍">
+    <div class="entry-copy" id="entryCopy" role="button" tabindex="0" aria-label="点击进入 Finance Agent 系统地图">
+      <div class="entry-number">01</div><div class="entry-divider" aria-hidden="true"></div>
+      <div class="entry-body"><div class="entry-kicker">FEATURED SYSTEM · RUNTIME MAP</div>
+        <h2>让模型提方案，<br>让系统掌握执行边界</h2>
+        <p>一张可交互的 2D 系统运行地图。沿着请求、审查、只读执行与证据轨道，看一次财务 Agent 如何把动作留在边界内。</p>
+        <div class="entry-list" aria-label="Finance Agent 内容目录"><span>01 / 接住请求</span><span>02 / 审查方法</span><span>03 / 用户确认</span><span>04 / 返回证据</span></div>
+        <span class="entry-hint">CLICK CARD TO ENTER</span>
+      </div>
+    </div>
+  </div>
+  <main class="shell">
+    <div class="window-lights" aria-label="窗口控制">
+      <button class="window-light red" id="entryBack" type="button" aria-label="返回介绍卡"></button>
+      <span class="window-light yellow" aria-hidden="true"></span>
+      <span class="window-light green" aria-hidden="true"></span>
+    </div>
+    <header class="topbar">
+      <div class="brand"><h1>Finance Agent · 系统运行地图</h1></div>
+      <div class="top-meta"><span>固定 2D / 正交构图</span><span>14 个关键模块</span><span class="live">运行演示</span></div>
+    </header>
+
+    <div class="workspace">
+      <nav class="left-panel" aria-label="系统职责空间">
+        <div class="panel-kicker">The System</div>
+        <div class="panel-heading">Responsibility Zones</div>
+        <div class="zone-nav" id="zoneNav"></div>
+        <section class="run-box" aria-label="主路径演示">
+          <div class="panel-kicker">The Runtime</div>
+          <div class="run-controls">
+            <button class="run-button" id="playButton" type="button">Ⅱ &nbsp;暂停主路径</button>
+            <button class="step-button" id="stepButton" type="button" title="下一步" aria-label="主路径下一步">→</button>
+          </div>
+          <div class="flow-status">CURRENT / <b id="flowStep">01 API 入口</b><br>只读数据访问发生在确认之后</div>
+        </section>
+      </nav>
+
+      <section class="map-panel" aria-label="Finance Agent 系统运行架构图">
+        <div class="map-head"><strong>RUNTIME TOPOLOGY / ORTHOGRAPHIC MAP</strong><span>Zone 只表示职责归属；粗锈红线表示真实请求路径</span></div>
+        <div class="map-tools" aria-label="地图缩放">
+          <button class="map-tool" id="zoomIn" type="button" aria-label="放大">+</button>
+          <button class="map-tool" id="zoomOut" type="button" aria-label="缩小">−</button>
+          <button class="map-tool" id="zoomReset" type="button" aria-label="重置">↺</button>
+        </div>
+        <svg id="systemMap" viewBox="0 0 1120 760" role="img" aria-labelledby="mapTitle mapDesc" preserveAspectRatio="xMidYMid meet">
+          <title id="mapTitle">Finance Agent 固定二维系统运行地图</title>
+          <desc id="mapDesc">请求从 API 入口进入 Agent Control Core，经过方法审查与用户确认后进入只读执行，最终返回结果回复。上下文、安全护栏与证据轨道以较弱虚线表示。</desc>
+          <defs>
+            <pattern id="hatchLight" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(25)"><rect width="5" height="5" fill="#fbf3e2"/><line x1="0" y1="0" x2="0" y2="5" stroke="#9c967f" stroke-width=".65"/></pattern>
+            <pattern id="hatchSage" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(25)"><rect width="5" height="5" fill="#dce2d5"/><line x1="0" y1="0" x2="0" y2="5" stroke="#7c8977" stroke-width=".7"/></pattern>
+            <pattern id="hatchRust" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(25)"><rect width="5" height="5" fill="#edcfbc"/><line x1="0" y1="0" x2="0" y2="5" stroke="#a65b45" stroke-width=".8"/></pattern>
+            <marker id="arrowMain" viewBox="0 0 10 10" refX="8.6" refY="5" markerWidth="4.5" markerHeight="4.5" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#9a4938"/></marker>
+            <marker id="arrowContext" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#4d5d9e"/></marker>
+            <marker id="arrowGuardrail" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#19786e"/></marker>
+            <marker id="arrowEvidence" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#c27a32"/></marker>
+          </defs>
+
+          <g id="zones">
+            <path class="zone-boundary" data-zone="surface" d="M26 230 L181 214 L232 257 L217 448 L232 669 L158 712 L53 691 L23 611 L38 402 Z"/>
+            <path class="zone-boundary support" data-zone="context" d="M222 45 L817 37 L866 78 L844 182 L733 201 L309 190 L207 134 Z"/>
+            <path class="zone-boundary" data-zone="core" d="M247 212 L790 207 L806 256 L804 394 L714 423 L330 414 L240 365 Z"/>
+            <path class="zone-boundary" data-zone="review" d="M818 214 L1093 218 L1101 425 L1044 454 L862 451 L818 392 Z"/>
+            <path class="zone-boundary support" data-zone="execution" d="M706 480 L1087 476 L1100 685 L1017 711 L751 698 L706 628 Z"/>
+            <path class="zone-boundary support" data-zone="evidence" d="M270 471 L664 466 L686 532 L668 594 L552 615 L315 603 L257 548 Z"/>
+          </g>
+
+          <g id="zoneLabels">
+            <text class="zone-label" x="46" y="252">ZONE 01 / SURFACE</text>
+            <text class="zone-title" x="46" y="272">Surface</text>
+            <text class="zone-label" x="238" y="67">ZONE 03 / CONTEXT &amp; POLICY</text>
+            <text class="zone-title" x="238" y="87">Context &amp; Policy</text>
+            <text class="zone-label core" x="530" y="235" text-anchor="middle">ZONE 02 / DECISION SPACE</text>
+            <text class="zone-title core" x="530" y="259" text-anchor="middle">Agent Control Core</text>
+            <text class="zone-label" x="838" y="241">ZONE 04 / REVIEW GATE</text>
+            <text class="zone-title" x="838" y="261">Review Gate</text>
+            <text class="zone-label" x="724" y="499">ZONE 05 / READ-ONLY EXECUTION</text>
+            <text class="zone-title" x="724" y="519">Read-only Execution</text>
+            <text class="zone-label" x="280" y="494">ZONE 06 / EVIDENCE</text>
+            <text class="zone-title" x="280" y="514">Evidence</text>
+          </g>
+
+          <g id="supportEdges">
+            <path class="edge edge-context" marker-end="url(#arrowContext)" d="M342 162 V277"/>
+            <path class="edge edge-context" marker-end="url(#arrowContext)" d="M509 162 V218 H390 V277"/>
+            <path class="edge edge-context" marker-end="url(#arrowContext)" d="M676 162 V218 H680 V277"/>
+            <path class="edge edge-guardrail" marker-end="url(#arrowGuardrail)" d="M746 136 H887 V280"/>
+            <path class="edge edge-guardrail" marker-end="url(#arrowGuardrail)" d="M887 358 V478 H955 V508"/>
+            <path class="edge edge-evidence" d="M944 585 V594 H396"/>
+            <path class="edge edge-evidence" d="M835 602 V594"/>
+            <path class="edge edge-evidence" d="M581 594 V578"/>
+            <path class="edge edge-evidence" d="M396 594 V578"/>
+            <path class="edge edge-evidence" marker-end="url(#arrowEvidence)" d="M330 554 H125 V583"/>
+            <g id="evidenceDirections" aria-hidden="true">
+              <path class="evidence-direction" marker-end="url(#arrowEvidence)" d="M735 594 H700"/>
+              <path class="evidence-direction" marker-end="url(#arrowEvidence)" d="M540 594 H505"/>
+            </g>
+            <text class="edge-label label-context" x="528" y="207">CONTEXT</text>
+            <text class="edge-label label-guardrail" x="757" y="131">GUARDRAIL</text>
+            <text class="edge-label label-evidence" x="520" y="609">EVIDENCE TRACK</text>
+          </g>
+
+          <g id="branchEdges">
+            <path class="edge edge-branch" d="M530 358 V450 H20 V610 H70"/>
+            <path class="branch-direction" marker-end="url(#arrowMain)" d="M32 610 H58"/>
+            <path class="edge edge-branch" marker-end="url(#arrowMain)" d="M887 292 V264 H710 V277"/>
+            <path class="edge edge-branch" marker-end="url(#arrowMain)" d="M1088 329 V95 H250 V250 H320 V277"/>
+          </g>
+
+          <g id="mainEdges">
+            <path class="edge edge-main" data-segment="0" d="M188 329 H285"/>
+            <path class="edge edge-main" data-segment="1" d="M426 329 H465"/>
+            <path class="edge edge-main" data-segment="2" d="M606 329 H645"/>
+            <path class="edge edge-main" data-segment="3" d="M786 329 H830"/>
+            <path class="edge edge-main" data-segment="4" d="M948 329 H970"/>
+            <path class="edge edge-main" data-segment="5" d="M1025 358 V522"/>
+            <path class="edge edge-main" data-segment="6" d="M1068 558 H1080 V638 H908"/>
+            <path class="edge edge-main" data-segment="7" d="M770 638 H188"/>
+            <g id="mainDirections" aria-hidden="true">
+              <path class="main-direction" marker-end="url(#arrowMain)" d="M250 329 H269"/>
+              <path class="main-direction" marker-end="url(#arrowMain)" d="M438 329 H456"/>
+              <path class="main-direction" marker-end="url(#arrowMain)" d="M618 329 H636"/>
+              <path class="main-direction" marker-end="url(#arrowMain)" d="M801 329 H821"/>
+              <path class="main-direction" marker-end="url(#arrowMain)" d="M952 329 H963"/>
+              <path class="main-direction" marker-end="url(#arrowMain)" d="M1025 463 V500"/>
+              <path class="main-direction" marker-end="url(#arrowMain)" d="M1080 588 V612"/>
+              <path class="main-direction" marker-end="url(#arrowMain)" d="M425 638 H396"/>
+            </g>
+            <text class="edge-label label-branch" x="477" y="629">RESULT RETURN</text>
+          </g>
+
+          <g id="checkpoints">
+            <g class="checkpoint" data-checkpoint="0" transform="translate(218 329)"><circle class="checkpoint-ring" r="7"/><circle class="checkpoint-dot" r="3.5"/></g>
+            <g class="checkpoint" data-checkpoint="1" transform="translate(792 329)"><circle class="checkpoint-ring" r="7"/><circle class="checkpoint-dot" r="3.5"/></g>
+            <g class="checkpoint" data-checkpoint="2" transform="translate(1025 430)"><circle class="checkpoint-ring" r="7"/><circle class="checkpoint-dot" r="3.5"/></g>
+            <g class="checkpoint" data-checkpoint="3" transform="translate(1080 590)"><circle class="checkpoint-ring" r="7"/><circle class="checkpoint-dot" r="3.5"/></g>
+            <g class="checkpoint" data-checkpoint="4" transform="translate(565 638)"><circle class="checkpoint-ring" r="7"/><circle class="checkpoint-dot" r="3.5"/></g>
+          </g>
+
+          <g id="modules"></g>
+          <circle id="flowTracer" class="flow-tracer" r="6" cx="125" cy="329"/>
+        </svg>
+      </section>
+
+      <aside class="right-panel" aria-live="polite">
+        <div class="right-header"><h2>What it does</h2><span id="detailCode">SYSTEM / 00</span></div>
+        <div class="overview">一条主线讲清楚请求如何完成；三组暗线解释系统为什么安全。模型可以提出方法，但不能绕过审查直接读取数据。</div>
+        <section class="detail">
+          <div class="panel-kicker" id="detailKicker">System Overview</div>
+          <h3 id="detailTitle">请求如何安全地完成</h3>
+          <p id="detailCopy">API 把请求交给控制核心。只有通过方法审查并获得用户确认，分析方法才会进入只读沙箱；执行结果和审计证据最终一起回到结果回复。</p>
+          <dl class="detail-meta">
+            <dt>所属空间</dt><dd id="detailZone">All zones</dd>
+            <dt>运行角色</dt><dd id="detailRole">主路径 + 三组支撑关系</dd>
+            <dt>代码映射</dt><dd id="detailSource">src/finance_agent</dd>
+          </dl>
+        </section>
+        <div class="legend" aria-label="线路图例">
+          <button class="legend-button main" type="button" data-focus="main"><i></i><span>主路径 / 用户请求的真实运行路径</span></button>
+          <button class="legend-button branch" type="button" data-focus="branch"><i></i><span>主路径分支 / 直接回复、重规划、拒绝</span></button>
+          <button class="legend-button context" type="button" data-focus="context"><i></i><span>上下文 / 模型、记忆、目录提供信息</span></button>
+          <button class="legend-button guardrail" type="button" data-focus="guardrail"><i></i><span>安全护栏 / 限制方法与执行边界</span></button>
+          <button class="legend-button evidence" type="button" data-focus="evidence"><i></i><span>证据轨道 / 结果、审计与状态留证</span></button>
+          <button class="legend-button event" type="button" data-focus=""><i></i><span>锈红圆点 / 事件检查点</span></button>
+          <button class="legend-button zone" type="button" data-focus=""><i></i><span>Zone 边界 / 只表达职责归属</span></button>
+        </div>
+      </aside>
+    </div>
+
+    <footer class="footer"><span>Hover / click a module to inspect · click a legend item to isolate a track</span><span>Finance Agent / Runtime Architecture / 2026</span></footer>
+  </main>
+
+  <script>
+    const NS = "http://www.w3.org/2000/svg";
+    const map = document.getElementById("systemMap");
+    const modulesLayer = document.getElementById("modules");
+    const tracer = document.getElementById("flowTracer");
+    const mainSegments = [...document.querySelectorAll(".edge-main")];
+
+    const zones = [
+      { id: "surface", no: "01", name: "Surface", sub: "入口 / 回复", copy: "系统与用户接触的表面：请求从 API 进入，最终结果从回复模块返回。" },
+      { id: "core", no: "02", name: "Agent Control Core", sub: "规划 / 校验 / 分析", copy: "控制核心把自然语言目标收紧为结构化、可审查且符合策略的分析方法。" },
+      { id: "context", no: "03", name: "Context & Policy", sub: "模型 / 记忆 / 策略", copy: "为规划提供必要语境与约束，但不拥有数据读取权限。" },
+      { id: "review", no: "04", name: "Review Gate", sub: "方法审查 / 用户确认", copy: "任何数据读取都必须先通过方法审查，再得到用户明确确认。" },
+      { id: "execution", no: "05", name: "Read-only Execution", sub: "沙箱 / 只读数据源", copy: "经确认的方法只在受限沙箱中执行，数据源连接始终保持只读。" },
+      { id: "evidence", no: "06", name: "Evidence", sub: "结果 / 审计 / 状态", copy: "保存结果引用、哈希、审计记录与运行状态，让每次读取都可追溯。" }
+    ];
+
+    const nodeData = [
+      { id: "api", seq: "01", title: "API 入口", type: "FASTAPI / SSE", zone: "surface", role: "主路径入口", source: "api/app.py", x: 70, y: 303, w: 110, h: 52, copy: "接收用户请求并建立运行上下文；执行过程中的关键状态通过事件流返回前端。" },
+      { id: "response", seq: "02", title: "响应规划", type: "RESPONSE PLAN", zone: "core", role: "意图与响应路由", source: "chat/response_plan.py", x: 285, y: 300, w: 130, h: 58, kind: "core", copy: "先判断请求是普通对话、帮助、澄清还是需要数据读取的分析任务。" },
+      { id: "validation", seq: "03", title: "动作校验", type: "TOOL DECISION", zone: "core", role: "能力边界校验", source: "chat/tool_decision.py", x: 465, y: 300, w: 130, h: 58, kind: "core", copy: "检查动作是否属于系统允许的技能与操作；不需要读取数据的请求可以在这里直接回复。" },
+      { id: "analysis", seq: "04", title: "分析计划", type: "ANALYSIS PLANNER", zone: "core", role: "生成结构化方法", source: "planner/analysis_planner.py", x: 645, y: 300, w: 130, h: 58, kind: "core", copy: "结合目录、业务语义和策略，把目标拆成字段、过滤条件、聚合与输出结构。" },
+      { id: "review-node", seq: "05", title: "方法审查", type: "HARNESS / VALIDATOR", zone: "review", role: "执行前安全闸门", source: "harness/validator.py", x: 830, y: 300, w: 110, h: 58, copy: "审查方法、SQL、字段与敏感数据边界；不合格的方法会被送回分析计划重新生成。" },
+      { id: "approval", seq: "06", title: "用户确认", type: "APPROVAL GATE", zone: "review", role: "用户授权", source: "graph/runtime.py", x: 970, y: 300, w: 110, h: 58, copy: "向用户展示将要执行的方法和读取范围。取消、修改或拒绝会回到响应规划。" },
+      { id: "sandbox", seq: "07", title: "只读沙箱", type: "SANDBOX RUNTIME", zone: "execution", role: "受限执行环境", source: "sandbox/runtime.py", x: 930, y: 530, w: 130, h: 55, kind: "support", copy: "只在隔离环境内运行已经审查并确认的方法，限制执行能力与资源边界。" },
+      { id: "source", seq: "08", title: "只读数据源", type: "READ-ONLY DB", zone: "execution", role: "受控数据读取", source: "executor/readonly_db.py", x: 770, y: 610, w: 130, h: 56, kind: "support", copy: "真实数据只从只读连接出现；系统不能通过这条路径修改生产数据。" },
+      { id: "reply", seq: "09", title: "结果回复", type: "RENDERER / REPLY", zone: "surface", role: "主路径出口", source: "renderer/reply_generator.py", x: 70, y: 595, w: 110, h: 54, copy: "把执行结果、必要说明和状态信息组织为用户可以直接阅读的最终回复。" },
+      { id: "llm", seq: "C1", title: "模型提供方", type: "LLM PROVIDER", zone: "context", role: "上下文提供方", source: "llm/provider.py", x: 280, y: 110, w: 124, h: 52, kind: "support", copy: "模型参与理解和规划，但不直接访问真实数据，也不能绕过审查触发执行。" },
+      { id: "memory", seq: "C2", title: "记忆上下文", type: "SELECTOR / SUMMARY", zone: "context", role: "相关上下文", source: "memory/selector.py", x: 447, y: 110, w: 124, h: 52, kind: "support", copy: "只选择与当前请求相关的对话摘要、引用和安全上下文，控制注入范围。" },
+      { id: "policy", seq: "C3", title: "目录与策略", type: "CATALOG + POLICY", zone: "context", role: "结构与约束", source: "metadata/catalog.py", x: 614, y: 110, w: 124, h: 52, kind: "support", copy: "目录描述可用数据结构，策略决定字段可见性、敏感边界和允许的读取方法。" },
+      { id: "result-store", seq: "E1", title: "结果存储", type: "PRIVATE RESULT STORE", zone: "evidence", role: "结果证据", source: "memory/private_result_store.py", x: 515, y: 530, w: 132, h: 48, kind: "support", copy: "保存受控结果引用、内容哈希与必要的结果元信息，避免原始结果无边界传播。" },
+      { id: "audit", seq: "E2", title: "审计与状态", type: "AUDIT / CHECKPOINT", zone: "evidence", role: "过程证据", source: "audit/audit_logger.py", x: 330, y: 530, w: 132, h: 48, kind: "support", copy: "记录规划、确认、执行、错误与恢复状态，为复核和故障恢复保留轨迹。" }
+    ];
+
+    const mainOrder = ["api", "response", "validation", "analysis", "review-node", "approval", "sandbox", "source", "reply"];
+    const zoneById = Object.fromEntries(zones.map(zone => [zone.id, zone]));
+    const nodeById = Object.fromEntries(nodeData.map(node => [node.id, node]));
+
+    function svgEl(name, attrs = {}) {
+      const element = document.createElementNS(NS, name);
+      Object.entries(attrs).forEach(([key, value]) => element.setAttribute(key, value));
+      return element;
+    }
+
+    function makeModule(node) {
+      const depth = node.kind === "core" ? 11 : 8;
+      const group = svgEl("g", {
+        class: `module ${node.kind || ""}`.trim(),
+        "data-node": node.id,
+        "data-zone": node.zone,
+        tabindex: "0",
+        role: "button",
+        "aria-label": `${node.title}：${node.role}`
+      });
+      const shadow = svgEl("rect", { class: "block-shadow", x: node.x + 10, y: node.y + 10, width: node.w, height: node.h });
+      const side = svgEl("polygon", { class: "block-side", points: `${node.x + node.w},${node.y} ${node.x + node.w + depth},${node.y - depth} ${node.x + node.w + depth},${node.y + node.h - depth} ${node.x + node.w},${node.y + node.h}` });
+      const top = svgEl("polygon", { class: "block-top", points: `${node.x},${node.y} ${node.x + depth},${node.y - depth} ${node.x + node.w + depth},${node.y - depth} ${node.x + node.w},${node.y}` });
+      const front = svgEl("rect", { class: "block-front", x: node.x, y: node.y, width: node.w, height: node.h });
+      const index = svgEl("text", { class: "node-index", x: node.x + 8, y: node.y + 13 }); index.textContent = node.seq;
+      const title = svgEl("text", { class: "node-title", x: node.x + node.w / 2, y: node.y + 25, "text-anchor": "middle" }); title.textContent = node.title;
+      const type = svgEl("text", { class: "node-type", x: node.x + node.w / 2, y: node.y + 42, "text-anchor": "middle" }); type.textContent = node.type;
+      const nativeTitle = svgEl("title"); nativeTitle.textContent = `${node.title} — ${node.copy}`;
+      group.append(nativeTitle, shadow, side, top, front, index, title, type);
+      group.addEventListener("click", event => { event.stopPropagation(); selectNode(node.id, true); });
+      group.addEventListener("keydown", event => {
+        if (event.key === "Enter" || event.key === " ") { event.preventDefault(); selectNode(node.id, true); }
+      });
+      return group;
+    }
+
+    nodeData.forEach(node => modulesLayer.appendChild(makeModule(node)));
+
+    const zoneNav = document.getElementById("zoneNav");
+    zones.forEach(zone => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "zone-button";
+      button.dataset.zone = zone.id;
+      button.innerHTML = `<span class="zone-no">${zone.no}</span><span><strong>${zone.name}</strong><small>${zone.sub}</small></span>`;
+      button.addEventListener("click", () => selectZone(zone.id));
+      zoneNav.appendChild(button);
+    });
+
+    const detailCode = document.getElementById("detailCode");
+    const detailKicker = document.getElementById("detailKicker");
+    const detailTitle = document.getElementById("detailTitle");
+    const detailCopy = document.getElementById("detailCopy");
+    const detailZone = document.getElementById("detailZone");
+    const detailRole = document.getElementById("detailRole");
+    const detailSource = document.getElementById("detailSource");
+
+    function clearSelection() {
+      document.querySelectorAll(".module.selected, .zone-boundary.active, .zone-button.active").forEach(element => element.classList.remove("selected", "active"));
+    }
+
+    function selectNode(id, pause = false) {
+      const node = nodeById[id]; if (!node) return;
+      if (pause) setRunning(false);
+      clearSelection();
+      document.querySelector(`.module[data-node="${id}"]`)?.classList.add("selected");
+      document.querySelector(`.zone-boundary[data-zone="${node.zone}"]`)?.classList.add("active");
+      document.querySelector(`.zone-button[data-zone="${node.zone}"]`)?.classList.add("active");
+      const zone = zoneById[node.zone];
+      detailCode.textContent = `${node.seq} / ${node.id.toUpperCase()}`;
+      detailKicker.textContent = `${zone.name} / ${node.role}`;
+      detailTitle.textContent = node.title;
+      detailCopy.textContent = node.copy;
+      detailZone.textContent = zone.name;
+      detailRole.textContent = node.role;
+      detailSource.textContent = node.source;
+    }
+
+    function selectZone(id) {
+      const zone = zoneById[id]; if (!zone) return;
+      setRunning(false); clearSelection();
+      document.querySelector(`.zone-boundary[data-zone="${id}"]`)?.classList.add("active");
+      document.querySelector(`.zone-button[data-zone="${id}"]`)?.classList.add("active");
+      detailCode.textContent = `ZONE / ${zone.no}`;
+      detailKicker.textContent = "Responsibility Space";
+      detailTitle.textContent = zone.name;
+      detailCopy.textContent = zone.copy;
+      detailZone.textContent = zone.name;
+      detailRole.textContent = zone.sub;
+      detailSource.textContent = nodeData.filter(node => node.zone === id).map(node => node.title).join(" · ");
+    }
+
+    document.querySelectorAll(".zone-boundary").forEach(boundary => {
+      boundary.addEventListener("click", event => { event.stopPropagation(); selectZone(boundary.dataset.zone); });
+    });
+
+    let focus = "";
+    document.querySelectorAll(".legend-button").forEach(button => {
+      button.addEventListener("click", () => {
+        const requested = button.dataset.focus;
+        focus = requested && focus !== requested ? requested : "";
+        map.dataset.focus = focus;
+        document.querySelectorAll(".legend-button").forEach(item => item.classList.toggle("active", Boolean(focus) && item.dataset.focus === focus));
+      });
+    });
+
+    const baseViewBox = [0, 0, 1120, 760];
+    let zoom = 1;
+    function applyZoom() {
+      const [x, y, w, h] = baseViewBox;
+      const viewW = w / zoom, viewH = h / zoom;
+      map.setAttribute("viewBox", `${x + (w - viewW) / 2} ${y + (h - viewH) / 2} ${viewW} ${viewH}`);
+    }
+    document.getElementById("zoomIn").addEventListener("click", () => { zoom = Math.min(1.35, zoom + .1); applyZoom(); });
+    document.getElementById("zoomOut").addEventListener("click", () => { zoom = Math.max(.82, zoom - .1); applyZoom(); });
+    document.getElementById("zoomReset").addEventListener("click", () => { zoom = 1; applyZoom(); });
+
+    const playButton = document.getElementById("playButton");
+    const stepButton = document.getElementById("stepButton");
+    const flowStep = document.getElementById("flowStep");
+    const checkpoints = [...document.querySelectorAll(".checkpoint")];
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const duration = 15000;
+    let running = !prefersReduced;
+    let elapsed = 0;
+    let lastTime = performance.now();
+    let lastStep = -1;
+
+    function setRunning(next) {
+      running = next && !prefersReduced;
+      playButton.textContent = running ? "Ⅱ  暂停主路径" : "▶  播放主路径";
+      lastTime = performance.now();
+    }
+
+    function renderFlow(progress) {
+      const safeProgress = ((progress % 1) + 1) % 1;
+      const segmentPosition = safeProgress * mainSegments.length;
+      const segmentIndex = Math.min(mainSegments.length - 1, Math.floor(segmentPosition));
+      const segmentProgress = segmentPosition - segmentIndex;
+      const segment = mainSegments[segmentIndex];
+      const total = segment.getTotalLength();
+      const point = segment.getPointAtLength(total * segmentProgress);
+      tracer.setAttribute("cx", point.x); tracer.setAttribute("cy", point.y);
+      const step = Math.min(mainOrder.length - 1, Math.floor(safeProgress * mainOrder.length));
+      document.querySelectorAll(".module.running").forEach(element => element.classList.remove("running"));
+      document.querySelector(`.module[data-node="${mainOrder[step]}"]`)?.classList.add("running");
+      checkpoints.forEach((checkpoint, index) => checkpoint.classList.toggle("passed", index < step));
+      const node = nodeById[mainOrder[step]];
+      flowStep.textContent = `${node.seq} ${node.title}`;
+      if (step !== lastStep && running) { selectNode(node.id, false); lastStep = step; }
+    }
+
+    function tick(now) {
+      const delta = Math.max(0, now - lastTime); lastTime = now;
+      if (running) elapsed = (elapsed + delta) % duration;
+      renderFlow(elapsed / duration);
+      requestAnimationFrame(tick);
+    }
+
+    playButton.addEventListener("click", () => setRunning(!running));
+    stepButton.addEventListener("click", () => {
+      setRunning(false);
+      const current = Math.floor((elapsed / duration) * mainOrder.length);
+      const next = (current + 1) % mainOrder.length;
+      elapsed = (next / mainOrder.length) * duration + 1;
+      renderFlow(elapsed / duration);
+      selectNode(mainOrder[next], false);
+    });
+
+    map.addEventListener("click", () => {
+      clearSelection();
+      detailCode.textContent = "SYSTEM / 00";
+      detailKicker.textContent = "System Overview";
+      detailTitle.textContent = "请求如何安全地完成";
+      detailCopy.textContent = "API 把请求交给控制核心。只有通过方法审查并获得用户确认，分析方法才会进入只读沙箱；执行结果和审计证据最终一起回到结果回复。";
+      detailZone.textContent = "All zones";
+      detailRole.textContent = "主路径 + 三组支撑关系";
+      detailSource.textContent = "src/finance_agent";
+    });
+
+    setRunning(running);
+    selectNode("api", false);
+    requestAnimationFrame(tick);
+
+    const params = new URLSearchParams(window.location.search);
+    const isEmbedded = params.get("embed") === "1";
+    const parentTargetOrigin = window.location.origin === "null" ? "*" : window.location.origin;
+    const entryScreen = document.getElementById("entryScreen");
+    const entryCopy = document.getElementById("entryCopy");
+    const entryBack = document.getElementById("entryBack");
+
+    function notifyParent(type) {
+      if (isEmbedded && window.parent !== window) {
+        window.parent.postMessage({ source: "finance-agent", type }, parentTargetOrigin);
+      }
+    }
+
+    function setDemoActive(active) {
+      document.body.classList.toggle("is-active", active);
+      entryScreen.classList.toggle("is-hidden", active);
+      if (active) {
+        document.body.classList.add("is-entering");
+        window.setTimeout(() => document.body.classList.remove("is-entering"), 520);
+        notifyParent("demo:entered");
+      } else {
+        notifyParent("demo:ready");
+      }
+    }
+
+    window.addEventListener("message", event => {
+      if (event.source === window.parent && (window.location.origin === "null" || event.origin === window.location.origin || event.origin === "null") && event.data?.type === "demo:close") setDemoActive(false);
+    });
+
+    if (isEmbedded) {
+      document.body.classList.add("embedded");
+      setDemoActive(false);
+    } else {
+      entryScreen.remove();
+    }
+
+    entryCopy.addEventListener("click", () => setDemoActive(true));
+    entryCopy.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setDemoActive(true); }
+    });
+    entryBack.addEventListener("click", () => setDemoActive(false));
+  </script>
+</body>
+</html>
