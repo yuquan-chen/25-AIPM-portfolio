@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Urban Ensemble / 城市合奏：把城市的功能与流动转译为可被听见的空间关系。">
+  <title>CityVibe / Southeast Study</title>
+  <style>
+    :root { --paper:#eee4cc; --paper-light:#f8f0df; --ink:#25211b; --muted:#817662; --green:#405248; --red:#984536; --blue:#526975; --gold:#b78642; --line:rgba(37,33,27,.42); --line-soft:rgba(37,33,27,.16); --page:min(1420px,calc(100vw - 44px)); }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; color:var(--ink); background:var(--paper); font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif; line-height:1.55; }
+    body::before { content:""; position:fixed; inset:0; z-index:20; pointer-events:none; opacity:.3; background:repeating-linear-gradient(0deg,rgba(65,48,29,.028),rgba(65,48,29,.028) 1px,transparent 1px,transparent 5px); mix-blend-mode:multiply; }
+    a { color:inherit; text-decoration:none; }
+    button,input { color:inherit; font:inherit; }
+    button { cursor:pointer; }
+    .mono,.eyebrow,.label,.meta { font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace; letter-spacing:.08em; text-transform:uppercase; }
+    h1,h2,h3 { font-family:Georgia,"Songti SC","STSong",serif; font-weight:500; }
+    .page { width:var(--page); margin:0 auto; padding-bottom:70px; }
+    .site-nav { min-height:72px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--line); }
+    .identity { font:600 19px/1 Georgia,"Songti SC",serif; }
+    .back { color:var(--red); font:10px/1 monospace; letter-spacing:.1em; }
+    .intro { display:grid; grid-template-columns:.63fr 1.37fr; gap:56px; align-items:start; padding:76px 0 44px; }
+    .eyebrow { color:var(--red); font-size:10px; }
+    h1 { margin:18px 0 24px; font-size:clamp(42px,4.2vw,66px); line-height:.96; letter-spacing:-.04em; }
+    h1 em { color:var(--red); font-style:normal; }
+    .intro-copy>p { max-width:480px; margin:0; color:#5b4e3e; font-size:16px; }
+    .thesis { max-width:480px; margin-top:32px; padding:15px 18px; border-left:2px solid var(--red); background:rgba(152,69,54,.06); color:#5b4e3e; font:16px/1.7 Georgia,"Songti SC",serif; }
+    .thesis small { display:block; margin-top:10px; color:var(--muted); font:9px/1.4 monospace; letter-spacing:.08em; text-transform:uppercase; }
+    .facts { display:flex; gap:22px; margin-top:30px; color:var(--muted); font:9px/1.45 monospace; }
+    .facts strong { display:block; margin-bottom:3px; color:var(--green); font:22px/1 Georgia,"Songti SC",serif; }
+    .study { border:1px solid var(--line); background:rgba(248,240,223,.5); box-shadow:10px 12px 0 rgba(64,82,72,.09); }
+    .study-head,.study-foot { display:flex; justify-content:space-between; align-items:center; gap:14px; padding:13px 16px; color:var(--green); font:10px/1.3 monospace; letter-spacing:.08em; }
+    .study-head { border-bottom:1px solid var(--line-soft); }
+    .study-foot { border-top:1px solid var(--line-soft); color:var(--muted); }
+    .study-foot strong { color:var(--red); font-weight:500; }
+    .tabs { display:grid; grid-template-columns:repeat(4,1fr); gap:5px; padding:12px 14px; }
+    .tab { min-height:33px; border:1px solid var(--line-soft); padding:6px 8px; color:var(--muted); background:transparent; font:9px/1 monospace; letter-spacing:.07em; }
+    .tab:hover,.tab[aria-selected=true] { border-color:var(--red); color:var(--paper-light); background:var(--red); }
+    .crop-frame { position:relative; width:calc(100% - 24px); margin:0 12px 12px; overflow:hidden; aspect-ratio:16/9; background:#d9c8a8; }
+    .crop-frame img,.crop-frame svg { position:absolute; inset:0; width:100%; height:100%; display:block; }
+    .road-image { object-fit:cover; }
+    .building-layer,.zone-layer,.road-mask-layer,.marker-layer,.flow-layer { opacity:0; transition:opacity .35s ease; pointer-events:none; }
+    .crop-frame.show-zones .building-layer,.crop-frame.show-zones .zone-layer,
+    .crop-frame.show-flow .building-layer,.crop-frame.show-flow .zone-layer,.crop-frame.show-flow .marker-layer { opacity:1; }
+    .crop-frame.show-road-mask .road-mask-layer,.crop-frame.show-flow .flow-layer,.crop-frame.show-city-scan .road-mask-layer { opacity:1; }
+    .road-mask-tint { fill:rgba(152,69,54,.78); mix-blend-mode:multiply; }
+    .road-mask-tint.yellow { fill:rgba(197,210,119,.82); mix-blend-mode:screen; opacity:0; }
+    .crop-frame.show-road-mask .road-mask-tint.red,.crop-frame.show-city-scan .road-mask-tint.red { animation:maskRedFlash var(--mask-duration,3s) steps(1,end) infinite; }
+    .crop-frame.show-road-mask .road-mask-tint.yellow,.crop-frame.show-city-scan .road-mask-tint.yellow { animation:maskYellowFlash var(--mask-duration,3s) steps(1,end) infinite; }
+    @keyframes maskRedFlash { 0%,49.99% { opacity:1; } 50%,100% { opacity:0; } }
+    @keyframes maskYellowFlash { 0%,49.99% { opacity:0; } 50%,100% { opacity:1; } }
+    .particle-layer { opacity:0; transition:opacity .35s ease; pointer-events:none; }
+    .particle-route { fill:none; stroke:#d1a13b; stroke-width:5; stroke-linecap:round; stroke-linejoin:round; opacity:.34; }
+    .road-particle { stroke:var(--paper-light); stroke-width:2; filter:drop-shadow(0 1px 2px rgba(37,33,27,.6)); }
+    .road-particle.forward { fill:#d1a13b; }
+    .road-particle.reverse { fill:#f4d28b; }
+    .city-image-layer { opacity:0; transition:opacity .45s ease; object-fit:fill; filter:saturate(.86) contrast(.98); }
+    .crop-frame.show-city-scan .city-image-layer { opacity:.84; }
+    .city-marker-layer { opacity:1; pointer-events:none; }
+    .city-marker { filter:drop-shadow(0 2px 2px rgba(20,18,14,.75)); }
+    .city-marker-outer { fill:rgba(255,255,255,.08); stroke:#ff5d73; stroke-width:6; }
+    .city-marker-outer.mall { stroke:#e6b936; }
+    .city-marker-outer.hospital { stroke:#f03d39; }
+    .city-marker-outer.police { stroke:#32599d; }
+    .city-marker-outer.school { stroke:#9c6e44; }
+    .city-marker-inner { fill:#fff8df; stroke:rgba(20,18,14,.56); stroke-width:3; }
+    .city-marker-inner.mall { fill:#fff0a6; }
+    .city-marker-inner.hospital { fill:#eee9e5; }
+    .city-marker-inner.police { fill:#c8cdca; }
+    .city-marker-inner.school { fill:#d9d2be; }
+    .city-marker-ring.mall { stroke:#e6b936; }
+    .city-marker-core.mall { fill:#fff0a6; stroke:#e6b936; }
+    .city-marker-ring.hospital { stroke:#cf3f45; }
+    .city-marker-core.hospital { fill:#fffdf5; stroke:#cf3f45; }
+    .city-marker-ring.police { stroke:#32599d; }
+    .city-marker-core.police { fill:#c8cdca; stroke:#32599d; }
+    .city-marker-ring.school { stroke:#5f8f68; }
+    .city-marker-core.school { fill:#f2ead0; stroke:#5f8f68; }
+    .city-marker-label-bg { fill:rgba(255,250,226,.97); stroke:rgba(20,18,14,.72); stroke-width:2; }
+    .city-marker-label { fill:#171510; font:700 19px monospace; letter-spacing:.06em; }
+    .scan-layer { opacity:0; transition:opacity .35s ease; pointer-events:none; }
+    .zone-image { opacity:.88; filter:saturate(.78) contrast(.98); }
+    .zone-fill { fill:rgba(64,82,72,.08); stroke:rgba(248,240,223,.9); stroke-width:3; stroke-dasharray:10 8; }
+    .zone-fill.commercial { fill:rgba(183,134,66,.15); stroke:var(--gold); }
+    .zone-fill.public { fill:rgba(82,105,117,.14); stroke:var(--blue); }
+    .zone-fill.education { fill:rgba(64,82,72,.15); stroke:var(--green); }
+    .zone-label { fill:var(--ink); font:600 16px monospace; letter-spacing:.06em; }
+    .zone-label-bg { fill:rgba(248,240,223,.9); stroke:rgba(37,33,27,.32); stroke-width:1; }
+    .zone-building { pointer-events:auto; cursor:pointer; }
+    .zone-building:hover .zone-fill,.zone-outline:hover { stroke-width:6; }
+    .zone-outline { fill:none; stroke-width:4; stroke-dasharray:12 8; pointer-events:auto; cursor:pointer; }
+    .marker-dot { fill:var(--red); stroke:var(--paper-light); stroke-width:3; }
+    .marker-dot.commercial { fill:var(--gold); }
+    .marker-dot.public { fill:var(--blue); }
+    .marker-dot.education { fill:var(--green); }
+    .marker-dot.transport { fill:var(--red); }
+    .marker-label-bg { fill:rgba(248,240,223,.92); stroke:rgba(37,33,27,.4); stroke-width:1; }
+    .marker-label { fill:var(--ink); font:20px monospace; font-weight:600; letter-spacing:.06em; }
+    .flow-path { fill:none; stroke-width:18; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:18 16; stroke-dashoffset:0; opacity:.98; filter:drop-shadow(0 1px 1px rgba(37,33,27,.55)); animation:flow 1.1s linear infinite; animation-play-state:paused; }
+    .flow-underlay { fill:none; stroke-width:22; stroke-linecap:round; stroke-linejoin:round; opacity:.24; }
+    .flow-underlay.red { stroke:var(--red); }
+    .flow-underlay.blue { stroke:var(--blue); }
+    .flow-underlay.green { stroke:var(--green); }
+    .crop-frame.show-flow .flow-path { animation-play-state:running; }
+    .flow-path.red { stroke:var(--red); }
+    .flow-path.blue { stroke:var(--blue); }
+    .flow-path.green { stroke:var(--green); }
+    .flow-particle { opacity:.98; fill:var(--red); stroke:var(--paper-light); stroke-width:3; }
+    .flow-particle.blue { fill:var(--blue); }
+    .flow-particle.green { fill:var(--green); }
+    @keyframes flow { to { stroke-dashoffset:-100; } }
+    .crop-note { position:absolute; left:14px; bottom:14px; z-index:4; padding:8px 10px; border:1px solid rgba(37,33,27,.3); color:var(--green); background:rgba(248,240,223,.86); font:9px/1.3 monospace; letter-spacing:.08em; }
+    .crop-coordinates { position:absolute; right:14px; bottom:14px; z-index:4; color:rgba(248,240,223,.9); text-shadow:0 1px 2px #25211b; font:9px/1 monospace; letter-spacing:.08em; }
+    .control-row { display:grid; grid-template-columns:auto 1fr auto; gap:12px; align-items:center; padding:0 14px 12px; color:var(--green); font:10px monospace; }
+    .control-row input { width:100%; accent-color:var(--red); }
+    .play { border:1px solid var(--red); padding:7px 10px; color:var(--red); background:transparent; font:9px monospace; letter-spacing:.08em; }
+    .play:hover,.play[aria-pressed=true] { color:var(--paper-light); background:var(--red); }
+    .reading { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:0 12px 12px; }
+    .reading-card { min-height:112px; padding:14px; border:1px solid var(--line-soft); background:rgba(248,240,223,.62); }
+    .reading-card .meta { color:var(--red); font-size:9px; }
+    .reading-card h3 { margin:8px 0 4px; font-size:20px; line-height:1; }
+    .reading-card p { margin:0; color:#5b4e3e; font-size:12px; }
+    .mask-control { display:grid; grid-template-columns:auto 1fr auto; gap:12px; align-items:center; padding:0 14px 12px; color:var(--green); font:10px monospace; }
+    .mask-control input { width:100%; accent-color:var(--red); }
+    .mask-control output { min-width:82px; text-align:right; color:var(--red); }
+    .section { margin-top:104px; }
+    .section-head { display:grid; grid-template-columns:.32fr .68fr; gap:36px; padding-bottom:24px; border-bottom:1px solid var(--line); }
+    .label { color:var(--red); font-size:10px; }
+    .section-head h2 { margin:0; font-size:clamp(34px,4.6vw,62px); line-height:.97; }
+    .section-head h2 small { display:block; max-width:660px; margin-top:18px; color:var(--muted); font:14px/1.6 Inter,sans-serif; letter-spacing:0; }
+    .mapping { display:grid; grid-template-columns:repeat(4,1fr); border:1px solid var(--line); border-top:0; }
+    .mapping article { min-height:145px; padding:16px; border-right:1px solid var(--line-soft); }
+    .mapping article:last-child { border-right:0; }
+    .mapping strong { display:block; margin:17px 0 6px; color:var(--green); font:21px/1 Georgia,"Songti SC",serif; }
+    .mapping p { margin:0; color:#5b4e3e; font-size:12px; }
+    .note { margin-top:12px; padding:17px; border:1px dashed rgba(152,69,54,.45); color:#5b4e3e; background:rgba(152,69,54,.045); font:13px/1.7 Georgia,"Songti SC",serif; }
+    footer { display:flex; justify-content:space-between; gap:20px; margin-top:100px; padding-top:15px; border-top:1px solid var(--line); color:var(--muted); font:9px monospace; letter-spacing:.08em; text-transform:uppercase; }
+    @media (max-width:980px) { .intro { grid-template-columns:1fr; gap:38px; } .intro-copy { max-width:740px; } .mapping { grid-template-columns:1fr 1fr; } .mapping article:nth-child(2n) { border-right:0; } .mapping article:nth-child(-n+2) { border-bottom:1px solid var(--line-soft); } }
+    @media (max-width:680px) { :root { --page:min(100% - 24px,620px); } .site-nav { min-height:60px; } .tabs { grid-template-columns:1fr 1fr; } .reading { grid-template-columns:1fr; } .section-head { grid-template-columns:1fr; gap:14px; } .mapping { grid-template-columns:1fr; } .mapping article,.mapping article:nth-child(2n) { border-right:0; border-bottom:1px solid var(--line-soft); } .mapping article:last-child { border-bottom:0; } footer { flex-direction:column; gap:7px; } }
+    @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:.01ms!important; animation-iteration-count:1!important; scroll-behavior:auto!important; } }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <nav class="site-nav"><a class="identity" href="../../index.html#top">25点学习.</a><a class="back" href="../../index.html#top">← BACK TO ARCHIVE</a></nav>
+    <main>
+      <section class="intro">
+        <div class="intro-copy">
+          <span class="eyebrow">CITYVIBE / URBAN ENSEMBLE / 01</span>
+          <h1>如果把城市<br>变成声音，<br><em>它会是<br>什么样子？</em></h1>
+          <p>我的专业是测绘工程，长期关注城市空间；我也一直喜欢声音。于是我开始思考：如果把城市中的功能、流动和空间关系转译成声音，一座城市会呈现怎样的听觉肖像？</p>
+          <div class="thesis">这不是给地图配一段背景音乐，而是尝试把城市数据按规则转译成一套可以被听见的空间关系。<small>URBAN DATA / SPATIAL RULES / AUDITORY PORTRAIT</small><small class="reference">RESEARCH THREAD / Adhitya · Sonifying Urban Rhythms · Urban Orchestra</small></div>
+          <div class="facts"><div><strong>POI</strong>城市功能分布</div><div><strong>OD</strong>空间移动关系</div><div><strong>HILBERT</strong>连续遍历路径</div></div>
+        </div>
+        <section class="study" aria-label="城市图像层叠实验">
+          <div class="study-head"><span>CITYVIBE / IMAGE STUDY</span><span id="status">CITY OVERLAY</span></div>
+          <div class="crop-frame static-city show-city-scan" id="cropFrame">
+            <img class="road-image" src="./assets/roads-southeast.png" alt="道路与绿化底图">
+            <svg class="road-mask-layer" viewBox="0 0 1920 1080" preserveAspectRatio="none" aria-label="从道路图像提取的透明路面蒙版"><defs><mask id="roadSurfaceMask" maskUnits="userSpaceOnUse"><rect width="1920" height="1080" fill="black"></rect><image href="./assets/road-surface-mask.png" x="0" y="0" width="1920" height="1080" preserveAspectRatio="none"></image></mask></defs><rect class="road-mask-tint red" width="1920" height="1080" mask="url(#roadSurfaceMask)"></rect><rect class="road-mask-tint yellow" width="1920" height="1080" mask="url(#roadSurfaceMask)"></rect></svg>
+            <img class="city-image-layer" src="./assets/city-southeast.png" alt="叠加在最上方的城市建筑图层">
+            <svg class="city-marker-layer" viewBox="0 0 1920 1080" preserveAspectRatio="none" aria-label="城市功能节点标记"><g id="cityMarkers"></g></svg>
+            <span class="crop-note">ROAD + CITY / IMAGE PROTOTYPE</span><span class="crop-coordinates">1920 × 1080</span>
+          </div>
+          <div class="mask-control"><span>ROAD MASK / VISUAL TEST</span><input id="maskDuration" type="range" min="0.5" max="3" step="0.1" value="1.5" aria-label="调整道路蒙版的切换时间"><output id="maskDurationOutput">1.5S</output></div>
+          <div class="reading"><aside class="reading-card"><span class="meta" id="readingMeta">VISUAL START</span><h3 id="readingTitle">先固定城市的空间现场</h3><p id="readingCopy">道路图作为底层空间，先把城市中可被读取的路网关系固定下来。</p></aside><aside class="reading-card"><span class="meta">CURRENT DEMO</span><h3 id="selectedTitle">道路与建筑的两层叠加</h3><p id="selectedCopy">城市主体图叠加在道路底图上，道路蒙版用颜色变化标记路网区域。这是当前版本的视觉原型，不是最终音频结果。</p></aside></div>
+          <div class="study-foot"><span id="flowSummary">ROAD MASK / IMAGE PROTOTYPE</span></div>
+        </section>
+      </section>
+      <section class="section"><header class="section-head"><span class="label">01 / RESEARCH THREAD</span><h2>先把城市拆开，<br>再让它拥有自己的声部。<small>我借鉴 Adhitya 关于 Urban Orchestra 的分层方法：先区分城市系统，再把具体元素转译成不同的听觉标识和声音参数。</small></h2></header><div class="mapping"><article><span class="mono">URBAN SYSTEMS</span><strong>先拆解城市</strong><p>自然环境、交通基础设施、城市形态、活动分布与城市设计元素。</p></article><article><span class="mono">URBAN ORCHESTRA</span><strong>再分配声部</strong><p>用不同的音色区分不同系统，让多个城市系统共同形成一支管弦乐队。</p></article><article><span class="mono">ACOUSTIC SIGNS</span><strong>细化到元素</strong><p>有真实声音的元素使用听觉图标；没有直接声音的元素建立象征或物理特征的声音标识。</p></article><article><span class="mono">AUDIO PARAMETERS</span><strong>写成声音参数</strong><p>继续处理音高、响度、时值与音色，让城市元素能够进入声音事件。</p></article></div><div class="note">研究脉络：<strong>城市系统 → 管弦声部 → 具体元素 → 声音参数</strong>。我借鉴这套分层结构，但重新组织自己的数据和空间遍历方式。</div></section>
+      <section class="section"><header class="section-head"><span class="label">02 / MY EXPERIMENT</span><h2>从城市数据，<br>走到一条可听见的路径。<small>POI 负责描述城市功能，OD 流补充城市中的移动关系，希尔伯特曲线则把二维空间转成连续的遍历序列。</small></h2></header><div class="mapping"><article><span class="mono">POI / FUNCTION</span><strong>城市的功能分布</strong><p>学校、医院、商业等 POI 让空间单元拥有可以被解释的语义。</p></article><article><span class="mono">OD / MOVEMENT</span><strong>城市的流动关系</strong><p>OD 数据补充起点与终点之间的移动，让城市不只是静态地图。</p></article><article><span class="mono">HILBERT / PATH</span><strong>保持空间连续</strong><p>希尔伯特曲线将二维城市转换为连续序列，减少遍历过程中的空间跳跃。</p></article><article><span class="mono">MIDI / OUTPUT</span><strong>把城市写成声音</strong><p>空间单元沿路径被读取，并根据映射关系触发声音事件，最终生成 MIDI。</p></article></div><div class="note">目前项目仍处于 Demo 阶段。映射关系和时序关系已经完成建模，也已经生成 MIDI 文件；但 MIDI 转换为真实音色时效果还不够理想，因此当前页面保留为研究与视觉实验。</div></section>
+    </main>
+    <footer><span>CITYVIBE / URBAN ENSEMBLE</span><span>POI + OD → HILBERT → MIDI</span><span><a href="../../index.html#top">25点学习 / BACK TO ARCHIVE</a></span></footer>
+  </div>
+  <script>
+    (() => {
+      const cropFrame = document.getElementById('cropFrame');
+      const tabs = [...document.querySelectorAll('.tab')];
+      const status = document.getElementById('status');
+      const readingMeta = document.getElementById('readingMeta');
+      const readingTitle = document.getElementById('readingTitle');
+      const readingCopy = document.getElementById('readingCopy');
+      const flowSummary = document.getElementById('flowSummary');
+      const timeRange = document.getElementById('timeRange');
+      const timeOutput = document.getElementById('timeOutput');
+      const flowToggle = document.getElementById('flowToggle');
+      const markerLayer = document.querySelector('.marker-layer');
+      const buildingLayer = document.querySelector('.building-layer');
+      const zoneClips = document.getElementById('zoneClips');
+      const zoneBuildings = document.getElementById('zoneBuildings');
+      const zoneOutlines = document.getElementById('zoneOutlines');
+      const flowPaths = document.getElementById('flowPaths');
+      const flowDots = document.getElementById('flowDots');
+      const SVG_NS = 'http://www.w3.org/2000/svg';
+      const cityMarkers = [
+        { id:'city-mall', label:'CITY MALL', type:'commercial', palette:'mall', x:345, y:78, labelX:365, labelY:42 },
+        { id:'hospital', label:'HOSPITAL', type:'public', palette:'hospital', x:760, y:340, labelX:780, labelY:304 },
+        { id:'police-east', label:'POLICE', type:'public', palette:'police', x:1400, y:520, labelX:1420, labelY:484 },
+        { id:'police-south', label:'POLICE 02', type:'public', palette:'police', x:585, y:735, labelX:605, labelY:700 },
+        { id:'school', label:'SCHOOL', type:'education', palette:'school', x:48, y:715, labelX:70, labelY:680 }
+      ];
+      const stageCopy = {
+        base: ['VISUAL START','先固定城市的空间现场','道路图作为底层空间，先把城市中可被读取的路网关系固定下来。','ROAD / BASE LAYER'],
+        zones: ['POI / VISUAL PROXY','让功能节点获得位置','当前页面的医院、学校和商业体是图像上的示意标注；真实 POI 数据用于后续空间单元分析。','POI / VISUAL REFERENCE'],
+        mask: ['ROAD MASK','标记可被读取的路网','同一道路蒙版在红色和低饱和黄绿色之间切换，用来观察路网边界如何从图像中被提取出来。','ROAD MASK / VISUAL TEST'],
+        scan: ['CITY OVERLAY','把城市主体叠加回来','城市主体图叠加在道路底图上，形成当前版本的视觉原型。它展示的是空间层叠关系，不是最终音频结果。','ROAD + CITY / IMAGE PROTOTYPE'],
+        flow: ['OD / DATA LAYER','把移动关系加入城市','OD 是项目使用的数据之一；当前页面还没有把真实 OD 流绘制成可交互粒子，这一层保留为后续连接。','OD / NEXT LAYER']
+      };
+      let data = null; let playing = false; let animationFrame = 0; let startedAt = 0;
+      function svg(name, attrs = {}) { const node = document.createElementNS(SVG_NS, name); Object.entries(attrs).forEach(([key,value]) => node.setAttribute(key,value)); return node; }
+      function renderCityMarkers() {
+        const layer = document.getElementById('cityMarkers');
+        cityMarkers.forEach((marker) => {
+          const group = svg('g', { class:'city-marker', transform:`translate(${marker.x} ${marker.y})` });
+          const palette = marker.palette || marker.type;
+          group.append(svg('circle', { class:`city-marker-outer ${palette}`, cx:0, cy:0, r:20 }));
+          group.append(svg('circle', { class:`city-marker-inner ${palette}`, cx:0, cy:0, r:8 }));
+          const labelWidth = Math.max(110, marker.label.length * 10 + 22);
+          const labelGroup = svg('g', { transform:`translate(${marker.labelX - marker.x} ${marker.labelY - marker.y})` });
+          labelGroup.append(svg('rect', { class:'city-marker-label-bg', x:0, y:-20, width:labelWidth, height:29, rx:2 }));
+          const label = svg('text', { class:'city-marker-label', x:9, y:0 }); label.textContent = marker.label; labelGroup.append(label);
+          group.append(labelGroup); layer.append(group);
+        });
+      }
+      function selectZone(zone) {
+        document.getElementById('selectedTitle').textContent = zone.label;
+        document.getElementById('selectedCopy').textContent = `${zone.note} 当前边界：图像识别 + 人工校准候选。`;
+        readingMeta.textContent = `ZONE / ${zone.type.toUpperCase()}`;
+        readingTitle.textContent = zone.label;
+        readingCopy.textContent = zone.note;
+        setStage('zones');
+      }
+      function renderZones() {
+        data.zones.forEach((zone) => {
+          const clipId = `clip-${zone.id}`;
+          const clip = svg('clipPath', { id:clipId, clipPathUnits:'userSpaceOnUse' });
+          clip.append(svg('polygon', { points:zone.polygon }));
+          zoneClips.append(clip);
+          const building = svg('g', { class:'zone-building', 'data-zone':zone.id, 'clip-path':`url(#${clipId})` });
+          building.append(svg('image', { class:'zone-image', href:'./assets/city-southeast.png', x:0, y:0, width:1920, height:1080, preserveAspectRatio:'none' }));
+          building.addEventListener('click', () => selectZone(zone));
+          zoneBuildings.append(building);
+          const outline = svg('polygon', { class:`zone-outline ${zone.type}`, points:zone.polygon, 'data-zone':zone.id });
+          outline.addEventListener('click', () => selectZone(zone));
+          zoneOutlines.append(outline);
+          const labelWidth = Math.max(116, zone.label.length * 10 + 26);
+          const label = svg('g', { transform:`translate(${zone.labelPosition[0]} ${zone.labelPosition[1]})`, class:'zone-tag', 'data-zone':zone.id });
+          label.append(svg('rect', { class:'zone-label-bg', x:0, y:-21, width:labelWidth, height:30, rx:2 }));
+          const text = svg('text', { class:'zone-label', x:10, y:0 }); text.textContent = zone.label; label.append(text);
+          label.addEventListener('click', () => selectZone(zone));
+          zoneOutlines.append(label);
+        });
+      }
+      async function prepareFlowRoutes() {
+        const image = new Image();
+        image.src = './assets/road-surface-mask.png';
+        await new Promise((resolve, reject) => { image.onload = resolve; image.onerror = reject; });
+        const canvas = document.createElement('canvas'); canvas.width = image.naturalWidth; canvas.height = image.naturalHeight;
+        const context = canvas.getContext('2d'); context.drawImage(image, 0, 0);
+        const pixels = context.getImageData(0, 0, canvas.width, canvas.height).data;
+        const gridWidth = 120; const gridHeight = 68; const cellWidth = canvas.width / gridWidth; const cellHeight = canvas.height / gridHeight;
+        const roadCells = new Set();
+        const hasRoad = (gx, gy) => {
+          const cx = Math.floor((gx + .5) * cellWidth); const cy = Math.floor((gy + .5) * cellHeight);
+          for (let y = Math.max(0, cy - 10); y <= Math.min(canvas.height - 1, cy + 10); y += 4) {
+            for (let x = Math.max(0, cx - 10); x <= Math.min(canvas.width - 1, cx + 10); x += 4) {
+              if (pixels[(y * canvas.width + x) * 4 + 3] > 100) return true;
+            }
+          }
+          return false;
+        };
+        for (let gy = 0; gy < gridHeight; gy += 1) for (let gx = 0; gx < gridWidth; gx += 1) if (hasRoad(gx, gy)) roadCells.add(`${gx},${gy}`);
+        const snapRoad = (point) => {
+          const startX = Math.max(0, Math.min(gridWidth - 1, Math.round(point[0] / cellWidth)));
+          const startY = Math.max(0, Math.min(gridHeight - 1, Math.round(point[1] / cellHeight)));
+          let best = null; let bestDistance = Infinity;
+          roadCells.forEach((key) => { const [gx, gy] = key.split(',').map(Number); const distance = (gx - startX) ** 2 + (gy - startY) ** 2; if (distance < bestDistance) { best = [gx, gy]; bestDistance = distance; } });
+          return best;
+        };
+        const findPath = (origin, destination) => {
+          const start = snapRoad(origin); const goal = snapRoad(destination); if (!start || !goal) return null;
+          const keyOf = (point) => `${point[0]},${point[1]}`; const startKey = keyOf(start); const goalKey = keyOf(goal);
+          const open = [{ point:start, score:0 }]; const cameFrom = new Map(); const cost = new Map([[startKey, 0]]);
+          const directions = [[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]];
+          while (open.length) {
+            open.sort((a,b) => a.score - b.score); const current = open.shift().point; const currentKey = keyOf(current); if (currentKey === goalKey) break;
+            directions.forEach(([dx,dy]) => { const next = [current[0] + dx, current[1] + dy]; const nextKey = keyOf(next); if (!roadCells.has(nextKey)) return; const nextCost = cost.get(currentKey) + ((dx && dy) ? 1.4 : 1); if (nextCost >= (cost.get(nextKey) ?? Infinity)) return; cost.set(nextKey, nextCost); cameFrom.set(nextKey, currentKey); const heuristic = Math.hypot(goal[0] - next[0], goal[1] - next[1]); open.push({ point:next, score:nextCost + heuristic }); });
+          }
+          if (!cameFrom.has(goalKey) && startKey !== goalKey) return null;
+          const points = [goal]; let cursor = goalKey;
+          while (cursor !== startKey) { cursor = cameFrom.get(cursor); if (!cursor) return null; points.push(cursor.split(',').map(Number)); }
+          points.reverse();
+          const simplified = points.filter((point, index) => index === 0 || index === points.length - 1 || index % 2 === 0);
+          return `M ${simplified.map(([gx,gy]) => `${Math.round((gx + .5) * cellWidth)} ${Math.round((gy + .5) * cellHeight)}`).join(' L ')}`;
+        };
+        data.flows.forEach((flow) => { if (flow.originPoint && flow.destinationPoint) flow.path = findPath(flow.originPoint, flow.destinationPoint) || flow.path; });
+      }
+      function renderMarkers() {
+        data.markers.filter((marker) => !data.zones.some((zone) => zone.id === marker.id)).forEach((marker) => {
+          const g = svg('g', { class:'marker', transform:`translate(${marker.x} ${marker.y})` });
+          const width = Math.max(112, marker.label.length * 12 + 22);
+          const text = svg('text', { class:'marker-label', x:18, y:7 }); text.textContent = marker.label;
+          g.append(svg('circle', { class:`marker-dot ${marker.type}`, cx:0, cy:0, r:10 }));
+          g.append(svg('rect', { class:'marker-label-bg', x:15, y:-25, width, height:35, rx:2 }));
+          g.append(text);
+          g.addEventListener('click', () => { document.getElementById('selectedTitle').textContent = marker.label; document.getElementById('selectedCopy').textContent = marker.note; readingMeta.textContent = `MARKER / ${marker.type.toUpperCase()}`; readingTitle.textContent = marker.label; readingCopy.textContent = marker.note; setStage('mask'); });
+          markerLayer.append(g);
+        });
+      }
+      function renderFlows() {
+        data.flows.forEach((flow,index) => {
+          const underlay = svg('path', { class:`flow-underlay ${flow.color}`, d:flow.path, 'data-flow-underlay':flow.id });
+          const path = svg('path', { class:`flow-path ${flow.color}`, d:flow.path, 'data-flow':flow.id });
+          flowPaths.append(underlay); flowPaths.append(path); flow._pathNode = path; flow._dotNodes = [];
+          const particleCount = flow.particleCount || 6;
+          for (let particleIndex = 0; particleIndex < particleCount; particleIndex += 1) {
+            const dot = svg('circle', { class:`flow-particle ${flow.color}`, r:particleIndex === 0 ? 11 : 8, cx:0, cy:0, 'data-flow-dot':flow.id });
+            flowDots.append(dot); flow._dotNodes.push(dot);
+          }
+          flow._delay = index * 1.1;
+        });
+      }
+      const roadRoutes = [
+        { id:'southwest-outer', speed:.055, particles:9, d:'M 936 913 L 904 913 L 872 913 L 840 913 L 808 913 L 776 913 L 744 913 L 712 913 L 680 913 L 648 897 L 616 897 L 584 881 L 552 866 L 520 850 L 488 834 L 456 818 L 424 818 L 392 802 L 360 786 L 328 770 L 296 754 L 264 739 L 232 723 L 200 707 L 184 707' },
+        { id:'northwest-east', speed:.068, particles:8, d:'M 1128 230 L 1096 230 L 1064 230 L 1032 214 L 1000 214 L 968 214 L 936 214 L 904 214 L 872 214 L 840 214 L 808 214 L 776 214 L 744 214 L 712 214 L 680 214 L 648 214 L 616 214 L 584 199 L 552 199 L 520 183 L 488 167 L 456 151 L 424 135 L 392 119 L 376 119' },
+        { id:'mall-central', speed:.048, particles:7, d:'M 376 135 L 408 135 L 440 151 L 472 167 L 504 167 L 536 167 L 568 167 L 600 167 L 632 199 L 664 230 L 696 262 L 728 294 L 760 326 L 792 357 L 824 389 L 856 421 L 856 437' },
+        { id:'west-loop', speed:.045, particles:7, d:'M 112 0 C 100 90 105 185 150 260 C 205 345 330 360 430 320 C 500 290 550 245 590 190' },
+        { id:'central-loop', speed:.052, particles:8, d:'M 430 320 C 520 270 600 260 680 300 C 760 340 820 400 900 430 C 980 455 1055 425 1110 370' },
+        { id:'north-east', speed:.072, particles:8, d:'M 720 0 C 760 80 760 170 820 235 C 900 310 1000 300 1100 250 C 1220 185 1300 120 1430 70' },
+        { id:'east-outer', speed:.061, particles:8, d:'M 1490 0 C 1510 100 1480 210 1435 320 C 1390 425 1470 520 1600 575 C 1740 635 1840 720 1900 840' },
+        { id:'west-central', speed:.05, particles:7, d:'M 30 610 C 130 650 230 680 350 680 C 470 680 560 625 650 570' },
+        { id:'east-diagonal', speed:.066, particles:8, d:'M 1020 355 C 1110 405 1200 465 1340 480 C 1490 500 1620 465 1780 520' },
+        { id:'south-north', speed:.058, particles:9, d:'M 915 1040 C 915 960 920 875 955 780 C 1000 665 1080 600 1120 530 C 1150 440 1110 360 1020 285' }
+      ];
+      const particleRoutes = document.getElementById('particleRoutes');
+      const roadParticles = document.getElementById('roadParticles');
+      let roadPlaying = false; let roadAnimationFrame = 0; let roadStartedAt = 0;
+      function renderRoadParticles() {
+        roadRoutes.forEach((route, routeIndex) => {
+          const path = svg('path', { class:'particle-route', d:route.d, 'data-road-route':route.id });
+          particleRoutes.append(path); route._pathNode = path; route._length = path.getTotalLength(); route._particles = [];
+          ['forward','reverse'].forEach((direction, directionIndex) => {
+            for (let particleIndex = 0; particleIndex < route.particles; particleIndex += 1) {
+              const particle = svg('circle', { class:`road-particle ${direction}`, r:directionIndex === 0 ? 6 : 5, cx:0, cy:0, 'data-road-particle':`${route.id}-${direction}-${particleIndex}` });
+              roadParticles.append(particle); route._particles.push({ node:particle, direction, offset:(particleIndex / route.particles + routeIndex * .037) % 1 });
+            }
+          });
+        });
+      }
+      function startRoadParticles() {
+        if (roadPlaying) return;
+        roadPlaying = true; roadStartedAt = performance.now();
+        const tick = (now) => {
+          if (!roadPlaying) return;
+          roadRoutes.forEach((route) => route._particles.forEach((particle) => {
+            const elapsed = (now - roadStartedAt) / 1000;
+            const forwardProgress = (particle.offset + elapsed * route.speed) % 1;
+            const progress = particle.direction === 'forward' ? forwardProgress : 1 - forwardProgress;
+            const point = route._pathNode.getPointAtLength(progress * route._length);
+            particle.node.setAttribute('cx', point.x); particle.node.setAttribute('cy', point.y);
+          }));
+          roadAnimationFrame = requestAnimationFrame(tick);
+        };
+        roadAnimationFrame = requestAnimationFrame(tick);
+      }
+      function stopRoadParticles() { roadPlaying = false; cancelAnimationFrame(roadAnimationFrame); }
+      function setStage(stage) {
+        cropFrame.className = `crop-frame ${stage === 'zones' ? 'show-zones' : stage === 'mask' ? 'show-road-mask' : stage === 'scan' ? 'show-city-scan' : stage === 'flow' ? 'show-flow' : ''}`;
+        tabs.forEach((tab) => tab.setAttribute('aria-selected', String(tab.dataset.stage === stage)));
+        const copy = stageCopy[stage]; status.textContent = copy[0]; readingMeta.textContent = copy[0]; readingTitle.textContent = copy[1]; readingCopy.textContent = copy[2]; flowSummary.textContent = copy[3];
+        stopRoadParticles();
+        if (stage !== 'flow' && playing) stopAnimation();
+        if (stage === 'flow') startAnimation();
+      }
+      function updateTime() {
+        const hour = Number(timeRange.value); const period = hour >= 7 && hour <= 9 ? 'MORNING' : hour >= 17 && hour <= 20 ? 'EVENING' : hour >= 11 && hour <= 14 ? 'MIDDAY' : 'QUIET';
+        timeOutput.textContent = `${String(hour).padStart(2,'0')}:00 / ${period}`;
+        data?.flows.forEach((flow) => { flow._weight = flow.period === '07:00–09:00' && period === 'MORNING' ? 1.8 : flow.period === '17:00–20:00' && period === 'EVENING' ? 1.8 : flow.period === 'ALL DAY' ? 1 : .35; });
+      }
+      function pointOnPath(path, progress) { const length = path.getTotalLength(); return path.getPointAtLength(((progress % 1) + 1) % 1 * length); }
+      function startAnimation() { if (playing) return; playing = true; flowToggle.setAttribute('aria-pressed','true'); flowToggle.textContent = 'PAUSE OD FLOW'; startedAt = performance.now(); const tick = (now) => { if (!playing) return; data.flows.forEach((flow) => { const speed = (flow._weight || 1) / 6000; flow._dotNodes.forEach((dot,particleIndex) => { const progress = ((now - startedAt) * speed + flow._delay / 6 + particleIndex / flow._dotNodes.length) % 1; const point = pointOnPath(flow._pathNode, progress); dot.setAttribute('cx',point.x); dot.setAttribute('cy',point.y); }); }); animationFrame = requestAnimationFrame(tick); }; animationFrame = requestAnimationFrame(tick); }
+      function stopAnimation() { playing = false; flowToggle.setAttribute('aria-pressed','false'); flowToggle.textContent = 'PLAY OD FLOW'; cancelAnimationFrame(animationFrame); }
+      tabs.forEach((tab) => tab.addEventListener('click', () => setStage(tab.dataset.stage)));
+      if (flowToggle) flowToggle.addEventListener('click', () => { if (playing) stopAnimation(); else { setStage('flow'); startAnimation(); } });
+      if (timeRange) timeRange.addEventListener('input', updateTime);
+      const maskDuration = document.getElementById('maskDuration');
+      const maskDurationOutput = document.getElementById('maskDurationOutput');
+      function updateMaskDuration() { const seconds = Number(maskDuration.value); cropFrame.style.setProperty('--mask-duration', `${seconds * 2}s`); maskDurationOutput.textContent = `${seconds.toFixed(1)}S`; }
+      maskDuration.addEventListener('input', updateMaskDuration);
+      updateMaskDuration();
+      renderCityMarkers();
+    })();
+  </script>
+</body>
+</html>
