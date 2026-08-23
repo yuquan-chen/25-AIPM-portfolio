@@ -207,6 +207,13 @@
       .topbar { min-height: 62px; }
       .brand-kicker { display: none; }
       .workspace { display: block; }
+      .left-panel { display: block; padding: 12px 18px; border-right: 0; border-bottom: 1px solid var(--hairline); }
+      .left-panel .panel-heading { margin-bottom: 10px; }
+      .zone-nav { display: flex; gap: 7px; overflow-x: auto; padding-bottom: 3px; scroll-snap-type: x proximity; }
+      .zone-button { flex: 0 0 166px; min-height: 52px; scroll-snap-align: start; }
+      .run-box { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 12px; align-items: end; }
+      .run-box .panel-kicker, .run-box .flow-status { grid-column: 1 / -1; }
+      .run-controls { margin-top: 0; }
       .map-panel { min-height: 560px; border-bottom: 1px solid var(--hairline); }
       #systemMap { min-height: 560px; }
       .right-panel { border: 0; padding: 0 18px 24px; }
@@ -217,9 +224,11 @@
       .brand { width: 100%; }
       .brand h1 { min-width: 0; overflow: hidden; font-size: 15px; white-space: nowrap; text-overflow: ellipsis; }
       .top-meta { display: none; }
-      .map-panel, #systemMap { min-height: 360px; }
+      .map-panel, #systemMap { min-height: 420px; }
       .map-head span { display: none; }
       .footer span:last-child { display: none; }
+      .map-tool { width: 44px; height: 44px; }
+      .run-button, .step-button { min-height: 44px; }
     }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }

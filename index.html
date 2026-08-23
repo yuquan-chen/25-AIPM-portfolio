@@ -46,6 +46,7 @@
     a { color: inherit; text-decoration: none; }
     button { color: inherit; font: inherit; }
     .page { width: var(--page); margin: 0 auto; padding-bottom: 44px; }
+    .page-top-anchor { display: block; width: 1px; height: 0; }
     .mono, .eyebrow, .section-index, .tag, .frame-meta, .nav-links, .project-meta, .ghost-label {
       font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
       letter-spacing: .08em;
@@ -88,6 +89,8 @@
     .floating-toc[open] .toc-toggle::before { content: "−"; }
     .floating-toc summary::before, .floating-toc summary::after { content: none !important; display: none; }
     .floating-toc .toc-label, .floating-toc .toc-panel { user-select: none; -webkit-user-select: none; }
+    .floating-toc.is-hidden { opacity: 0; pointer-events: none; }
+    .floating-toc.is-lower { top: auto; right: 12px; bottom: 14px; left: auto; }
     .toc-leaves { position: absolute; top: 7px; bottom: 7px; width: 21px; pointer-events: none; }
     .toc-leaves-left { left: -17px; }
     .toc-leaves-right { right: -17px; }
@@ -132,7 +135,7 @@
       font: 10px/1.35 "SFMono-Regular", Consolas, monospace;
       letter-spacing: .08em;
     }
-    .hero-copy { min-height: 600px; padding: 72px 58px 52px; display: flex; flex-direction: column; justify-content: center; border-right: 0; }
+    .hero-copy { min-height: 600px; padding: 54px 58px 52px; display: flex; flex-direction: column; justify-content: flex-start; border-right: 0; }
     .hero-copy { position: relative; }
     .city-inline-page { position: absolute; top: 50%; right: 0; left: auto; z-index: 4; display: block; width: var(--city-inline-width, 100%); height: var(--city-inline-height, 100%); padding: 0; border: 1px solid rgba(37,33,27,.48); border-right: 0; outline: none; color: var(--ink); background: #f4ead8; box-shadow: -8px 12px 0 rgba(64,82,72,.08), inset -16px 0 22px rgba(37,33,27,.055); opacity: 0; pointer-events: none; transform: translateY(-50%) translateX(-18px); transform-style: preserve-3d; perspective: 1200px; transition: opacity .32s ease, transform .46s cubic-bezier(.2,.74,.2,1); }
     .hero.city-inline-open .city-inline-page { opacity: 1; pointer-events: auto; transform: translateY(-50%) translateX(0); }
@@ -254,15 +257,18 @@
     .hero.city-page-flipping-prev .city-page-current { animation: city-page-flip-prev .72s cubic-bezier(.2,.72,.2,1) both; }
     @keyframes city-page-flip-next { 0% { transform: rotateY(0); opacity: 1; } 42% { transform: rotateY(-88deg); opacity: .2; } 58% { transform: rotateY(88deg); opacity: .2; } 100% { transform: rotateY(0); opacity: 1; } }
     @keyframes city-page-flip-prev { 0% { transform: rotateY(0); opacity: 1; } 42% { transform: rotateY(88deg); opacity: .2; } 58% { transform: rotateY(-88deg); opacity: .2; } 100% { transform: rotateY(0); opacity: 1; } }
-    .hero-copy h1 { max-width: 780px; margin: 26px 0 26px; font-size: clamp(58px, 6.5vw, 112px); line-height: .9; letter-spacing: -.05em; }
+    .hero-copy h1 { max-width: 780px; margin: 8px auto 26px; font-size: clamp(52px, 5vw, 88px); line-height: .96; letter-spacing: -.05em; text-align: center; }
     .hero-copy h1 em { display: block; color: var(--red); font-style: normal; }
-    .hero-copy p { max-width: 580px; margin: 0; font-size: 16px; }
+    .hero-copy p { max-width: 620px; margin: 0; font-size: 18px; line-height: 1.65; }
     .hero-copy p .key-point { color: var(--green); font-weight: 700; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    .hero-overview { max-width: 620px; margin: 0 0 20px !important; }
+    .hero-overview-path { color: var(--wine); font-weight: 700; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    .hero-overview-note { color: var(--red); font-size: 14px !important; }
     .hero-bottom { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-top: 44px; }
     .enter { width: 118px; aspect-ratio: 1; border: 1px solid var(--ink); border-radius: 50%; display: grid; place-items: center; font: 10px/1.2 monospace; transition: background .22s, color .22s; }
     .enter:hover { color: var(--paper-light); background: var(--ink); }
-    .hero-location { color: var(--muted); font: 10px/1.5 monospace; text-align: right; }
-    .hero-open { color: var(--red); font-size: 9px; letter-spacing: .05em; }
+    .hero-location { color: var(--muted); font: 13px/1.6 monospace; text-align: right; }
+    .hero-open { color: var(--red); font-size: 11px; letter-spacing: .05em; }
     .hero-right { position: relative; display: block; }
     .hero-art { overflow: hidden; min-height: 440px; color: var(--red); background: linear-gradient(135deg, rgba(255,255,255,.12), transparent); }
     .city-note { display: block; width: 100%; min-height: 600px; padding: 42px 42px 34px; overflow: visible; border: 0; color: var(--green); text-align: left; font: inherit; background-color: #f4ead8; background-image: repeating-linear-gradient(to bottom, transparent 0, transparent 35px, rgba(64,82,72,.10) 36px, transparent 37px); box-shadow: 10px 12px 0 rgba(64,82,72,.10); transform: rotate(.35deg); transition: transform .24s ease, box-shadow .24s ease; cursor: pointer; }
@@ -422,11 +428,26 @@
     .project-reference-status { align-self: flex-start; color: var(--muted); font: 700 10px/1.35 monospace; letter-spacing: .06em; text-transform: uppercase; }
     .section-head h2 { max-width: 900px; margin: 0; font-size: clamp(38px, 5vw, 76px); line-height: .98; letter-spacing: -.035em; }
     .section-head h2 small { display: block; margin-top: 18px; color: var(--muted); font: 13px/1.55 ui-sans-serif, sans-serif; letter-spacing: 0; }
+    .section-head h2 small.finance-title-meta { margin-top: 16px; color: var(--red); font: 700 24px/1.35 ui-sans-serif, sans-serif; letter-spacing: 0; text-align: right; text-decoration: none; }
+    .finance-section-head { display: block; margin-top: 28px; }
+    .finance-section-head h2 { max-width: none; text-align: center; }
+    .project-intro.finance-intro { grid-template-columns: 3fr 7fr; gap: 50px; align-items: start; }
+    .finance-intro .project-copy { max-width: none; }
+    .companion-section-head { display: block; margin-top: 28px; }
+    .companion-section-head h2 { max-width: none; text-align: center; }
+    .section-head h2 small.companion-title-meta { margin-top: 16px; color: var(--red); font: 700 24px/1.35 ui-sans-serif, sans-serif; letter-spacing: 0; text-align: right; text-decoration: none; }
+    .project-intro.companion-intro { grid-template-columns: 3fr 7fr; gap: 50px; align-items: start; }
+    .companion-intro .project-copy { max-width: none; }
+    .editing-section-head { display: block; margin-top: 28px; }
+    .editing-section-head h2 { max-width: none; text-align: center; }
+    .section-head h2 small.editing-title-meta { margin-top: 16px; color: var(--red); font: 700 24px/1.35 ui-sans-serif, sans-serif; letter-spacing: 0; text-align: right; text-decoration: none; }
+    .project-intro.editing-intro { grid-template-columns: 3fr 7fr; gap: 50px; align-items: start; }
+    .editing-intro .project-copy { max-width: none; }
     /* Part 之间的章节边界：像纸页上的折痕，提醒读者已经进入下一段。 */
-    .part-boundary { display: flex; align-items: center; gap: 16px; margin-top: 82px; color: var(--green); opacity: .82; }
+    .part-boundary { display: flex; align-items: center; gap: 18px; margin-top: 82px; color: var(--red); opacity: 1; }
     .part-boundary-line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(64,82,72,.34) 22%, rgba(152,69,54,.3) 78%, transparent); }
-    .part-boundary-mark { width: 34px; height: 23px; display: grid; place-items: center; border: 1px solid rgba(64,82,72,.28); background: rgba(246,239,223,.56); box-shadow: 3px 3px 0 rgba(64,82,72,.08); color: var(--red); font: 17px/1 Georgia, "Songti SC", serif; transform: rotate(-3deg); }
-    .part-boundary-label { color: rgba(64,82,72,.78); font: 9px/1 monospace; letter-spacing: .12em; white-space: nowrap; }
+    .part-boundary-mark { width: 42px; height: 28px; display: grid; place-items: center; border: 1px solid rgba(152,69,54,.42); background: rgba(246,239,223,.56); box-shadow: 3px 3px 0 rgba(152,69,54,.1); color: var(--red); font: 700 22px/1 Georgia, "Songti SC", serif; transform: rotate(-3deg); }
+    .part-boundary-label { color: var(--red); font: 700 12px/1 monospace; letter-spacing: .12em; white-space: nowrap; }
     .part-boundary + .section-head { margin-top: 28px; }
     .placeholder { min-height: 430px; display: grid; place-items: center; padding: 40px; background-image: linear-gradient(var(--line-soft) 1px, transparent 1px), linear-gradient(90deg, var(--line-soft) 1px, transparent 1px); background-size: 34px 34px; }
     .placeholder-inner { max-width: 680px; text-align: center; background: var(--paper); border: 1px solid var(--line); padding: 30px; }
@@ -610,6 +631,9 @@
       .hero-copy { min-height: 520px; border-right: 1px solid var(--line); }
       .currently { border-top: 1px solid var(--line); border-left: 0; }
       .section-head, .project-intro { grid-template-columns: 1fr; gap: 18px; }
+      .project-intro.finance-intro { grid-template-columns: 1fr; }
+      .project-intro.companion-intro { grid-template-columns: 1fr; }
+      .project-intro.editing-intro { grid-template-columns: 1fr; }
       .project-reference { min-height: 150px; margin-top: 14px; }
       .system-reading { grid-template-columns: repeat(2, 1fr); }
       .system-reading article:nth-child(2) { border-right: 0; }
@@ -627,27 +651,50 @@
 
     @media (max-width: 680px) {
       .page { width: calc(100% - 18px); }
-      .site-nav { min-height: 60px; }
-      .nav-links { gap: 14px; }
+      .site-nav { min-height: 60px; padding: 12px 0 10px; align-items: flex-start; flex-wrap: wrap; row-gap: 6px; }
+      .identity { flex: 1 0 100%; }
+      .nav-links { width: 100%; justify-content: space-between; gap: 6px; flex-wrap: wrap; font-size: 9px; }
+      .nav-links a { min-height: 44px; display: inline-flex; align-items: center; padding: 9px 4px; }
       .toc-panel { right: -42px; width: min(270px, calc(100vw - 36px)); }
-      .floating-toc { top: 72px; left: 12px; }
+      .floating-toc { top: 104px; left: 8px; }
       .floating-toc summary { width: 50px; min-height: 82px; padding: 9px 6px; }
       .floating-toc .toc-label { font-size: 15px; }
       .floating-toc .toc-leaves { transform: scale(.84); transform-origin: center; }
       .floating-toc .toc-panel { left: 0; right: auto; }
-      .nav-links a:not(:first-child):not(:last-child) { display: none; }
       .hero { margin-top: 20px; }
       .hero-copy { min-height: 510px; padding: 52px 24px 30px; }
-      .hero-copy h1 { font-size: 56px; }
+      .hero-copy h1 { font-size: 48px; }
+      .hero-copy p { font-size: 16px; line-height: 1.65; }
       .hero-art { min-height: 340px; }
       .city-note { min-height: 520px; padding: 34px 24px 26px; }
       .city-note::after { left: 58px; }
       .city-note-head, .city-note-foot { padding-left: 30px; }
       .city-note-body { min-height: 340px; padding: 28px 24px 30px 30px; }
       .city-note-modal { padding: 16px; overflow-y: auto; place-items: start center; }
-      .city-book { width: min(100%, 560px); height: auto; min-height: calc(100vh - 32px); margin: 16px 0; perspective: none; }
-      .city-book-spread { position: relative; display: block; overflow: hidden; filter: drop-shadow(8px 12px 0 rgba(33,30,25,.12)); }
-      .city-book-page { min-height: 540px; padding: 30px 26px 34px; }
+      /* Mobile notes use natural-height stacked sheets. The browser page is
+         the only scroll surface, so long prose is never trapped in a sheet. */
+      .hero.city-inline-open .hero-copy { min-height: 0; padding: 0; }
+      .hero.city-inline-open .hero-copy > *:not(.city-inline-page) { display: none; }
+      .city-inline-page { position: relative; top: auto; right: auto; left: auto; width: 100%; height: auto !important; min-height: 0; transform: none; border-right: 1px solid rgba(37,33,27,.48); opacity: 0; }
+      .hero.city-inline-open .city-inline-page { transform: none; opacity: 1; }
+      .city-inline-page > .city-page-sheet,
+      .city-book-right-page > .city-page-sheet { position: relative; inset: auto; display: none; height: auto; min-height: 0; overflow: visible; opacity: 0; pointer-events: none; transform: none; }
+      .hero.city-inline-open .city-inline-page > .city-page-sheet[data-page="1"],
+      .hero[data-city-spread="2"] .city-inline-page > .city-page-sheet[data-page="3"],
+      .hero[data-city-spread="3"] .city-inline-page > .city-page-sheet[data-page="5"],
+      .hero.city-inline-open .city-book-right-page > .city-page-sheet[data-page="2"],
+      .hero[data-city-spread="2"] .city-book-right-page > .city-page-sheet[data-page="4"],
+      .hero[data-city-spread="3"] .city-book-right-page > .city-page-sheet[data-page="blank"] { display: block; opacity: 1; pointer-events: auto; }
+      .hero[data-city-spread="2"] .city-inline-page > .city-page-sheet[data-page="1"],
+      .hero[data-city-spread="3"] .city-inline-page > .city-page-sheet[data-page="1"],
+      .hero[data-city-spread="3"] .city-inline-page > .city-page-sheet[data-page="3"],
+      .hero[data-city-spread="2"] .city-book-right-page > .city-page-sheet[data-page="2"],
+      .hero[data-city-spread="3"] .city-book-right-page > .city-page-sheet[data-page="2"],
+      .hero[data-city-spread="3"] .city-book-right-page > .city-page-sheet[data-page="4"] { display: none; opacity: 0; pointer-events: none; }
+      .city-book-right-page { position: relative; inset: auto; height: auto; min-height: 0; overflow: visible; border-left: 1px solid rgba(37,33,27,.48); }
+      .hero.city-inline-open .hero-right .city-note { display: none; }
+      .hero.city-inline-open .hero-right { display: block; }
+      .city-book-page { min-height: 0; padding: 30px 26px 34px; overflow: visible; }
       .city-book-left, .city-book-right { border: 1px solid rgba(37,33,27,.38); transform: none; opacity: 1; animation: none !important; }
       .city-book-right { border-top: 0; }
       .city-book-left::before { left: 52px; }
@@ -656,15 +703,30 @@
       .city-book-copy, .city-book-section, .city-book-flow, .city-book-list { margin-left: 24px; }
       .city-book-foot { margin: 22px 26px 0; }
       .city-book-figure { margin-left: 12px; }
-      .city-book-close { top: -10px; right: -4px; }
+      .city-book-close { top: -10px; right: -4px; width: 44px; height: 44px; }
+      .city-book-turn { width: 44px; height: 44px; }
+      .city-inline-page > .city-page-count,
+      .city-book-right-page > .city-page-count { position: relative; right: auto; bottom: auto; display: none; margin: 10px 18px 12px; text-align: right; }
+      .hero.city-inline-open .city-inline-page > .city-page-count[data-page-count="1"],
+      .hero[data-city-spread="2"] .city-inline-page > .city-page-count[data-page-count="3"],
+      .hero[data-city-spread="3"] .city-inline-page > .city-page-count[data-page-count="5"],
+      .hero.city-inline-open .city-book-right-page > .city-page-count[data-page-count="2"],
+      .hero[data-city-spread="2"] .city-book-right-page > .city-page-count[data-page-count="4"],
+      .hero[data-city-spread="3"] .city-book-right-page > .city-page-count[data-page-count="blank"] { display: block; opacity: 1; }
       .currently { border-left: 1px solid var(--line); border-top: 0; }
       .manifest { margin-top: 50px; padding: 30px 16px; flex-wrap: wrap; text-align: center; }
       .section-head { margin-top: 82px; }
-      .part-boundary { gap: 9px; margin-top: 58px; }
-      .part-boundary-label { font-size: 8px; letter-spacing: .07em; }
-      .part-boundary-mark { width: 29px; height: 21px; font-size: 15px; }
+      .finance-section-head { margin-top: 24px; }
+      .companion-section-head { margin-top: 24px; }
+      .editing-section-head { margin-top: 24px; }
+      .part-boundary { gap: 10px; margin-top: 58px; }
+      .part-boundary-label { font-size: 10px; letter-spacing: .07em; }
+      .part-boundary-mark { width: 34px; height: 24px; font-size: 18px; }
       .part-boundary + .section-head { margin-top: 24px; }
       .section-head h2 { font-size: 44px; }
+      .section-head h2 small.finance-title-meta { font-size: 20px; }
+      .section-head h2 small.companion-title-meta { font-size: 20px; }
+      .section-head h2 small.editing-title-meta { font-size: 20px; }
       .project-reference { min-height: 132px; padding: 12px 14px 11px; }
       .project-reference-title { margin-top: 8px; font-size: 24px; }
       .placeholder { min-height: 330px; padding: 16px; }
@@ -736,9 +798,40 @@
       .city-method-page[data-page="2"] .city-method-source { margin-top:2px; }
     }
   </style>
+  <style>
+    /* Keep the first inline note page readable on narrow screens without an inner scrollbar. */
+    @media (max-width:680px){
+      .city-page-sheet[data-page="1"] {
+        padding: 34px 18px 22px 124px;
+      }
+      .city-page-sheet[data-page="1"]::after {
+        left: 86px;
+      }
+      .city-page-sheet[data-page="1"] .city-page-copy {
+        max-width: none;
+        margin-bottom: 9px;
+        font-size: 12px;
+        line-height: 1.55;
+        text-indent: 1.5em;
+      }
+      .city-page-sheet[data-page="1"] .city-chapter-mark {
+        left: 28px;
+        gap: 10px;
+      }
+      .city-page-sheet[data-page="1"] .city-chapter-roman {
+        font-size: 14px;
+      }
+      .city-page-sheet[data-page="1"] .city-chapter-name,
+      .city-page-sheet[data-page="1"] .city-chapter-title {
+        font-size: 30px;
+        letter-spacing: .12em;
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="page">
+    <span id="top" class="page-top-anchor" aria-hidden="true"></span>
     <nav class="site-nav" aria-label="网站导航">
       <a class="identity" href="#top">25点学习.的产品作品集</a>
       <div class="nav-links">
@@ -761,16 +854,18 @@
     </details>
     <div class="page-turn" id="pageTurn" aria-hidden="true"><span>TURNING THE PAGE</span></div>
 
-    <main id="top">
+    <main>
       <section class="hero">
         <div class="hero-copy">
           <span class="box-label">B / PRIMARY IDENTITY</span>
-          <span class="eyebrow">AI PRODUCT MANAGER / AGENT RUNTIME / FULL-STACK / AI NATIVE</span>
-          <h1>设计有边界的<br><em>自主性。</em></h1>
-          <p>我是一个能全栈的<span class="key-point">AIPM</span>，做产品，也同时把它写出来。我的工作始终围绕一个问题：如何<span class="key-point">限制 AI</span>，让其能发挥出它真正的<span class="key-point">有界自主能力</span>。即它能够<span class="key-point">看见、判断、提议和行动</span>，同时<span class="key-point">知道什么时候该停下来</span>，<span class="key-point">把控制权还给人</span>，形成<span class="key-point">Human in the loop</span>；<span class="key-point">不只是 human 在 loop，它也同时会 loop</span>。</p>
+          <h1>设计有边界的<br><em>自主性</em></h1>
+          <p class="hero-overview">这是一个 PM 的作品集，想通过下述几个项目来传达我对 AI 的理解。<br><span class="hero-overview-path">从 AI 的行动边界 -&gt; AI 的主动性 -&gt; Human in the loop -&gt; 回到模型本身思考它的局限性</span><br><span class="hero-overview-note">注：右侧的城市可听化项目仅作引子使用</span></p>
+          <p>我是一个能全栈的 <span class="key-point">AIPM</span>，做产品，也把它写出来。</p>
+          <p>我的工作始终围绕一个问题：如何为 AI 设定边界，让它发挥真正的自主能力——<span class="key-point">看见、判断、提议和行动</span>，并在需要时停下来，<span class="key-point">把控制权还给人</span>。</p>
+          <p>这就是 <span class="key-point">Human in the loop</span>：不只是 human 在 loop，AI 也需要知道什么时候该 loop。</p>
           <div class="hero-bottom">
             <a class="enter" href="#works">ENTER<br>WORKS ↓</a>
-            <span class="hero-location">SHENZHEN<br>25点学习<br><span class="hero-open">AI NATIVE / TOC / AGENT ORCHESTRATE / CITY STUDY</span></span>
+            <span class="hero-location">SHENZHEN<br>25点学习<br><span class="hero-open">AI PM/ AI NATIVE / FULL-STACK / TOC / CITY STUDY</span></span>
           </div>
           <button class="city-inline-page" id="cityInlinePage" type="button" aria-label="左侧城市可听化研究笔记页面">
             <span class="city-book-window-controls" aria-label="书本窗口控制"><span class="city-book-window-dot city-book-window-dot-red city-book-close-inline" role="button" tabindex="0" title="关闭笔记" aria-label="关闭笔记"></span><span class="city-book-window-dot city-book-window-dot-yellow" aria-hidden="true"></span><span class="city-book-window-dot city-book-window-dot-green" aria-hidden="true"></span></span>
@@ -786,7 +881,7 @@
             <div class="city-note-body">
               <span class="city-note-kicker">CITYVIBE · A SMALL EXPERIMENT</span>
               <h2>如果把城市<br>变成声音，<br><em>它会是什么样子？</em></h2>
-              <p class="city-note-copy">从测绘工程出发，借鉴 Urban Orchestra，把城市的功能与流动关系，转译成一套可以被听见的空间规则。</p>
+              <p class="city-note-copy">从 Urban Orchestra 出发，把城市的功能与流动关系，转译成一套可以被听见的空间规则。</p>
               <div class="city-note-chain"><span>POI</span><span>OD</span><span>HILBERT</span><span>MIDI</span></div>
             </div>
             <div class="city-note-foot"><span>RESEARCH NOTE / 01</span><span class="city-note-open">OPEN NOTE ↗</span></div>
@@ -801,22 +896,20 @@
 
       <div class="part-boundary" aria-hidden="true"><span class="part-boundary-line"></span><span class="part-boundary-mark">❧</span><span class="part-boundary-label">TURN / 01 · FINANCE AGENT</span><span class="part-boundary-line"></span></div>
       <section id="works">
-        <header class="section-head">
+        <header class="section-head finance-section-head">
+          <h2>一个被规则限制并能够自检的财务查询 Agent<small class="finance-title-meta">-- AI 可以行动，但不能越过边界。</small></h2>
+        </header>
+        <div class="project-intro finance-intro">
           <div class="section-head-aside">
-            <span class="section-index">01 / FEATURED SYSTEM</span>
-            <div class="project-reference">
+            <a class="project-reference" href="https://my.feishu.cn/wiki/Th8vw2gsIik8fdkhmAiccuqYnog" target="_blank" rel="noreferrer" aria-label="打开财务查询 Agent 真实项目">
               <span class="project-reference-kicker">REAL PROJECT / 01</span>
               <div>
                 <h3 class="project-reference-title">财务查询 Agent</h3>
                 <p class="project-reference-note">实习项目：记录系统边界、查询链路与审计闭环。</p>
               </div>
-              <a class="project-reference-link" href="https://my.feishu.cn/wiki/Th8vw2gsIik8fdkhmAiccuqYnog" target="_blank" rel="noreferrer">打开真实项目 ↗</a>
-            </div>
+              <span class="project-reference-link">打开真实项目 ↗</span>
+            </a>
           </div>
-          <h2>一个被规则限制且能自检的<br>财务查询 Agent<small>测试环境中注册 170+ 张表、1000+ 个字段，完成约 50 条单表查询与约 100 条关联表查询，准确率达 90%；全链路可运行，并保留 Mock 数据试跑与审计追踪闭环。</small></h2>
-        </header>
-        <div class="project-intro">
-          <p class="project-statement">AI 可以行动，但不能越过边界。</p>
           <div>
             <p class="project-copy">一条查询请求进入系统后，会先和<span class="key-point">实际业务语言对齐</span>，再通过“<span class="key-point">查表 → 查字段</span>”的逐层披露完成二次对齐，确认查询的<span class="key-point">规范性与真实性</span>。<span class="key-point">LLM 只能提出方案</span>，只有<span class="key-point">被授权的动作才会进入只读执行</span>；查询统一通过 API 调用数据库，并在<span class="key-point">隔离沙箱</span>中完成，<span class="key-point">执行后立即销毁</span>。结果采用 <span class="key-point">Memory Throw Away</span> 机制，不让<span class="key-point">真实数据和敏感数据</span>留在上下文里。<br><br>我关心的不是让 Agent 看起来无所不能，而是把它<span class="key-point">可以做什么、不能做什么</span>，以及<span class="key-point">人在其中的授权和确认</span>，明确地放进系统里，即所谓的“<span class="key-point">Human in the Execute</span>”。</p>
             <div class="tag-row"><span class="tag">Harness Engineering</span><span class="tag">Human in the Execute</span><span class="tag">Evidence Track</span><span class="tag">Review Gate</span></div>
@@ -830,7 +923,7 @@
             <div class="scenario-badges"><span>INTERACTIVE SYSTEM DEMO</span><span>2D RUNTIME MAP</span></div>
           </div>
           <div class="demo-shell">
-            <iframe id="finance-demo" src="./projects/finance-agent/index.html?embed=1&amp;v=20260823-finance-kicker" title="Finance Agent 2D 系统运行地图" loading="lazy"></iframe>
+            <iframe id="finance-demo" src="./projects/finance-agent/index.html?embed=1&amp;v=20260823-finance-responsive" title="Finance Agent 2D 系统运行地图" loading="lazy"></iframe>
           </div>
           <div class="frame-bottom"><span class="frame-meta">可点击模块、职责分区与线路图例 · 支持主路径播放</span><strong>TRACE THE RUNTIME →</strong></div>
         </div>
@@ -845,28 +938,26 @@
 
       <section id="companion">
         <div class="part-boundary" aria-hidden="true"><span class="part-boundary-line"></span><span class="part-boundary-mark">❧</span><span class="part-boundary-label">TURN / 02 · COMPANION AGENT</span><span class="part-boundary-line"></span></div>
-        <header class="section-head">
+        <header class="section-head companion-section-head">
+          <h2>一个知道什么时候出现的陪伴 Agent<small class="companion-title-meta">-- AI 知道，什么时候该保持安静。</small></h2>
+        </header>
+
+        <div class="project-intro companion-intro">
           <div class="section-head-aside">
-            <span class="section-index">02 / HUMAN-CENTERED AGENT</span>
-            <div class="project-reference is-pending">
+            <a class="project-reference is-pending" href="./projects/companion-agent/assets/ebo.pdf" target="_blank" rel="noreferrer" aria-label="打开陪伴 Agent PDF 项目">
               <span class="project-reference-kicker">REAL PROJECT / 02</span>
               <div>
                 <h3 class="project-reference-title">陪伴 Agent · 鹅宝</h3>
                 <p class="project-reference-note">Tencent 比赛项目：记录输入信号、介入阈值与陪伴逻辑。</p>
               </div>
               <div class="project-reference-actions">
-                <a class="project-reference-link" href="./projects/companion-agent/assets/ebo.pdf" target="_blank" rel="noreferrer">打开 PDF ↗</a>
+                <span class="project-reference-link">打开 PDF ↗</span>
                 <span class="project-reference-warning">PDF 中的 Demo 链接已失效，如需体验请联系作者</span>
               </div>
-            </div>
+            </a>
           </div>
-          <h2>从输入侧识别犹豫，静默识别聊天场景，并及时提供帮助的陪伴型 Agent——鹅宝。<small>系统先观察真实数据中的输入信号，达到介入阈值后再分析上下文，决定是否递出一条可接受、也可忽略的建议。</small></h2>
-        </header>
-
-        <div class="project-intro">
-          <p class="project-statement">AI 知道，什么时候该保持安静。</p>
           <div>
-            <p class="project-copy">系统先保持安静，观察删除、停顿和输入速度等信号，从<span class="key-point">输入侧识别犹豫</span>；当这些指标累积超过<span class="key-point">介入阈值</span>后，再<span class="key-point">分析上下文</span>，判断用户是否真的需要帮助。十轮场景是 Mock，但其中的判断指标和介入逻辑来自真实数据机制。AI 可以主动递出下一步，却不能把一次停顿直接解释成“你需要帮助”；建议出现之后，用户仍然可以采用、忽略，或继续自己的表达。</p>
+            <p class="project-copy"><span class="key-point">我把用户的犹豫转化为可观察的输入信号</span>：系统先保持安静，观察删除、停顿和输入速度；指标超过<span class="key-point">介入阈值</span>后，再<span class="key-point">分析上下文</span>，判断用户是否真的需要帮助。十轮场景是 Mock，但其中的判断指标和介入逻辑来自真实数据机制。<span class="key-point">AI 可以递出下一步</span>，但不能把一次停顿直接解释成“你需要帮助”；建议出现之后，用户仍然可以采用、忽略，或继续自己的表达。</p>
             <div class="tag-row"><span class="tag">Input Dynamics</span><span class="tag">Proactive Agent</span><span class="tag">Human-AI Boundary</span><span class="tag">State Machine</span></div>
           </div>
         </div>
@@ -878,7 +969,7 @@
             <div class="scenario-badges"><span>INTERACTIVE SCENARIO DEMO</span><span>10-ROUND SCRIPTED MOCK</span></div>
           </div>
           <div class="demo-shell">
-            <iframe id="companion-demo" src="./projects/companion-agent/index.html?embed=1&amp;v=20260823-companion-title" title="陪伴式 Agent 十轮连续场景演示" loading="lazy"></iframe>
+            <iframe id="companion-demo" src="./projects/companion-agent/index.html?embed=1&amp;v=20260823-companion-responsive" title="陪伴式 Agent 十轮连续场景演示" loading="lazy"></iframe>
           </div>
           <div class="frame-bottom"><span class="frame-meta">自动运行 · 可采用或忽略建议 · 10 轮后自动重置</span><strong>WATCH THE AGENT DECIDE →</strong></div>
         </div>
@@ -893,9 +984,12 @@
 
       <section id="editing">
         <div class="part-boundary" aria-hidden="true"><span class="part-boundary-line"></span><span class="part-boundary-mark">❧</span><span class="part-boundary-label">TURN / 03 · EDITING AGENT</span><span class="part-boundary-line"></span></div>
-        <header class="section-head">
+        <header class="section-head editing-section-head">
+          <h2>一个不替创作者决定的剪辑 Agent<small class="editing-title-meta">-- AI 参与创作，但不替创作者决定。</small></h2>
+        </header>
+
+        <div class="project-intro editing-intro">
           <div class="section-head-aside">
-            <span class="section-index">03 / EDITING AGENT</span>
             <div class="project-reference is-pending">
               <span class="project-reference-kicker">REAL PROJECT / 03</span>
               <div>
@@ -905,13 +999,8 @@
               <span class="project-reference-status">暂未公开</span>
             </div>
           </div>
-          <h2>先用一句话创建分镜，制作视频；再不断对话，直到这个视频真正具有你的色彩。<small>先通过对话拆分镜并制作第一版，再把自然语言里的位置、节奏和感觉接回时间线，进入二次创作。</small></h2>
-        </header>
-
-        <div class="project-intro">
-          <p class="project-statement">AI 可以参与创作，但不能替创作者决定。</p>
           <div>
-            <p class="project-copy">先通过对话把模糊的想法拆成分镜，再<span class="key-point">执行制作</span>，得到第一版视频。真正具体的感觉往往在看到第一版之后才出现：“这里慢一点”“在这里加一个标题”“换一段音乐”——这些还没有说完整的感觉，都可以直接交给 Agent。<span class="key-point">对话负责理解</span>，<span class="key-point">时间线负责留下每一次改变</span>；你可以<span class="key-point">确认这版提案、调整节奏，或换一版</span>继续比较。标题、文本、转场和 BGM 都只是候选操作，<span class="key-point">最终留下什么，仍然由创作者决定</span>。</p>
+            <p class="project-copy"><span class="key-point">我把模糊的创作感觉接回时间线</span>：先通过对话把想法拆成分镜，<span class="key-point">执行制作</span>得到第一版；再把“这里慢一点”“在这里加一个标题”“换一段音乐”等反馈，变成<span class="key-point">可以看到、比较和继续修改的版本</span>。<span class="key-point">对话负责理解</span>，<span class="key-point">时间线负责留下每一次改变</span>；标题、文本、转场和 BGM 都只是候选操作，<span class="key-point">最终留下什么，仍然由创作者决定</span>。</p>
             <div class="tag-row"><span class="tag">Second Creation</span><span class="tag">Conversation → Timeline</span><span class="tag">Iterative Mock</span></div>
           </div>
         </div>
@@ -923,7 +1012,7 @@
             <div class="scenario-badges"><span>CONVERSATION-DRIVEN</span><span>SECOND CREATION MOCK</span></div>
           </div>
           <div class="demo-shell">
-            <iframe id="editing-demo" src="./projects/editing-agent/index.html?embed=1&amp;v=20260823-window-controls" title="剪辑 Agent 二次创作交互演示" loading="lazy"></iframe>
+            <iframe id="editing-demo" src="./projects/editing-agent/index.html?embed=1&amp;v=20260823-editing-responsive" title="剪辑 Agent 二次创作交互演示" loading="lazy"></iframe>
           </div>
           <div class="frame-bottom"><span class="frame-meta">无真实视频渲染 · 对话与时间线可交互 · 支持多次二次修改</span><strong>KEEP MAKING →</strong></div>
         </div>
@@ -1017,6 +1106,27 @@
         'companion-agent': document.getElementById('companion-demo'),
         'editing-agent': document.getElementById('editing-demo')
       };
+      const syncEmbeddedFrameHeight = (frame) => {
+        if (!frame) return;
+        // Mobile embeds need natural height for stacked content. Desktop keeps
+        // the authored frame heights so the workbench scale stays unchanged.
+        if (!window.matchMedia('(max-width:680px)').matches) {
+          frame.style.removeProperty('height');
+          return;
+        }
+        try {
+          const doc = frame.contentDocument;
+          if (!doc?.body) return;
+          const root = doc.documentElement;
+          const height = Math.ceil(Math.max(root?.scrollHeight || 0, doc.body.scrollHeight || 0, doc.body.offsetHeight || 0));
+          if (height > 0) frame.style.height = `${height}px`;
+        } catch (_) { /* cross-origin embeds keep their authored height */ }
+      };
+      const scheduleFrameHeight = (frame) => {
+        syncEmbeddedFrameHeight(frame);
+        window.setTimeout(() => syncEmbeddedFrameHeight(frame), 120);
+        window.setTimeout(() => syncEmbeddedFrameHeight(frame), 700);
+      };
       const setEntryMode = (frame, isEntry) => {
         if (!frame) return;
         frame.closest('.project-frame')?.classList.toggle('is-entry', isEntry);
@@ -1028,6 +1138,7 @@
         frame.addEventListener('load', () => {
           try { setEntryMode(frame, !frame.contentDocument?.body?.classList.contains('is-active')); }
           catch (_) { setEntryMode(frame, true); }
+          scheduleFrameHeight(frame);
         });
       });
       document.querySelectorAll('[data-close-agent]').forEach((button) => {
@@ -1046,7 +1157,7 @@
         if (!frame || event.source !== frame.contentWindow) return;
         if (window.location.origin !== 'null' && event.origin !== window.location.origin && event.origin !== 'null') return;
         if (event.data.type === 'demo:ready') setEntryMode(frame, true);
-        if (event.data.type === 'demo:entered') setEntryMode(frame, false);
+        if (event.data.type === 'demo:entered') { setEntryMode(frame, false); scheduleFrameHeight(frame); }
       });
       document.querySelectorAll('.toc-panel a').forEach((link) => {
         link.addEventListener('click', () => link.closest('.toc-menu')?.removeAttribute('open'));
@@ -1087,7 +1198,25 @@
       const syncCityInlineSize = () => {
         if (!cityNoteTrigger || !cityInlinePage) return;
         cityInlinePage.style.setProperty('--city-inline-width', `${cityNoteTrigger.offsetWidth}px`);
-        cityInlinePage.style.setProperty('--city-inline-height', `${cityNoteTrigger.offsetHeight}px`);
+        // The two inline book pages live in different hero columns. Match the
+        // opened left page to the right column's actual height so the spread
+        // stays level without changing either page's border treatment.
+        const rightHeight = cityBookRightPage?.getBoundingClientRect().height || 0;
+        const pageHeight = window.matchMedia('(max-width:680px)').matches
+          ? cityNoteTrigger.offsetHeight
+          : (rightHeight || cityNoteTrigger.offsetHeight);
+        cityInlinePage.style.setProperty('--city-inline-height', `${pageHeight}px`);
+      };
+      const syncMobileCityPageHeights = () => {
+        if (!hero || !cityInlinePage || !cityBookRightPage || !window.matchMedia('(max-width:680px)').matches) return;
+        const left = cityInlinePage.querySelector('.city-page-sheet[style*="display"]') || [...cityInlinePage.querySelectorAll('.city-page-sheet')].find((page) => getComputedStyle(page).display !== 'none');
+        const right = cityBookRightPage.querySelector('.city-page-sheet[style*="display"]') || [...cityBookRightPage.querySelectorAll('.city-page-sheet')].find((page) => getComputedStyle(page).display !== 'none');
+        if (!left || !right || !hero.classList.contains('city-inline-open')) return;
+        left.style.minHeight = '';
+        right.style.minHeight = '';
+        const pageHeight = Math.max(left.getBoundingClientRect().height, right.getBoundingClientRect().height);
+        left.style.height = `${pageHeight}px`;
+        right.style.height = `${pageHeight}px`;
       };
       const setCitySpread = (spread, direction = null) => {
         if (!hero) return;
@@ -1109,6 +1238,9 @@
         window.setTimeout(() => {
           hero.classList.remove(animationClass);
           currentPages.forEach((page) => page.classList.remove('city-page-current'));
+          const target = hero.getBoundingClientRect().top + window.scrollY - 12;
+          window.scrollTo({ top: Math.max(0, target), behavior: 'smooth' });
+          syncMobileCityPageHeights();
         }, 760);
       };
       const setCityInlineOpen = (open) => {
@@ -1122,12 +1254,19 @@
           delete hero.dataset.citySpread;
           hero.classList.remove('city-page-flipping-next', 'city-page-flipping-prev');
           document.querySelectorAll('.city-page-current').forEach((page) => page.classList.remove('city-page-current'));
+          document.querySelectorAll('.city-page-sheet').forEach((page) => { page.style.minHeight = ''; page.style.height = ''; });
         }
+        updateFloatingTocPosition?.();
+        window.setTimeout(syncMobileCityPageHeights, 50);
         if (open) cityInlinePage.focus({ preventScroll: true });
         else cityNoteTrigger.focus({ preventScroll: true });
+        if (open && window.matchMedia('(max-width:680px)').matches) {
+          // The trigger sits below the inline page on mobile; return to the opened note.
+          hero.scrollIntoView({ behavior: 'auto', block: 'start' });
+        }
       };
       syncCityInlineSize();
-      window.addEventListener('resize', syncCityInlineSize);
+      window.addEventListener('resize', () => { syncCityInlineSize(); syncMobileCityPageHeights(); });
       cityNoteTrigger?.addEventListener('click', () => setCityInlineOpen(true));
       const handleCityBookControl = (control) => {
         if (!control) return;
@@ -1194,6 +1333,14 @@
         });
       });
       const floatingToc = document.querySelector('.floating-toc');
+      const updateFloatingTocPosition = () => {
+        if (!floatingToc) return;
+        const cityOpen = hero?.classList.contains('city-inline-open');
+        floatingToc.classList.toggle('is-hidden', cityOpen);
+        if (!cityOpen) floatingToc.classList.toggle('is-lower', window.scrollY > 120);
+      };
+      window.addEventListener('scroll', updateFloatingTocPosition, { passive: true });
+      updateFloatingTocPosition();
       const tocHandle = floatingToc?.querySelector('summary');
       let tocDrag = null;
       tocHandle?.addEventListener('pointerdown', (event) => {
