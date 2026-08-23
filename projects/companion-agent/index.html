@@ -597,13 +597,6 @@
         .embedded.is-active .demo-header::after{content:"";grid-column:2;grid-row:1;width:1px;height:31px;background:rgba(55,44,36,.2)}
         .embedded.is-active .demo-header h1{grid-column:1;grid-row:1;margin:0;color:var(--companion-ink);font:500 20px/1.1 Georgia,"Songti SC",serif;letter-spacing:0}
         .embedded.is-active .demo-header p{grid-column:3;grid-row:1;margin:0;color:var(--companion-faded);font:11px/1.55 "Courier New",monospace;font-style:normal}
-        .companion-note{display:grid;grid-template-columns:minmax(230px,.9fr) repeat(3,1fr);border-bottom:1px solid rgba(55,44,36,.2);background:rgba(239,229,210,.25)}
-        .companion-note > div{padding:18px 22px 19px;border-right:1px solid rgba(55,44,36,.16)}
-        .companion-note > div:last-child{border-right:0}
-        .companion-note .note-kicker{display:block;margin-bottom:8px;color:var(--companion-wine);font:700 9px/1 "Courier New",monospace;letter-spacing:.12em}
-        .companion-note h2{margin:7px 0 6px;font:500 18px/1.25 Georgia,"Songti SC",serif}
-        .companion-note p{margin:0;color:var(--companion-ink);font-size:11px;line-height:1.62}
-        .companion-note .lead p{color:var(--companion-faded)}
         .embedded.is-active .demo-main{grid-template-columns:minmax(390px,.83fr) minmax(560px,1.17fr);gap:0;flex:1;min-height:0;height:0;overflow:hidden}
         .embedded.is-active .chat-interface{min-height:0;height:auto;border-radius:0;border:0;border-right:1px solid rgba(55,44,36,.2);padding:26px 28px;max-height:none;box-shadow:none}
         .embedded.is-active .perception-panel{border-radius:0;border:0;padding:26px 28px;box-shadow:none}
@@ -612,9 +605,7 @@
     .embedded.is-active .chat-messages::-webkit-scrollbar-track{background:rgba(156,142,123,.10)}
     .embedded.is-active .chat-messages::-webkit-scrollbar-thumb{background:#984536;border:1px solid transparent;background-clip:padding-box;border-radius:5px}
         .embedded.is-active .demo-footer{display:none}
-        body:not(.is-active) .companion-note{visibility:hidden;opacity:0;max-height:0;overflow:hidden;pointer-events:none}
-        @media(max-width:960px){.companion-note{grid-template-columns:1fr 1fr}.companion-note .lead{grid-column:1/-1;border-right:0;border-bottom:1px solid rgba(55,44,36,.16)}.companion-note > div:nth-child(3){border-right:0}.companion-note > div:nth-child(4){grid-column:1/-1;border-top:1px solid rgba(55,44,36,.16)}}
-        @media(max-width:700px){.embedded.is-active .demo-header{grid-template-columns:1fr;gap:7px}.embedded.is-active .demo-header::after{display:none}.embedded.is-active .demo-header h1,.embedded.is-active .demo-header p{grid-column:1;grid-row:auto}.embedded.is-active .demo-main{grid-template-columns:1fr;height:auto;overflow-y:auto;overflow-x:hidden}.embedded.is-active .chat-interface{height:560px;min-height:560px;flex:0 0 560px;border-right:0;border-bottom:1px solid rgba(55,44,36,.2)}.embedded.is-active .perception-panel{min-height:560px;border-right:0;border-bottom:1px solid rgba(55,44,36,.2)}.companion-note{grid-template-columns:1fr}.companion-note .lead,.companion-note > div:nth-child(4){grid-column:auto;border-right:0}.companion-note > div{border-right:0;border-top:1px solid rgba(55,44,36,.16)}}
+        @media(max-width:700px){.embedded.is-active .demo-header{grid-template-columns:1fr;gap:7px}.embedded.is-active .demo-header::after{display:none}.embedded.is-active .demo-header h1,.embedded.is-active .demo-header p{grid-column:1;grid-row:auto}.embedded.is-active .demo-main{grid-template-columns:1fr;height:auto;overflow-y:auto;overflow-x:hidden}.embedded.is-active .chat-interface{height:560px;min-height:560px;flex:0 0 560px;border-right:0;border-bottom:1px solid rgba(55,44,36,.2)}.embedded.is-active .perception-panel{min-height:560px;border-right:0;border-bottom:1px solid rgba(55,44,36,.2)}}
         .window-lights{position:absolute;top:14px;left:18px}
     </style>
   <style>
@@ -650,9 +641,202 @@
             .suggestion-actions{gap:8px}
             .suggestion-btn{min-height:44px;padding:10px 8px}
             .agent-suggestion{padding:16px;width:min(340px,calc(100vw - 24px));max-height:calc(100svh - 32px)}
-            .window-light{width:30px;height:30px;background:transparent!important;box-shadow:none;display:grid;place-items:center;position:relative}
+            .window-light{width:44px;height:44px;background:transparent!important;box-shadow:none;display:grid;place-items:center;position:relative}
             .window-light::before{content:"";width:13px;height:13px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(37,32,29,.2),0 1px 4px rgba(37,32,29,.16)}
             .window-light.red::before{background:#ef5b60}.window-light.yellow::before{background:#e8b52f}.window-light.green::before{background:#35bf62}
+        }
+    </style>
+    <style>
+        /* Companion palette: layered kraft paper, moss structure, clay intervention. */
+        :root {
+            --companion-paper: #e4d5b8;
+            --companion-ink: #2d2924;
+            --companion-wine: #8f5043;
+            --companion-blush: #c28769;
+            --companion-green: #3f5c52;
+            --companion-faded: #786c5b;
+            --companion-olive: #9aa487;
+            --companion-honey: #c99e5c;
+        }
+
+        body {
+            background:
+                linear-gradient(105deg, rgba(255,255,255,.14), transparent 34%, rgba(86,62,42,.07)),
+                repeating-linear-gradient(0deg, rgba(102,76,49,.035) 0 1px, transparent 1px 30px),
+                var(--companion-paper);
+        }
+
+        .embedded.is-active .demo-container {
+            background:
+                linear-gradient(90deg, rgba(255,255,255,.08), transparent 42%, rgba(71,56,39,.05)),
+                rgba(228,213,184,.58);
+        }
+
+        .embedded .embed-ribbon {
+            color: var(--companion-ink);
+            background: linear-gradient(90deg, #d2c09d, #eee1c4 48%, #d2c09d);
+            border-bottom-color: rgba(63,92,82,.42);
+        }
+
+        .embedded.is-active .demo-header {
+            background: linear-gradient(90deg, rgba(247,237,211,.92), rgba(215,194,157,.50));
+            border-bottom-color: rgba(63,92,82,.42);
+        }
+
+        .embedded.is-active .demo-header h1 { color: var(--companion-ink); }
+        .embedded.is-active .demo-header p { color: var(--companion-green); opacity: .88; }
+
+        .embedded.is-active .chat-interface {
+            background: linear-gradient(145deg, rgba(249,239,214,.86), rgba(211,194,158,.52));
+            border-right-color: rgba(63,92,82,.34);
+            box-shadow: inset 0 0 34px rgba(126,91,53,.10);
+        }
+
+        .embedded.is-active .perception-panel {
+            background: linear-gradient(155deg, rgba(238,230,201,.82), rgba(190,201,169,.42));
+            border-left: 1px solid rgba(63,92,82,.30);
+            box-shadow: inset 14px 0 28px rgba(63,92,82,.07);
+        }
+
+        .message.other {
+            background: linear-gradient(135deg, rgba(214,220,193,.88), rgba(235,226,198,.72));
+            border: 1px solid rgba(63,92,82,.28);
+            border-left: 3px solid var(--companion-green);
+            box-shadow: 0 5px 12px rgba(77,67,48,.12);
+        }
+
+        .message.user {
+            background: linear-gradient(135deg, #875047 0%, #b87861 58%, #c99572 100%);
+            box-shadow: 0 6px 16px rgba(111,65,54,.24);
+        }
+
+        .input-area {
+            border-color: rgba(143,80,67,.42);
+            background: linear-gradient(135deg, rgba(248,232,198,.92), rgba(205,181,140,.42));
+            box-shadow: inset 0 2px 8px rgba(121,80,51,.10), 0 4px 12px rgba(78,60,42,.08);
+        }
+
+        .input-hint { color: var(--companion-green); opacity: .78; }
+
+        .panel-title {
+            color: var(--companion-green);
+            font-weight: 700;
+        }
+
+        .status-indicator {
+            background: linear-gradient(90deg, rgba(181,198,164,.74), rgba(229,223,190,.72));
+            border-color: rgba(63,92,82,.28);
+            border-left: 3px solid var(--companion-green);
+            box-shadow: 0 4px 10px rgba(65,75,53,.10);
+        }
+
+        .status-dot {
+            background: var(--companion-green);
+            box-shadow: 0 0 0 4px rgba(63,92,82,.15), 0 0 12px rgba(63,92,82,.42);
+        }
+
+        .metrics-grid .metric-card {
+            background: linear-gradient(145deg, rgba(251,242,218,.94), rgba(225,212,177,.62));
+            border-color: rgba(108,91,65,.24);
+            box-shadow: 0 5px 12px rgba(78,60,42,.10);
+        }
+
+        .metrics-grid .metric-card:nth-child(2) {
+            background: linear-gradient(145deg, rgba(237,226,191,.94), rgba(193,205,171,.62));
+            border-top: 2px solid var(--companion-green);
+        }
+
+        .metrics-grid .metric-card:nth-child(3) {
+            background: linear-gradient(145deg, rgba(247,233,198,.94), rgba(221,190,143,.60));
+            border-top: 2px solid var(--companion-honey);
+        }
+
+        .metrics-grid .metric-card:nth-child(4) {
+            background: linear-gradient(145deg, rgba(246,222,204,.92), rgba(212,177,151,.58));
+            border-top: 2px solid var(--companion-wine);
+        }
+
+        .metric-label { color: var(--companion-green); }
+        .metric-value { color: var(--companion-ink); }
+        .metric-value.warning { color: var(--companion-wine); }
+
+        .load-chart {
+            background:
+                linear-gradient(rgba(63,92,82,.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(63,92,82,.08) 1px, transparent 1px),
+                linear-gradient(180deg, rgba(249,239,214,.92), rgba(198,207,179,.52));
+            background-size: 28px 20px, 28px 20px, auto;
+            border-color: rgba(63,92,82,.28);
+            box-shadow: inset 0 2px 8px rgba(63,92,82,.08);
+        }
+
+        .load-line { stroke: var(--companion-wine); stroke-width: 2.4; }
+        .threshold-line { stroke: var(--companion-green); stroke-width: 1.4; }
+
+        .agent-suggestion {
+            background: linear-gradient(145deg, #f5e8cf 0%, #dec3a0 100%);
+            border-color: rgba(143,80,67,.44);
+            box-shadow: 0 18px 42px rgba(68,51,38,.24), 0 0 0 6px rgba(143,80,67,.07);
+        }
+
+        .suggestion-icon { background: linear-gradient(145deg, var(--companion-green), #6f8a71); }
+        .suggestion-subtitle { color: var(--companion-green); }
+        .suggestion-content {
+            background: linear-gradient(135deg, rgba(211,220,192,.76), rgba(247,231,198,.72));
+            border-color: rgba(63,92,82,.30);
+        }
+
+        .suggestion-content .suggestion-text[style] {
+            background: linear-gradient(135deg, rgba(143,80,67,.18), rgba(201,158,92,.18)) !important;
+        }
+
+        .suggestion-reasoning {
+            color: var(--companion-green);
+            border-top-color: rgba(63,92,82,.24);
+        }
+
+        .suggestion-btn.primary {
+            background: linear-gradient(135deg, #824b43, #b8735e);
+            box-shadow: 0 5px 14px rgba(111,65,54,.24);
+        }
+
+        .suggestion-btn.secondary {
+            background: rgba(229,224,196,.62);
+            color: var(--companion-green);
+            border-color: rgba(63,92,82,.34);
+        }
+
+        /* Keep the perception side quiet: one paper surface, one structural accent. */
+        .embedded.is-active .perception-panel {
+            background: rgba(239,229,205,.68);
+            border-left: 1px solid rgba(63,92,82,.26);
+            box-shadow: inset 10px 0 24px rgba(111,86,54,.045);
+        }
+
+        .status-indicator {
+            background: rgba(211,218,190,.58);
+            border: 1px solid rgba(63,92,82,.24);
+            border-left: 3px solid var(--companion-green);
+            box-shadow: none;
+        }
+
+        .metrics-grid .metric-card,
+        .metrics-grid .metric-card:nth-child(2),
+        .metrics-grid .metric-card:nth-child(3),
+        .metrics-grid .metric-card:nth-child(4) {
+            background: rgba(247,239,218,.72);
+            border: 1px solid rgba(108,91,65,.22);
+            box-shadow: none;
+        }
+
+        .load-chart {
+            background:
+                linear-gradient(rgba(63,92,82,.06) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(63,92,82,.06) 1px, transparent 1px),
+                rgba(239,229,205,.66);
+            background-size: 28px 20px, 28px 20px, auto;
+            border-color: rgba(63,92,82,.24);
+            box-shadow: none;
         }
     </style>
 </head>
@@ -666,15 +850,8 @@
     <div class="demo-container">
         <header class="demo-header">
             <h1>鹅宝 Companion Agent Demo</h1>
-            <p>真正的陪伴，不是一直说话，而是知道什么时候出现</p>
+            <p>真正的陪伴，不是一直说话，而是知道什么时候出现。通过输入侧识别犹豫，自动分析上下文后给出合理回复建议。</p>
         </header>
-
-        <section class="companion-note" aria-label="陪伴 Agent 设计说明">
-            <div class="lead"><span class="note-kicker">WHY THIS AGENT</span><h2>让陪伴变成一种克制的出现</h2><p>系统不只理解用户说了什么，也观察那些没有被发送出去的话。</p></div>
-            <div><span class="note-kicker">01 / 出发点</span><p>先保持安静，给用户自己完成表达的空间，而不是一开始就打断。</p></div>
-            <div><span class="note-kicker">02 / 为什么这样做</span><p>删除、停顿和输入速度只是线索，只有信号持续累积，Agent 才会试探性地出现。</p></div>
-            <div><span class="note-kicker">03 / 介入边界</span><p>建议可以被采用，也可以被忽略；系统提供下一步，但不替用户做决定。</p></div>
-        </section>
 
         <main class="demo-main">
             <!-- 聊天界面 -->
