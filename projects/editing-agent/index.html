@@ -89,7 +89,7 @@
     .chat-area::-webkit-scrollbar-thumb:hover { background: #984536; background-clip: padding-box; }
   </style>
   <style>
-    .entry-copy { display:grid; grid-template-columns:108px 1px minmax(0,1fr); gap:26px; align-items:stretch; width:min(760px,calc(100vw - 54px)); max-width:none; min-height:350px; padding:44px 48px 40px; text-align:left; }
+    .entry-copy { display:grid; grid-template-columns:108px 1px minmax(0,1fr); gap:26px; align-items:stretch; width:min(760px,calc(100vw - 54px)); max-width:none; min-height:350px; padding:44px 48px 40px; text-align:left; transition:transform .44s cubic-bezier(.16,1,.3,1), opacity .32s ease, box-shadow .24s ease, background-color .24s ease; }
     .entry-number { align-self:start; color:rgba(54,85,75,.58); font:500 clamp(72px,10vw,112px)/.78 Georgia,"Songti SC",serif; letter-spacing:-.08em; }
     .entry-divider { width:1px; min-height:230px; background:rgba(54,85,75,.34); }
     .entry-body { min-width:0; }
@@ -98,7 +98,14 @@
     .entry-copy p { max-width:390px; margin:0; font-size:12px; line-height:1.75; }
     .entry-list { display:grid; gap:5px; margin-top:22px; color:#36554B; font:10px/1.4 "SFMono-Regular",Consolas,monospace; }
     .entry-list span { display:flex; justify-content:space-between; border-bottom:1px solid rgba(54,85,75,.16); padding-bottom:4px; }
-    .entry-hint { margin-top:25px; }
+    .entry-hint { margin-top:25px; color:var(--red) !important; font-size:15px !important; font-weight:800 !important; letter-spacing:.08em; }
+    @media (hover: hover) and (pointer: fine) {
+      .entry-copy:hover, .entry-copy:focus-visible {
+        transform: translateY(-5px) scale(.94);
+        background-color: rgba(239,229,210,.94);
+        box-shadow: 0 22px 42px rgba(90,55,42,.24), inset 0 0 30px rgba(74,57,43,.08);
+      }
+    }
     @media(max-width:600px){.entry-copy{grid-template-columns:55px 1px minmax(0,1fr);gap:14px;width:min(440px,calc(100vw - 42px));padding:28px 22px 25px}.entry-number{font-size:72px}.entry-divider{min-height:220px}.entry-copy h2{font-size:29px;margin-top:20px;white-space:normal}.entry-copy p{font-size:11px}.entry-list{font-size:9px;margin-top:18px}}
   </style>
   <style>
@@ -141,7 +148,7 @@
 </head>
 <body>
   <div class="window-lights" aria-label="窗口控制"><button class="window-light red" id="closeLight" aria-label="返回介绍页" title="返回介绍页"></button><span class="window-light yellow" aria-hidden="true"></span><span class="window-light green" aria-hidden="true"></span></div>
-  <div class="entry-screen" id="entryScreen" role="dialog" aria-modal="true" aria-label="剪辑 Agent 介绍"><div class="entry-copy" id="entryCopy" role="button" tabindex="0" aria-label="点击进入剪辑 Agent 演示"><div class="entry-number">03</div><div class="entry-divider" aria-hidden="true"></div><div class="entry-body"><div class="entry-kicker">EDITING AGENT · SECOND-CUT STUDY</div><h2>Editing Agent<br>让 AI 参与修改，但不接管创作</h2><p>先看一版，再用一句话告诉 Agent 你想怎么改；对话会把下一步接回同一条时间线。</p><div class="entry-list" aria-label="剪辑 Agent 内容目录"><span>01 / 先看一版</span><span>02 / 说出感觉</span><span>03 / 继续修改</span><span>04 / 留下选择</span></div><span class="entry-hint">CLICK CARD TO ENTER</span></div></div></div>
+  <div class="entry-screen" id="entryScreen" role="dialog" aria-modal="true" aria-label="剪辑 Agent 介绍"><div class="entry-copy" id="entryCopy" role="button" tabindex="0" aria-label="点击进入剪辑 Agent 演示"><div class="entry-number">03</div><div class="entry-divider" aria-hidden="true"></div><div class="entry-body"><div class="entry-kicker">EDITING AGENT · SECOND-CUT STUDY</div><h2>Editing Agent<br>让 AI 参与修改，但不接管创作</h2><p>先看一版，再用一句话告诉 Agent 你想怎么改；对话会把下一步接回同一条时间线。</p><div class="entry-list" aria-label="剪辑 Agent 内容目录"><span>01 / 先看一版</span><span>02 / 说出感觉</span><span>03 / 继续修改</span><span>04 / 留下选择</span></div><span class="entry-hint">点我！点我！点我！</span></div></div></div>
   <main class="shell">
     <header class="masthead"><div class="masthead-copy"><div class="kicker">03 / EDITING AGENT</div><h1>A workbench for second cuts</h1><div class="sub">第一版不是终点，创作可以继续发生。</div></div><div class="rule"></div><div class="project-note">PROJECT / CAT-DANCE-STUDY<br>15 SEC · SECOND-CUT MOCK</div><div class="header-actions"><span class="state-dot" id="headerState">DEMO RUNNING</span><button class="restart-btn" id="restartBtn">重新开始 ↺</button></div></header>
     <section class="workspace">

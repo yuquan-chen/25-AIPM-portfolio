@@ -81,29 +81,37 @@
     .toc-panel b { font: 600 11px/1.3 var(--project-ui-font, sans-serif); letter-spacing: .01em; text-transform: none; }
     .toc-panel small { color: var(--muted); font: 10px/1.35 var(--project-ui-font, sans-serif); letter-spacing: 0; }
     .floating-toc { position: fixed; top: 92px; left: 24px; z-index: 40; user-select: none; -webkit-user-select: none; }
-    .floating-toc summary { position: relative; width: 58px; min-height: 96px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 11px 8px; border: 1px solid rgba(64,82,72,.28); background: rgba(246,239,223,.50); box-shadow: 4px 5px 0 rgba(64,82,72,.09), 0 10px 24px rgba(33,30,25,.11); backdrop-filter: blur(8px); cursor: grab; touch-action: none; }
+    .floating-toc summary { position: relative; width: 58px; min-height: 96px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 11px 8px; border: 1px solid rgba(246,239,223,.46); border-radius: 4px; background: rgba(126,61,47,.46); box-shadow: 4px 5px 0 rgba(64,82,72,.09), 0 10px 24px rgba(33,30,25,.11); backdrop-filter: blur(12px) saturate(1.12); -webkit-backdrop-filter: blur(12px) saturate(1.12); cursor: grab; touch-action: none; }
     .floating-toc summary:active { cursor: grabbing; }
-    .floating-toc .toc-label { writing-mode: vertical-rl; text-orientation: upright; letter-spacing: .16em; font: 600 17px/1 Georgia, "Songti SC", serif; }
+    .floating-toc .toc-label { writing-mode: vertical-rl; text-orientation: upright; letter-spacing: .16em; color: var(--paper-light); font: 600 17px/1 Georgia, "Songti SC", serif; }
     .floating-toc .toc-toggle { color: var(--red); font: 13px/1 monospace; }
     .floating-toc .toc-toggle::before { content: "+"; }
     .floating-toc[open] .toc-toggle::before { content: "−"; }
     .floating-toc summary::before, .floating-toc summary::after { content: none !important; display: none; }
     .floating-toc .toc-label, .floating-toc .toc-panel { user-select: none; -webkit-user-select: none; }
     .floating-toc.is-hidden { opacity: 0; pointer-events: none; }
-    .floating-toc.is-lower { top: auto; right: 12px; bottom: 14px; left: auto; }
     .toc-leaves { position: absolute; top: 7px; bottom: 7px; width: 21px; pointer-events: none; }
     .toc-leaves-left { left: -17px; }
     .toc-leaves-right { right: -17px; }
     .toc-leaves::after { content: ""; position: absolute; left: 9px; top: 8px; bottom: 5px; width: 1px; background: linear-gradient(to bottom, rgba(83,159,94,.65), rgba(83,159,94,.12)); transform: rotate(-8deg); }
     .toc-leaves i { position: absolute; z-index: 1; display: block; width: 11px; height: 31px; background: linear-gradient(155deg, #83bf78 0%, #5aa865 55%, #478c59 100%); border: 1px solid rgba(55,125,67,.48); border-radius: 100% 0 100% 0; transform-origin: 50% 100%; box-shadow: 1px 2px 4px rgba(44,92,50,.14); }
     .toc-leaves-left i:nth-child(1) { top: 2px; left: 8px; height: 27px; transform: rotate(23deg); }
-    .toc-leaves-left i:nth-child(2) { display: none; }
+    .toc-leaves-left i:nth-child(2) { top: 25px; left: -1px; height: 21px; transform: rotate(-18deg); opacity: .82; }
     .toc-leaves-left i:nth-child(3) { top: 55px; left: 10px; height: 24px; transform: rotate(39deg); opacity: .68; }
+    .toc-leaves-left i:nth-child(4) { top: 73px; left: -4px; width: 9px; height: 31px; transform: rotate(-31deg); opacity: .74; }
+    .toc-leaves-left i:nth-child(5) { top: 40px; left: 13px; width: 8px; height: 18px; transform: rotate(57deg); opacity: .62; }
     .toc-leaves-right i:nth-child(1) { top: 12px; left: 1px; height: 35px; transform: rotate(-34deg); opacity: .9; }
     .toc-leaves-right i:nth-child(2) { top: 39px; left: 9px; height: 26px; transform: rotate(46deg); }
     .toc-leaves-right i:nth-child(3) { top: 62px; left: 3px; height: 18px; transform: rotate(-18deg); opacity: .58; }
+    .toc-leaves-right i:nth-child(4) { top: 1px; left: 10px; width: 9px; height: 28px; transform: rotate(24deg); opacity: .72; }
+    .toc-leaves-right i:nth-child(5) { top: 76px; left: -2px; width: 8px; height: 22px; transform: rotate(-48deg); opacity: .64; }
     .floating-toc .toc-panel { top: 34px; left: 0; right: auto; border-color: rgba(64,82,72,.28); background: rgba(246,239,223,.76); box-shadow: 6px 8px 0 rgba(64,82,72,.09), 0 14px 28px rgba(33,30,25,.14); backdrop-filter: blur(10px); }
     main > section[id] { scroll-margin-top: 28px; display: flow-root; }
+    main > section {
+      transform: translate3d(0, var(--scroll-section-lift, 0px), 0) skewX(var(--scroll-section-skew, 0deg)) scaleY(var(--scroll-section-stretch, 1));
+      transform-origin: center top;
+      will-change: transform;
+    }
     @keyframes part-arrive { from { opacity: .42; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
     main > section.part-arriving { animation: part-arrive .58s cubic-bezier(.22,.7,.24,1) both; }
     .page-turn { position: fixed; inset: 0; z-index: 80; pointer-events: none; visibility: hidden; opacity: 0; overflow: hidden; }
@@ -259,14 +267,16 @@
     @keyframes city-page-flip-prev { 0% { transform: rotateY(0); opacity: 1; } 42% { transform: rotateY(88deg); opacity: .2; } 58% { transform: rotateY(-88deg); opacity: .2; } 100% { transform: rotateY(0); opacity: 1; } }
     .hero-copy h1 { max-width: 780px; margin: 8px auto 26px; font-size: clamp(52px, 5vw, 88px); line-height: .96; letter-spacing: -.05em; text-align: center; }
     .hero-copy h1 em { display: block; color: var(--red); font-style: normal; }
-    .hero-copy p { max-width: 620px; margin: 0; font-size: 18px; line-height: 1.65; }
+    .hero-copy p { max-width: none; margin: 0; font-size: 18px; line-height: 1.65; }
     .hero-copy p .key-point { color: var(--green); font-weight: 700; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
-    .hero-overview { max-width: 620px; margin: 0 0 20px !important; }
+    .hero-overview { max-width: none; margin: 0 0 20px !important; text-indent: 2em; }
     .hero-overview-path { color: var(--wine); font-weight: 700; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
     .hero-overview-note { color: var(--red); font-size: 14px !important; }
-    .hero-bottom { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-top: 44px; }
-    .enter { width: 118px; aspect-ratio: 1; border: 1px solid var(--ink); border-radius: 50%; display: grid; place-items: center; font: 10px/1.2 monospace; transition: background .22s, color .22s; }
-    .enter:hover { color: var(--paper-light); background: var(--ink); }
+    .hero-overview-limit { color: var(--red); font-size: 14px !important; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    .hero-overview-interactive { font-weight: 700; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    .hero-self-label { display: inline-block; font-size: 20px; line-height: 1.35; }
+    .hero-copy-paragraph { text-indent: 2em; }
+    .hero-bottom { display: flex; justify-content: flex-end; align-items: end; gap: 24px; margin-top: 24px; }
     .hero-location { color: var(--muted); font: 13px/1.6 monospace; text-align: right; }
     .hero-open { color: var(--red); font-size: 11px; letter-spacing: .05em; }
     .hero-right { position: relative; display: block; }
@@ -415,7 +425,24 @@
     .section-head { display: grid; grid-template-columns: .32fr .68fr; gap: 40px; align-items: start; margin: 112px 0 30px; }
     .section-head-aside { min-width: 0; }
     .section-index { display: block; color: var(--red); padding-top: 8px; }
-    .project-reference { min-height: 168px; margin-top: 18px; padding: 14px 16px 13px; display: flex; flex-direction: column; justify-content: space-between; border: 2px solid var(--red); background: rgba(246,239,223,.30); box-shadow: inset 0 0 24px rgba(90,65,34,.05); }
+    .project-reference { min-height: 168px; margin-top: 18px; padding: 14px 16px 13px; display: flex; flex-direction: column; justify-content: space-between; border: 2px solid var(--red); background: rgba(246,239,223,.30); box-shadow: inset 0 0 24px rgba(90,65,34,.05); transition: transform .24s ease, box-shadow .24s ease, background-color .24s ease; }
+    @media (hover: hover) {
+      .finance-intro .project-reference:hover,
+      .companion-intro .project-reference:hover,
+      .editing-intro .project-reference:hover,
+      .finance-intro .project-reference:focus-visible,
+      .companion-intro .project-reference:focus-visible,
+      .editing-intro .project-reference:focus-visible {
+        transform: translate3d(0, calc(var(--scroll-card-lift, 0px) - 4px), 0) skewX(var(--scroll-card-skew, 0deg)) scaleX(1.025) scaleY(calc(var(--scroll-card-stretch, 1) * 1.025));
+        background-color: rgba(246,239,223,.58);
+        box-shadow: 7px 8px 0 rgba(152,69,54,.12), inset 0 0 24px rgba(90,65,34,.07);
+      }
+    }
+    .project-reference, .project-frame, .journey-shell {
+      transform: translate3d(0, var(--scroll-card-lift, 0px), 0) skewX(var(--scroll-card-skew, 0deg)) scaleY(var(--scroll-card-stretch, 1));
+      transform-origin: center top;
+      will-change: transform;
+    }
     .project-reference-kicker { color: var(--muted); font: 9px/1.35 monospace; letter-spacing: .1em; text-transform: uppercase; }
     .project-reference-title { margin: 11px 0 6px; color: var(--ink); font: 500 clamp(20px, 2vw, 28px)/1.04 Georgia, "Songti SC", serif; }
     .project-reference-note { margin: 0; color: var(--muted); font-size: 10px; line-height: 1.4; }
@@ -446,8 +473,8 @@
     /* Part 之间的章节边界：像纸页上的折痕，提醒读者已经进入下一段。 */
     .part-boundary { display: flex; align-items: center; gap: 18px; margin-top: 82px; color: var(--red); opacity: 1; }
     .part-boundary-line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(64,82,72,.34) 22%, rgba(152,69,54,.3) 78%, transparent); }
-    .part-boundary-mark { width: 42px; height: 28px; display: grid; place-items: center; border: 1px solid rgba(152,69,54,.42); background: rgba(246,239,223,.56); box-shadow: 3px 3px 0 rgba(152,69,54,.1); color: var(--red); font: 700 22px/1 Georgia, "Songti SC", serif; transform: rotate(-3deg); }
-    .part-boundary-label { color: var(--red); font: 700 12px/1 monospace; letter-spacing: .12em; white-space: nowrap; }
+    .part-boundary-mark { width: 42px; height: 28px; display: grid; place-items: center; border: 1px solid rgba(152,69,54,.42); background: rgba(246,239,223,.56); box-shadow: 3px 3px 0 rgba(152,69,54,.1); color: var(--red); font: 700 22px/1 Georgia, "Songti SC", serif; transform: translate3d(0, var(--scroll-lift, 0px), 0) skewX(var(--scroll-skew, 0deg)) scaleX(var(--scroll-stretch, 1)) rotate(-3deg); transform-origin: center; will-change: transform; }
+    .part-boundary-label { color: var(--red); font: 700 12px/1 monospace; letter-spacing: .12em; white-space: nowrap; transform: translate3d(0, var(--scroll-lift, 0px), 0) skewX(var(--scroll-skew, 0deg)) scaleX(var(--scroll-stretch, 1)); transform-origin: center; will-change: transform; }
     .part-boundary + .section-head { margin-top: 28px; }
     .placeholder { min-height: 430px; display: grid; place-items: center; padding: 40px; background-image: linear-gradient(var(--line-soft) 1px, transparent 1px), linear-gradient(90deg, var(--line-soft) 1px, transparent 1px); background-size: 34px 34px; }
     .placeholder-inner { max-width: 680px; text-align: center; background: var(--paper); border: 1px solid var(--line); padding: 30px; }
@@ -479,6 +506,11 @@
     .scenario-badges { display: flex; flex-wrap: wrap; gap: 7px; }
     .scenario-badges span { border: 1px solid var(--wine); color: var(--wine); padding: 5px 8px; font: 700 9px/1 monospace; letter-spacing: .06em; }
     .demo-shell { position: relative; overflow: hidden; background: #e9dfca; }
+    .project-frame .demo-shell {
+      transform: scaleY(var(--scroll-iframe-stretch, 1));
+      transform-origin: center top;
+      will-change: transform;
+    }
     .demo-shell iframe { width: 100%; border: 0; display: block; background: transparent; }
     #finance-demo { height: 900px; }
     #companion-demo { height: 690px; }
@@ -511,16 +543,11 @@
     /* LLM 区域的阅读层级：只保留一个主标题，其余信息逐级收敛 */
     #notes .section-head h2 { max-width: 760px; font-size: clamp(42px, 4.2vw, 60px); line-height: 1; }
     #notes .journey-thesis blockquote { max-width: 760px; font-size: clamp(24px, 2.25vw, 34px); line-height: 1.18; }
-    #notes .journey-facts strong { font-size: 20px; }
     .journey-overview { display: grid; grid-template-columns: .7fr .3fr; min-height: 180px; border-bottom: 1px solid var(--line); }
     .journey-thesis { padding: 36px 40px; border-right: 1px solid var(--line); }
     .journey-thesis blockquote { max-width: 870px; margin: 12px 0 0; font: 500 clamp(27px, 3vw, 46px)/1.08 Georgia, "Songti SC", serif; }
-    .journey-facts { display: grid; grid-template-columns: 1fr 1fr; }
-    .journey-facts div { display: flex; flex-direction: column; justify-content: space-between; padding: 24px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-    .journey-facts div:nth-child(even) { border-right: 0; }
-    .journey-facts div:nth-last-child(-n+2) { border-bottom: 0; }
-    .journey-facts strong { font: 500 24px/1 Georgia, serif; }
-    .journey-facts span { color: var(--muted); font: 9px/1.35 monospace; letter-spacing: .07em; text-transform: uppercase; }
+    .journey-note { align-self: stretch; padding: 30px 28px; border-left: 1px solid var(--line); color: var(--red); font: 600 14px/1.78 Georgia, "Songti SC", serif; }
+    .journey-note p { margin: 0; }
     .journey-nav { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--line); }
     .journey-step { position: relative; min-height: 150px; padding: 25px 22px; text-align: left; border: 0; border-right: 1px solid var(--line); background: transparent; cursor: pointer; }
     .journey-step:last-child { border-right: 0; }
@@ -641,6 +668,7 @@
       .journey-overview, .journey-detail { grid-template-columns: 1fr; }
       .journey-detail { height: auto; }
       .journey-thesis, .journey-copy { border-right: 0; border-bottom: 1px solid var(--line); }
+      .journey-note { border-left: 0; border-top: 1px solid var(--line); }
       .journey-nav { grid-template-columns: repeat(2, 1fr); }
       .journey-step:nth-child(2) { border-right: 0; }
       .journey-step:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
@@ -744,6 +772,7 @@
       .system-reading article { border-right: 0; border-bottom: 1px solid var(--line); }
       .system-reading article:last-child { border-bottom: 0; }
       .journey-thesis, .journey-copy { padding: 28px 22px; }
+      .journey-note { padding: 24px 22px; font-size: 14px; line-height: 1.75; }
       .journey-article { max-height: none; overflow: visible; }
       .journey-overview { min-height: 0; }
       .journey-nav { grid-template-columns: 1fr; }
@@ -775,6 +804,7 @@
 
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+      main > section, .part-boundary-mark, .part-boundary-label, .project-reference, .project-frame, .journey-shell, .project-frame .demo-shell { transform: none; will-change: auto; }
     }
   </style>
   <style>
@@ -790,6 +820,21 @@
     #notes .journey-step::after { background:#465C6B; }
     #notes .journey-step[aria-selected="true"] { background:rgba(70,92,107,.10); }
     #notes .journey-shell { border-color:rgba(70,92,107,.42); }
+    @media (hover: hover) and (pointer: fine) {
+      #notes .journey-step {
+        transition: transform .24s ease, background-color .24s ease, box-shadow .24s ease;
+        transform-origin: center center;
+        will-change: transform;
+      }
+      #notes .journey-step:hover,
+      #notes .journey-step:focus-visible {
+        position: relative;
+        z-index: 2;
+        transform: translateY(-4px) scale(1.025);
+        background: rgba(246,239,223,.72);
+        box-shadow: 0 8px 18px rgba(64,82,72,.16);
+      }
+    }
   </style>
   <style>
     .city-method-page[data-page="2"] .city-method-lead { font-size:13px; line-height:1.5; }
@@ -843,7 +888,7 @@
     </nav>
 
     <details class="toc-menu floating-toc" aria-label="作品目录">
-      <summary><span class="toc-leaves toc-leaves-left" aria-hidden="true"><i></i><i></i><i></i></span><span class="toc-label">目录</span><span class="toc-leaves toc-leaves-right" aria-hidden="true"><i></i><i></i><i></i></span></summary>
+      <summary><span class="toc-leaves toc-leaves-left" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="toc-label">目录</span><span class="toc-leaves toc-leaves-right" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></summary>
       <div class="toc-panel" aria-label="作品目录">
         <a href="#top"><span>TOP</span><b>回到开头</b><small>重新看一遍首页</small></a>
         <a href="#works"><span>01</span><b>Finance Agent</b><small>行动可以走到哪一步</small></a>
@@ -859,12 +904,11 @@
         <div class="hero-copy">
           <span class="box-label">B / PRIMARY IDENTITY</span>
           <h1>设计有边界的<br><em>自主性</em></h1>
-          <p class="hero-overview">这是一个 PM 的作品集，想通过下述几个项目来传达我对 AI 的理解。<br><span class="hero-overview-path">从 AI 的行动边界 -&gt; AI 的主动性 -&gt; Human in the loop -&gt; 回到模型本身思考它的局限性</span><br><span class="hero-overview-note">注：右侧的城市可听化项目仅作引子使用</span></p>
-          <p>我是一个能全栈的 <span class="key-point">AIPM</span>，做产品，也把它写出来。</p>
-          <p>我的工作始终围绕一个问题：如何为 AI 设定边界，让它发挥真正的自主能力——<span class="key-point">看见、判断、提议和行动</span>，并在需要时停下来，<span class="key-point">把控制权还给人</span>。</p>
-          <p>这就是 <span class="key-point">Human in the loop</span>：不只是 human 在 loop，AI 也需要知道什么时候该 loop。</p>
+          <p class="hero-overview">这是一个 PM 的作品集，<span class="hero-overview-interactive">里面的组件大多可交互</span>！大胆点击获得绝佳体验！我想通过下述几个项目来传达我对 AI 的理解。<br><span class="hero-overview-path">从 AI 的行动边界 -&gt; AI 的主动性 -&gt; Human in the loop -&gt; 回到模型本身思考它的局限性</span><br><span class="hero-overview-note">注：右侧的城市可听化项目仅作引子使用</span><br><span class="hero-overview-limit">局限性：尽管做了移动端适配，还是存在很多优化不好的地方，如果有条件建议使用桌面端打开</span></p>
+          <p><span class="hero-self-label">自我描述：</span></p>
+          <p class="hero-copy-paragraph">我是一个能全栈的 <span class="key-point">AIPM</span>，做产品，也把它写出来。</p>
+          <p class="hero-copy-paragraph">我的工作始终围绕一个问题：如何为 AI 设定边界，让它发挥真正的自主能力——<span class="key-point">看见、判断、提议和行动</span>，并在需要时停下来，<span class="key-point">把控制权还给人</span>。这就是 <span class="key-point">Human in the loop</span>：不只是 human 在 loop，AI 也需要知道什么时候该 loop。</p>
           <div class="hero-bottom">
-            <a class="enter" href="#works">ENTER<br>WORKS ↓</a>
             <span class="hero-location">SHENZHEN<br>25点学习<br><span class="hero-open">AI PM/ AI NATIVE / FULL-STACK / TOC / CITY STUDY</span></span>
           </div>
           <button class="city-inline-page" id="cityInlinePage" type="button" aria-label="左侧城市可听化研究笔记页面">
@@ -923,7 +967,7 @@
             <div class="scenario-badges"><span>INTERACTIVE SYSTEM DEMO</span><span>2D RUNTIME MAP</span></div>
           </div>
           <div class="demo-shell">
-            <iframe id="finance-demo" src="./projects/finance-agent/index.html?embed=1&amp;v=20260823-finance-responsive" title="Finance Agent 2D 系统运行地图" loading="lazy"></iframe>
+            <iframe id="finance-demo" src="./projects/finance-agent/index.html?embed=1&amp;v=20260825-entry-hint" title="Finance Agent 2D 系统运行地图" loading="lazy"></iframe>
           </div>
           <div class="frame-bottom"><span class="frame-meta">可点击模块、职责分区与线路图例 · 支持主路径播放</span><strong>TRACE THE RUNTIME →</strong></div>
         </div>
@@ -969,7 +1013,7 @@
             <div class="scenario-badges"><span>INTERACTIVE SCENARIO DEMO</span><span>10-ROUND SCRIPTED MOCK</span></div>
           </div>
           <div class="demo-shell">
-            <iframe id="companion-demo" src="./projects/companion-agent/index.html?embed=1&amp;v=20260823-companion-responsive" title="陪伴式 Agent 十轮连续场景演示" loading="lazy"></iframe>
+            <iframe id="companion-demo" src="./projects/companion-agent/index.html?embed=1&amp;v=20260825-entry-hint" title="陪伴式 Agent 十轮连续场景演示" loading="lazy"></iframe>
           </div>
           <div class="frame-bottom"><span class="frame-meta">自动运行 · 可采用或忽略建议 · 10 轮后自动重置</span><strong>WATCH THE AGENT DECIDE →</strong></div>
         </div>
@@ -1012,7 +1056,7 @@
             <div class="scenario-badges"><span>CONVERSATION-DRIVEN</span><span>SECOND CREATION MOCK</span></div>
           </div>
           <div class="demo-shell">
-            <iframe id="editing-demo" src="./projects/editing-agent/index.html?embed=1&amp;v=20260823-editing-responsive" title="剪辑 Agent 二次创作交互演示" loading="lazy"></iframe>
+            <iframe id="editing-demo" src="./projects/editing-agent/index.html?embed=1&amp;v=20260825-entry-hint" title="剪辑 Agent 二次创作交互演示" loading="lazy"></iframe>
           </div>
           <div class="frame-bottom"><span class="frame-meta">无真实视频渲染 · 对话与时间线可交互 · 支持多次二次修改</span><strong>KEEP MAKING →</strong></div>
         </div>
@@ -1039,7 +1083,7 @@
               <a class="project-reference-link" href="https://github.com/yuquan-chen/LLM_Learning_Journey" target="_blank" rel="noreferrer">打开 GitHub ↗</a>
             </div>
           </div>
-          <h2>理解模型的能力，<br>也理解它的限制。<small>这是一组学习 LLM 时留下的记录：我从训练数据开始，沿着 Transformer 的路径往下追，再观察一个 token 如何参与生成，最后把不同训练阶段的输出放进同一张地图里比较。</small></h2>
+          <h2>理解模型的能力，<br>也理解它的局限。<small>这是一组学习 LLM 时留下的记录：我从训练数据开始，沿着 Transformer 的路径往下追，再观察一个 token 如何参与生成，最后把不同训练阶段的输出放进同一张地图里比较。</small></h2>
         </header>
 
         <div class="journey-shell">
@@ -1049,11 +1093,8 @@
               <span class="eyebrow">NOTES FROM APRIL TO MAY</span>
               <blockquote>在让系统自主行动之前，我想先把它的路径看清楚：我看到的结果，在模型里究竟是怎么一步步发生的？</blockquote>
             </div>
-            <div class="journey-facts" aria-label="项目证据摘要">
-              <div><strong>04→05</strong><span>two months of notes</span></div>
-              <div><strong>4</strong><span>reasoning behaviours</span></div>
-              <div><strong>3</strong><span>model snapshots</span></div>
-              <div><strong>1</strong><span>visual study</span></div>
+            <div class="journey-note" aria-label="学习记录说明">
+              <p>这个学习记录，是去年04-05月份时撰写，技术方案的时效性可能大打折扣。但我想说，这些记录并不是完全没有意义，正是我参透到模型内部的原理，才能让身为PM的我在设计产品的时候，会将这些不可控的Gap尽力缩小到最小。也正是这些最底层的架构，一步步铸成了这繁华的AI盛世！</p>
             </div>
           </div>
 
@@ -1333,11 +1374,88 @@
         });
       });
       const floatingToc = document.querySelector('.floating-toc');
+      // Give chapter markers a small, velocity-driven deformation. The effect
+      // decays quickly after scrolling stops so it adds movement without
+      // changing document layout or disturbing long-form reading.
+      const scrollDistortionTargets = [...document.querySelectorAll('.part-boundary-mark, .part-boundary-label')];
+      const scrollDistortionSections = [...document.querySelectorAll('main > section')];
+      const scrollDistortionCards = [...document.querySelectorAll('.project-reference, .project-frame, .journey-shell')];
+      const scrollDistortionIframes = [...document.querySelectorAll('.project-frame .demo-shell')];
+      const reduceScrollMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      let scrollDistortionFrame = 0;
+      let scrollDistortionLastY = window.scrollY;
+      let scrollDistortionLastTime = performance.now();
+      let scrollDistortionVelocity = 0;
+      const renderScrollDistortion = (now) => {
+        const elapsed = Math.max(16, now - scrollDistortionLastTime);
+        const currentY = window.scrollY;
+        const rawVelocity = (currentY - scrollDistortionLastY) / elapsed;
+        const targetVelocity = Math.max(-2.2, Math.min(2.2, rawVelocity * 1.4));
+        scrollDistortionVelocity += (targetVelocity - scrollDistortionVelocity) * .24;
+        scrollDistortionVelocity *= .9;
+        const magnitude = Math.min(1, Math.abs(scrollDistortionVelocity) / 2.2);
+        const skew = scrollDistortionVelocity * 2.2;
+        const lift = -scrollDistortionVelocity * 1.6;
+        const stretch = 1 + magnitude * .075;
+        scrollDistortionTargets.forEach((target) => {
+          target.style.setProperty('--scroll-skew', `${skew.toFixed(3)}deg`);
+          target.style.setProperty('--scroll-lift', `${lift.toFixed(2)}px`);
+          target.style.setProperty('--scroll-stretch', stretch.toFixed(4));
+        });
+        const sectionSkew = scrollDistortionVelocity * .32;
+        const sectionLift = -scrollDistortionVelocity * .45;
+        const sectionStretch = 1 + magnitude * .012;
+        scrollDistortionSections.forEach((section) => {
+          section.style.setProperty('--scroll-section-skew', `${sectionSkew.toFixed(3)}deg`);
+          section.style.setProperty('--scroll-section-lift', `${sectionLift.toFixed(2)}px`);
+          section.style.setProperty('--scroll-section-stretch', sectionStretch.toFixed(4));
+        });
+        const cardSkew = scrollDistortionVelocity * .68;
+        const cardLift = -scrollDistortionVelocity * .72;
+        const cardStretch = 1 + magnitude * .026;
+        scrollDistortionCards.forEach((card) => {
+          card.style.setProperty('--scroll-card-skew', `${cardSkew.toFixed(3)}deg`);
+          card.style.setProperty('--scroll-card-lift', `${cardLift.toFixed(2)}px`);
+          card.style.setProperty('--scroll-card-stretch', cardStretch.toFixed(4));
+        });
+        const iframeStretch = 1 + magnitude * .035;
+        scrollDistortionIframes.forEach((frame) => frame.style.setProperty('--scroll-iframe-stretch', iframeStretch.toFixed(4)));
+        scrollDistortionLastY = currentY;
+        scrollDistortionLastTime = now;
+        if (Math.abs(scrollDistortionVelocity) > .008) scrollDistortionFrame = requestAnimationFrame(renderScrollDistortion);
+        else scrollDistortionFrame = 0;
+      };
+      const requestScrollDistortion = () => {
+        if (reduceScrollMotion.matches || !scrollDistortionTargets.length || scrollDistortionFrame) return;
+        scrollDistortionFrame = requestAnimationFrame(renderScrollDistortion);
+      };
+      window.addEventListener('scroll', requestScrollDistortion, { passive: true });
+      reduceScrollMotion.addEventListener?.('change', () => {
+        if (reduceScrollMotion.matches) {
+          if (scrollDistortionFrame) cancelAnimationFrame(scrollDistortionFrame);
+          scrollDistortionFrame = 0;
+          scrollDistortionTargets.forEach((target) => {
+            target.style.removeProperty('--scroll-skew');
+            target.style.removeProperty('--scroll-lift');
+            target.style.removeProperty('--scroll-stretch');
+          });
+          scrollDistortionSections.forEach((section) => {
+            section.style.removeProperty('--scroll-section-skew');
+            section.style.removeProperty('--scroll-section-lift');
+            section.style.removeProperty('--scroll-section-stretch');
+          });
+          scrollDistortionCards.forEach((card) => {
+            card.style.removeProperty('--scroll-card-skew');
+            card.style.removeProperty('--scroll-card-lift');
+            card.style.removeProperty('--scroll-card-stretch');
+          });
+          scrollDistortionIframes.forEach((frame) => frame.style.removeProperty('--scroll-iframe-stretch'));
+        }
+      });
       const updateFloatingTocPosition = () => {
         if (!floatingToc) return;
         const cityOpen = hero?.classList.contains('city-inline-open');
         floatingToc.classList.toggle('is-hidden', cityOpen);
-        if (!cityOpen) floatingToc.classList.toggle('is-lower', window.scrollY > 120);
       };
       window.addEventListener('scroll', updateFloatingTocPosition, { passive: true });
       updateFloatingTocPosition();
