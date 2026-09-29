@@ -1,26 +1,35 @@
-# 首页整合预览
+# 25 点学习｜AI 产品经理作品集
 
-这一版将已确认的 A–I 首页布局，与两份真实项目原型进行了统一编排：
+这是我的个人介绍与项目作品集，包含交互式项目演示、研究记录和联系方式。
 
-- 陪伴式 Agent：保留完整 10 轮连续演示，新增嵌入铭牌与轮次进度。
-- LLM 学习记录：作为一个完整研究项目展示，支持三张索引卡与笔记详情切换。
-- Finance Agent：本轮保留已确认的 Featured System 展框，尚未接入 Three.js 页面。
+## 在线浏览
 
-## 运行
+GitHub Pages 部署完成后，可通过以下地址直接浏览，无需安装运行环境：
 
-请不要双击 `index.html`，使用静态服务器运行：
+<https://yuquan-chen.github.io/25-AIPM-portfolio/>
+
+## 本地运行
+
+先在终端进入克隆下来的仓库根目录（也就是包含 `index.html` 的目录），再启动静态服务器。无需安装依赖。
+
+Windows：
+
+```powershell
+py -m http.server 8780
+```
+
+macOS / Linux：
 
 ```bash
-cd /Users/dogpay/Desktop/25点学习-personal-website/09-首页整合预览
 python3 -m http.server 8780
 ```
 
-然后访问：
+然后在浏览器打开 <http://127.0.0.1:8780/>。结束运行时，在终端按 `Ctrl+C`。
 
-```text
-http://127.0.0.1:8780/
-```
+## 项目内容
 
-## 本轮目的
+- 陪伴式 Agent：十轮连续场景演示。
+- LLM 学习记录：研究过程、笔记和相关代码入口。
+- Finance Agent、Editing Agent、Urban Ensemble：项目原型和交互演示。
 
-这是内容、尺寸、编排与视觉语言的整合预览，不是最终上线版本。后续可继续接入 Finance Agent、城市可听化与 AIStudio。
+部分演示为原型或情景模拟，页面内会标明当前状态；项目仍在持续完善。
