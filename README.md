@@ -1,5 +1,7 @@
 # 25-AIPM-portfolio
 
+在线预览：<https://yuquan-chen.github.io/25-AIPM-portfolio/>
+
 ## 本地运行
 
 在包含 `index.html` 的项目目录打开终端并运行：
