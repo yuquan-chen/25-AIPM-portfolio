@@ -2,8 +2,7 @@ const journeyStages = {
   data: {
     copy: `
       <article class="journey-copy journey-article">
-        <span class="eyebrow">01 / EARLY APRIL · FROM OUTPUT TO SUPERVISION</span>
-        <h3>我第一次明白，<br>数据本身就是一种判断。</h3>
+        <h3>训练数据</h3>
         <p class="article-lede">这组实验开始于一个很朴素的想法：如果想让模型更会解决问题，训练材料里是不是也应该留下解决问题的过程？</p>
         <div class="article-body">
           <p>一开始，我只是把原来的问答重新整理：补上回答里的<span class="key-point">解题步骤</span>，再把它们保存成可以继续使用的<span class="key-point">训练数据</span>。这个过程看起来像整理文件，真正做起来却更像是在决定什么值得被留下。</p>
@@ -13,7 +12,6 @@ const journeyStages = {
           <p>这次实验真正留下的结果，不是一个立刻变好的数字，而是我第一次看见“<span class="key-point">选择材料</span>”本身就是<span class="key-point">训练的一部分</span>。后来再看任何训练结果，我都会先问：我们到底让模型反复练习了什么？</p>
         </div>
         <p class="article-end">当我开始追踪每个 token 的训练位置时，下一步自然变成了追踪它在 Transformer 里经过了哪些层。</p>
-        <a class="journey-link" href="https://github.com/yuquan-chen/LLM_Learning_Journey/tree/main/src/data_process" target="_blank" rel="noreferrer">OPEN THE DATA NOTES ON GITHUB ↗</a>
       </article>`,
     artifact: `
       <div class="journey-artifact"><div class="artifact-code"><span class="blue">BEFORE / A RESULT</span>
@@ -47,8 +45,7 @@ It specifies which behaviours become visible to learning.</div></div>`
     structure: {
       copy: `
       <article class="journey-copy journey-article">
-        <span class="eyebrow">02 / MID APRIL · TRANSFORMER</span>
-        <h3>我不再背 Transformer，<br>而是跟着它走。</h3>
+        <h3>张量流</h3>
         <p class="article-lede">我曾经把 Transformer 当成一张必须背下来的结构图。后来我发现，真正让我困惑的不是名词，而是不知道一段信息在模型里究竟经过了什么。</p>
         <div class="article-body">
           <p>我给自己定了一个很笨、但很有效的规则：不先背结论，只看<span class="key-point">每一步进来了什么、出去什么</span>。于是，一段文字先被变成模型可以处理的<span class="key-point">表示</span>，再被拆开去比较不同位置之间的关系，最后重新合在一起。</p>
@@ -58,7 +55,6 @@ It specifies which behaviours become visible to learning.</div></div>`
           <p>最后留下来的不是“我已经完全看懂了 Transformer”，而是一种继续学习的方法：遇到不确定的地方，就<span class="key-point">沿着信息的路径往下追</span>。速度慢一点，但每一步都更踏实。</p>
         </div>
         <p class="article-end">结构开始清楚之后，我又想知道：在最后一个 token 出现以前，模型究竟面对着怎样的选择。</p>
-        <a class="journey-link" href="https://github.com/yuquan-chen/LLM_Learning_Journey/blob/main/notebooks/transformer_lean.ipynb" target="_blank" rel="noreferrer">OPEN TRANSFORMER NOTEBOOK ↗</a>
       </article>`,
     artifact: `
       <div class="journey-artifact"><div class="tensor-flow" aria-label="经典 encoder-decoder Transformer 维度流">
@@ -116,8 +112,7 @@ It specifies which behaviours become visible to learning.</div></div>`
   state: {
     copy: `
       <article class="journey-copy journey-article">
-        <span class="eyebrow">03 / LATE APRIL · GENERATION TRACE</span>
-        <h3>答案出现以前，<br>模型经历了什么。</h3>
+        <h3>Token 生成</h3>
         <p class="article-lede">以前我只关心模型给出的答案是否通顺。后来我开始好奇：一句话出现以前，模型是不是也经历了许多我们看不见的选择？</p>
         <div class="article-body">
           <p>我开始把一次回答拆成<span class="key-point">许多小步</span>来看。模型读到当前的<span class="key-point">上下文</span>，决定接下来写什么，再把刚刚写下的内容放回整句话里，继续往前走。它不是先在某个地方想好完整答案，再一次性把答案交给我。</p>
@@ -127,7 +122,6 @@ It specifies which behaviours become visible to learning.</div></div>`
           <p>这段经历给我的收获，是终于开始关注答案没有出现以前的那一片空间。<span class="key-point">理解生成，不能只看最后说了什么</span>，也要看它是怎样一步一步走到那里的。</p>
         </div>
         <p class="article-end">当我看见一个模型每一步都在候选中做选择时，我开始好奇：换一个训练阶段，这些选择能不能在同一张地图上留下不同的轨迹？</p>
-        <a class="journey-link" href="https://github.com/yuquan-chen/LLM_Learning_Journey/blob/main/src/analysis/plot_token_ppl_curve.py" target="_blank" rel="noreferrer">READ THE ANALYSIS SCRIPT ↗</a>
       </article>`,
     artifact: `
       <div class="journey-artifact"><div class="ppl-plot">
@@ -144,8 +138,7 @@ It specifies which behaviours become visible to learning.</div></div>`
   distribution: {
     copy: `
       <article class="journey-copy journey-article">
-        <span class="eyebrow">04 / MAY · TOKEN SPACE</span>
-        <h3>我把三组模型输出，<br>放进同一张地图。</h3>
+        <h3>UMAP 分布</h3>
         <p class="article-lede">前一篇里，我看见了模型怎样一步一步生成文字。到了五月，我又想知道：如果模型经历了不同的训练，这些文字会不会在空间里留下不同的形状？</p>
         <div class="article-body">
           <p>我把 <span class="key-point">baseline、continued training 和 LoRA SFT</span> 三个模型放到一起比较，让它们面对同一个问题，再把各自生成出来的文字放进一张<span class="key-point">共享的二维地图</span>里。这张地图是先用 baseline 的 <span class="key-point">token embedding</span> 做出来的。第一次看到结果时，我很容易被形状吸引：有的点铺得开一些，有的点聚得更近，旁边还跟着一圈圈椭圆。</p>
@@ -155,7 +148,6 @@ It specifies which behaviours become visible to learning.</div></div>`
           <p><span class="key-point">可视化因此变成了一种更诚实的工具</span>。它帮我打开一个角度，也提醒我不要把一个角度误认为全部答案。</p>
         </div>
         <p class="article-end">回头看，这四段学习把我从“模型学到了什么”，带到了“我究竟测到了什么”；这大概是我继续做实验时最想保留的习惯。</p>
-        <a class="journey-link" href="https://github.com/yuquan-chen/LLM_Learning_Journey/blob/main/notebooks/UMAP_and_Ellipse.ipynb" target="_blank" rel="noreferrer">OPEN THE REAL NOTEBOOK ↗</a>
       </article>`,
     artifact: `
       <div class="journey-artifact"><figure class="artifact-figure">
@@ -416,11 +408,15 @@ function selectJourneyStage(key) {
   const stage = journeyStages[key];
   if (!stage) return;
   journeyDetail.innerHTML = stage.copy + stage.artifact;
-  journeySteps.forEach((step) => step.setAttribute('aria-selected', String(step.dataset.journey === key)));
+  journeySteps.forEach((step) => step.setAttribute(step.classList.contains('notes-folder-tab') ? 'aria-expanded' : 'aria-selected', String(step.dataset.journey === key)));
+  journeyDetail.setAttribute('aria-labelledby', `journey-step-${key}`);
   requestAnimationFrame(prepareTensorFlow);
 }
 
-journeySteps.forEach((step) => step.addEventListener('click', () => selectJourneyStage(step.dataset.journey)));
+journeySteps.forEach((step) => step.addEventListener('click', () => {
+  if (step.classList.contains('notes-folder-tab') && step.getAttribute('aria-expanded') === 'true') return;
+  selectJourneyStage(step.dataset.journey);
+}));
 journeyDetail.addEventListener('click', (event) => {
   if (event.target.closest('.tensor-detail, .tensor-action-detail')) return;
   const action = event.target.closest('.tensor-action[data-action-detail]');
@@ -443,4 +439,4 @@ journeyDetail.addEventListener('keydown', (event) => {
   event.preventDefault();
   toggleTensorDetail(card);
 });
-selectJourneyStage('data');
+if (!document.getElementById('notesCabinet')) selectJourneyStage('data');

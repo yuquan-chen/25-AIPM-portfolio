@@ -1,0 +1,167 @@
+/* Finance case-study prototype: shared canvas on desktop, current-step view on mobile. */
+#finance-project{scroll-margin-top:0;padding-bottom:72px}
+#finance-project .chapter-heading.project-overview{padding:48px 0 34px;gap:32px;align-items:center}
+#finance-project .project-overview .editorial-label{font-size:12px;letter-spacing:.07em;margin-bottom:22px}
+#finance-project .project-overview h2{font-size:clamp(36px,4.4vw,58px);line-height:1.25;letter-spacing:-.04em}
+#finance-project .project-deck{font-size:19px;line-height:1.8;margin-top:20px;color:var(--ink)}
+#finance-project .project-actions{font-size:14px;gap:18px;align-items:flex-end}
+#finance-project .project-secondary-link{font-size:12px}
+#financePreview{--demo-paper:#f7f6ee;--demo-surface:#e7ecdf;--demo-muted:#5f7063;--demo-line:#cbd3c3;color-scheme:light;padding:0;border-color:#b6c3b2;border-radius:5px;box-shadow:0 18px 32px -28px #183d3250}
+#financePreview .finance-preview-bar{padding:17px 24px;background:#e2e8da;font-size:14px;border-radius:5px 5px 0 0}
+#financePreview .finance-preview-bar small{font-size:11px}
+#financePreview .finance-replay-layout{grid-template-columns:minmax(0,.96fr) minmax(0,1.08fr);gap:18px;padding:8px 14px 0;background-image:none}
+#financePreview .finance-chat,#financePreview .finance-trace{height:680px}
+#financePreview .finance-chat-head,#financePreview .finance-trace-head{padding:16px 12px;min-height:52px;font-size:12px}
+#financePreview .finance-chat-clock{font-size:11px}
+#financePreview .finance-chat-messages{padding:20px 14px;scroll-padding:20px}
+#financePreview .finance-message{font-size:14px;line-height:1.85;margin-bottom:22px}
+#financePreview .finance-message-node{font-size:11px;min-height:30px}
+#financePreview .finance-chat-empty{text-align:left;justify-content:flex-start;padding:28px 6px 14px;height:auto}
+.finance-welcome-mark{font:italic 30px/1 Georgia,serif;color:#a36d59;margin-bottom:24px;display:block}
+#financePreview .finance-chat-empty>span:not(.finance-welcome-mark){font-size:28px;line-height:1.5}
+#financePreview .finance-chat-empty p{font-size:14px;line-height:1.85;max-width:26em;margin:16px 0 22px}
+.finance-starter-options{display:flex;flex-wrap:wrap;gap:9px}
+.finance-starter-options button{font-size:12px;line-height:1.5;font-family:inherit;padding:10px 14px;min-height:44px;border:1px solid var(--demo-line);border-radius:5px;background:#fbfaf5;color:var(--demo-ink);cursor:pointer;text-align:left}
+.finance-starter-options button[aria-pressed=true]{background:var(--demo-surface);border-color:#738b76}
+.finance-starter-options button:hover{border-color:var(--trace-active)}
+#financePreview .finance-composer{margin:0 10px 12px;padding:10px 12px 8px;border-radius:12px;box-shadow:0 4px 16px #233e3608}
+#financePreview .finance-composer p{font-size:14px;line-height:1.65;margin:0 0 6px;min-height:0}
+#financePreview .finance-composer button{width:44px;height:44px;flex:none}
+#financePreview .finance-example-picker{font-size:11px}
+#financePreview .finance-example-picker select{font-size:12px;min-height:44px;max-width:180px}
+#financePreview .finance-chat-progress{font-size:11px;margin:0 14px 5px;min-height:30px}
+#financePreview .finance-trace-canvas{max-width:480px;width:100%;margin:10px auto 0}
+#financePreview .finance-trace-node strong{font-size:12px}
+#financePreview .finance-trace-node small{font-size:8px}
+#financePreview .finance-trace-inspector{padding:15px 12px 20px}
+#financePreview .finance-trace-inspector h3{font-size:21px;line-height:1.4}
+#financePreview .finance-trace-inspector p{font-size:12px}
+#financePreview .finance-runtime-legend{font-size:10px}
+#financePreview .finance-node-source summary{min-height:32px;font-size:11px}
+#financePreview .finance-node-source code{font-size:11px}
+#financePreview .finance-replay-controls{padding:10px 24px;font-size:11px;background:#eef0e7}
+#financePreview .finance-replay-controls button{min-height:44px;font-size:12px;padding:0 5px}
+#financePreview .finance-replay-controls>div{gap:18px}
+#financePreview:is([data-state=done],[data-state=cancelled]) .finance-composer p,#financePreview:is([data-state=done],[data-state=cancelled]) #financeSend{display:none}
+#financePreview:is([data-state=done],[data-state=cancelled]) .finance-composer{padding-block:5px;box-shadow:none}
+#financePreview .finance-approval h4{font-size:17px}
+#financePreview .finance-approval-actions button{min-height:44px;font-size:13px}
+#financePreview .finance-query{font-size:12px}
+#financePreview .finance-report h4{font-size:21px;line-height:1.5}
+#financePreview .finance-report p{font-size:13px;line-height:1.85}
+#financePreview .finance-report-findings strong{font-size:14px}
+#financePreview .finance-chart-switcher button{min-height:44px;font-size:12px}
+#financePreview .finance-chart-data{font-size:12px}
+#financePreview .finance-chart-data summary{min-height:36px}
+#financePreview .finance-chart-data th,#financePreview .finance-chart-data td{font-size:11px}
+#financePreview .finance-report-footnote{font-size:11px}
+#finance-project .finance-demo-caption{font-size:12px;line-height:1.85;color:var(--secondary);margin:15px 0 0;max-width:700px}
+#finance-project .finance-design-pair{display:grid;grid-template-columns:1fr 1fr;gap:44px;max-width:840px;margin:48px auto 0;padding-bottom:30px}
+.finance-design-pair article{border-top:1px solid var(--line);padding-top:20px}
+.finance-design-pair article>span{font:11px/1.8 Consolas,'Microsoft YaHei',sans-serif;color:var(--red);letter-spacing:.04em}
+.finance-design-pair h3{font:400 25px/1.5 'Songti SC','SimSun',serif;margin:12px 0}
+.finance-design-pair p{font-size:15px;line-height:1.95;color:var(--secondary);margin:0;max-width:28em}
+#finance-project .finance-context{max-width:840px;margin:0 auto}
+#finance-project .finance-context>summary{font-size:13px;min-height:58px}
+#finance-project .finance-context .finance-principles{grid-template-columns:1fr 1fr}
+#finance-project .finance-principles article:nth-child(3){border-left:0}
+#finance-project .finance-principles article:nth-child(n+3){border-top:1px solid var(--line)}
+#finance-project .finance-principles p{font-size:14px}
+#finance-project .finance-principles button{font-size:12px;min-height:44px}
+#finance-project .finance-emphasis{text-decoration:none}
+.finance-live-step{display:none}
+.finance-graph-dialog{padding:0;border:1px solid var(--demo-line);border-radius:12px;background:var(--demo-paper);color:var(--demo-ink);width:min(720px,calc(100% - 24px));max-width:none;max-height:calc(100dvh - 24px);overflow:auto;overscroll-behavior:contain}
+.finance-graph-dialog::backdrop{background:#142b24b3;backdrop-filter:blur(5px)}
+.finance-graph-toolbar{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px;background:var(--demo-paper);border-bottom:1px solid var(--demo-line)}
+.finance-graph-toolbar h3{font:18px/1.5 'Microsoft YaHei',sans-serif;margin:0}
+.finance-graph-toolbar p{font-size:11px;margin:5px 0 0;color:var(--demo-muted)}
+.finance-graph-toolbar button{min-height:44px;flex:none;border:1px solid var(--demo-line);border-radius:5px;padding:0 12px;background:transparent;color:var(--demo-ink);cursor:pointer}
+#financePreview .finance-graph-dialog .finance-trace{display:flex;height:auto;padding:12px}
+#financePreview .finance-graph-dialog .finance-trace-head{display:none}
+.finance-graph-scroll{overflow-x:auto;scrollbar-width:thin;overscroll-behavior-x:contain}
+#financePreview .finance-graph-dialog .finance-trace-canvas{min-width:560px;max-width:none;width:100%;margin:12px 0}
+#financePreview .finance-graph-dialog .finance-trace-node{padding:12px 12px 5px}
+#financePreview .finance-graph-dialog .finance-trace-node strong{font-size:13px}
+#financePreview .finance-graph-dialog .finance-trace-node small{font-size:9px}
+#financePreview .finance-graph-dialog .finance-trace-inspector{max-height:none;overflow:visible;min-height:120px}
+#financePreview .finance-graph-dialog .finance-trace-inspector p{font-size:14px}
+#financePreview :focus-visible{outline:2px solid var(--trace-active);outline-offset:4px}
+:root[data-light-mode=night] #financePreview{--demo-paper:#e5e8de;--demo-surface:#d3ddce;--demo-muted:#526450;border-color:#79937c;background:#a7b8a1}
+:root[data-light-mode=night] #financePreview .finance-preview-bar{background:#becfba}
+:root[data-light-mode=night] #financePreview .finance-replay-controls{background:#d3ddce}
+@media(max-width:960px) and (min-width:761px){#financePreview .finance-replay-layout{grid-template-columns:1fr 1fr;gap:10px;padding:8px}#financePreview .finance-trace-node strong{font-size:10px}#financePreview .finance-trace-node small{font-size:7px}#financePreview .finance-chat-empty>span:not(.finance-welcome-mark){font-size:24px}}
+@media(max-width:760px){
+  #finance-project .chapter-heading.project-overview{grid-template-columns:1fr;padding:32px 0 25px;gap:24px}
+  #finance-project .project-overview .editorial-label{font-size:11px;margin-bottom:18px}
+  #finance-project .project-overview h2{font-size:clamp(32px,7.8vw,42px)}
+  #finance-project .project-deck{font-size:17px;margin-top:16px}
+  #finance-project .project-actions{flex-direction:row;align-items:center;justify-content:flex-start;gap:28px}
+  #finance-project .project-actions>a{min-height:36px}
+  #financePreview .finance-preview-bar{padding:14px 16px;align-items:flex-start;font-size:12px;gap:10px}
+  #financePreview .finance-preview-bar small{font-size:10px;white-space:nowrap}
+  #financePreview .finance-replay-layout{display:block;padding:0}
+  #financePreview .finance-chat{height:clamp(510px,calc(100svh - 140px),650px);border:0}
+  #financePreview[data-state=idle] .finance-chat{height:auto;min-height:0}
+  #financePreview .finance-chat-head{padding:15px 16px;font-size:12px}
+  #financePreview .finance-chat-messages{padding:16px;overscroll-behavior-y:auto}
+  #financePreview[data-state=idle] .finance-chat-messages{flex:none}
+  #financePreview .finance-chat-empty{padding:2px 0 4px}
+  #financePreview .finance-chat-empty>span:not(.finance-welcome-mark){font-size:24px}
+  #financePreview .finance-chat-empty p{font-size:15px;margin:10px 0 16px}
+  .finance-welcome-mark{display:none}
+  #financePreview .finance-message{font-size:16px;line-height:1.8}
+  #financePreview .finance-message.user{margin-left:18px;padding:12px}
+  #financePreview .finance-message-node{font-size:12px}
+  #financePreview .finance-chat-progress{display:none}
+  #financePreview .finance-trace{display:none}
+  #financePreview .finance-conversation-bridge{display:none!important}
+  .finance-live-step{display:flex;flex:none;width:calc(100% - 32px);margin:4px 16px 14px;align-items:center;gap:10px;padding:12px;border:1px solid var(--demo-line);border-left:3px solid #8b9f81;border-radius:4px;background:var(--demo-surface);text-align:left;color:var(--demo-ink);font-family:inherit;cursor:pointer}
+  .finance-live-step>span:nth-child(2){flex:1;min-width:0;display:grid;gap:3px}
+  .finance-live-step small{font-size:10px;color:var(--demo-muted)}
+  .finance-live-step strong{font-size:14px;font-weight:500;line-height:1.5}
+  #financeLiveCopy{font-size:11px;line-height:1.7;color:var(--demo-muted)}
+  .live-step-mark{font:22px Georgia;color:var(--trace-active)}
+  .live-step-open{font-size:11px;white-space:nowrap}
+  #financePreview[data-state=running] .finance-live-step,#financePreview[data-state=waiting] .finance-live-step{border-left-color:var(--trace-active)}
+  #financePreview[data-state=idle] #financeLiveCopy{display:none}
+  #financePreview .finance-composer{margin:0 12px 12px;padding:10px 12px 8px}
+  #financePreview .finance-composer p{font-size:16px;line-height:1.6;margin-bottom:6px}
+  #financePreview .finance-example-picker select{font-size:13px;max-width:175px}
+  #financePreview .finance-replay-controls{padding:7px 14px;font-size:10px;gap:8px}
+  #financePreview .finance-replay-controls>div{gap:12px;flex:none}
+  #financePreview .finance-report p{font-size:15px}
+  #financePreview .finance-report{padding:14px 12px}
+  #financePreview .finance-report-metrics{display:grid;gap:14px;grid-template-columns:repeat(2,minmax(0,1fr))}
+  #financePreview .finance-report-metrics strong{font-size:23px}
+  #financePreview .finance-report-metrics span{font-size:11px}
+  #financePreview .finance-report-findings strong{font-size:15px}
+  #financePreview .finance-report h4{font-size:20px}
+  #financePreview .finance-report-footnote{font-size:12px}
+  #financePreview .finance-query pre{font-size:11px}
+  #finance-project .finance-demo-caption{font-size:12px;margin-top:13px}
+  #finance-project .finance-design-pair{grid-template-columns:1fr;gap:26px;margin-top:34px;padding-bottom:20px}
+  .finance-design-pair h3{font-size:24px}
+  .finance-design-pair p{font-size:16px}
+  #finance-project .finance-context .finance-principles{grid-template-columns:1fr}
+  #finance-project .finance-principles article+article{border-left:0;border-top:1px solid var(--line)}
+  #finance-project .finance-principles p{font-size:15px}
+  #finance-project .finance-context>summary{font-size:14px}
+}
+@media(prefers-reduced-motion:reduce){#financePreview *{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
+
+/* A continuous partition keeps conversation and runtime visually distinct. */
+@media(min-width:761px){
+  #financePreview .finance-chat{border-right:1px solid #b6c3b2;padding-right:14px;box-shadow:3px 0 0 #dfe5d880}
+}
+
+/* Warm paper, quiet sage details, and a drafting-ruler partition. */
+#financePreview{--demo-paper:#faf8f2;--demo-surface:#eeeee4;--demo-line:#d4d2c5;--demo-muted:#72776b;--trace-active:#9b6d5b}
+#financePreview .finance-preview-bar{background:#eeeee4}
+#financePreview .finance-replay-controls{background:#f3f2eb}
+#financePreview .finance-composer{background:#fffdf8;border-color:#d4d2c5;box-shadow:0 2px 8px #3b463006}
+#financePreview #financeSend{background:radial-gradient(circle closest-side,#597462 72%,transparent 75%);color:#fffdf8;font:20px/1 Arial,sans-serif;padding:0;display:grid;place-items:center;box-shadow:none}
+#financePreview #financeSend:hover:not(:disabled){background:radial-gradient(circle closest-side,#3f604b 72%,transparent 75%)}
+@media(min-width:761px){
+ #financePreview .finance-chat{position:relative;border-right:0;box-shadow:none;padding-right:22px}
+ #financePreview .finance-chat::after{content:'';position:absolute;right:0;top:10px;bottom:10px;width:12px;border-left:1px solid #aeb5a3;background:repeating-linear-gradient(to bottom,#9aa58e 0 1px,transparent 1px 50px) left top/11px 50px repeat-y,repeating-linear-gradient(to bottom,#bcc2b1 0 1px,transparent 1px 10px) left top/5px 10px repeat-y;pointer-events:none}
+}

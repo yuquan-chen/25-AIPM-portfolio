@@ -1,0 +1,91 @@
+/* A notebook lifted from the carriage, opened on the same screen. */
+dialog.research-reader{position:fixed;inset:0;width:100%;height:100%;max-width:none;max-height:none;margin:0;padding:70px 34px 40px;border:0;background:transparent;overflow:hidden;color:#284337;--ink:#284337;--red:#986252;--secondary:#75806c;--line:#c9c8b5;box-sizing:border-box;perspective:2200px}
+dialog.research-reader:not([open]){display:none}
+dialog.research-reader[open]{display:flex;align-items:center;justify-content:center}
+dialog.research-reader::backdrop{background:#102d265c;backdrop-filter:blur(3px)}
+.book-stage{position:relative;display:grid;grid-template-columns:1fr 1fr;width:min(100%,1020px);height:min(690px,calc(100dvh - 150px));min-height:0;transform-origin:75% 50%;perspective:2200px;filter:drop-shadow(0 28px 38px #05170e55)}
+.book-stage:before{content:'';position:absolute;inset:-7px -8px -12px;border-radius:4px 8px 8px 4px;background:#9e6955;box-shadow:0 2px 0 #583e32,0 4px 0 #3c3029;z-index:-1}
+.book-stage .research-margin{position:relative;box-sizing:border-box;margin:0;padding:37px 44px 30px;display:flex;flex-direction:column;background:linear-gradient(90deg,#f1eddf 88%,#ded8c4 98%,#b7ac92);border-radius:3px 0 0 3px;box-shadow:0 3px 0 #d1cdb9,0 5px 0 #e9e5d6;overflow:auto}
+.book-stage .research-margin h3{font-size:34px;line-height:1.5;margin:24px 0 18px}
+.book-stage .research-margin>p{font-size:12px;margin-bottom:24px}
+.book-stage .research-index{display:flex;flex-direction:column;gap:0;margin:0;border-top:1px solid #c9c8b5}
+.book-stage .research-index button{font-size:13px;padding:13px 0;border-bottom:1px solid #d2d0be;gap:18px;min-height:43px}
+.book-stage .research-index button:hover{color:#9a6158}
+.book-inscription{margin-top:auto;padding-top:24px;font:9px/1.9 Consolas,monospace;letter-spacing:.12em;color:#7c846f}
+.book-inscription span{font:10px/2 'Microsoft YaHei',sans-serif;letter-spacing:.04em}
+.book-stage .research-book{height:100%;margin:0;border:0;border-radius:0 4px 4px 0;box-shadow:2px 3px 0 #d2cfbc,3px 5px 0 #f1eddc,4px 7px 0 #c5bea7;background:#faf7ed;perspective:1800px;overflow:visible}
+.book-stage .research-page{box-sizing:border-box;height:100%;min-height:0;padding:34px 36px 20px;background:linear-gradient(90deg,#bfb6a04d,#f7f3e6 6%,#faf7ed 18%);overflow:hidden;animation:none}
+.book-stage .research-page h3{font-size:29px;margin:22px 0 18px;flex-shrink:0}
+.book-stage .research-page h3:focus-visible{outline:none}
+.book-stage .research-content{overflow:auto;min-height:0;font-size:14px;line-height:2.05;scrollbar-width:thin;scrollbar-color:#b6b69e transparent;padding-right:4px;overscroll-behavior:contain}
+.book-stage .research-content p{margin-bottom:16px}
+.book-stage .research-content .note-question{font-size:26px;margin:24px 0;padding-left:18px}
+.book-stage .research-content figure img{height:190px}
+.book-stage .research-controls{flex-shrink:0;margin-top:15px;padding-top:8px}
+.book-stage .research-controls button{min-height:40px;font-size:12px}
+.book-dismiss{position:absolute;right:max(28px,calc((100vw - 1020px)/2 - 7px));top:max(20px,calc((100dvh - 690px)/2 - 37px));padding:8px 12px;color:#f6f1df;background:#19392de8;border:1px solid #aeb9a67a;border-radius:3px;font-size:12px;cursor:pointer;display:flex;gap:20px;align-items:center;z-index:5}
+.book-dismiss span{font:23px/1 Georgia,serif}
+.book-front-cover{box-sizing:border-box;position:absolute;inset:0 0 0 50%;z-index:4;background:linear-gradient(90deg,#784c3d,#a46d56 4%,#b98569 10%,#b47d64 96%,#976149);padding:42px;color:#f8e9c8;transform-origin:0 50%;backface-visibility:hidden;border:1px solid #865340;border-radius:0 4px 4px 0;box-shadow:4px 6px 10px #31281844;display:flex;flex-direction:column}
+.book-front-cover>span{font:10px/1.5 Consolas,monospace;letter-spacing:.2em;border-bottom:1px solid #dec09880;padding-bottom:18px}
+.book-front-cover h3{font:400 40px/1.65 'Songti SC','SimSun',serif;margin:55px 0 0}.book-front-cover h3 i{font-style:normal;font-size:26px;letter-spacing:.1em}
+.cover-orbits{font:130px/1 Georgia,serif;opacity:.55;margin:auto 0}.book-front-cover small{font:10px/2 Consolas,monospace;letter-spacing:.09em}
+[data-phase=opening] .research-margin,[data-phase=returning] .research-margin{visibility:hidden}
+[data-phase=opening] .book-stage:before,[data-phase=returning] .book-stage:before{left:50%}
+[data-phase=opening] .book-dismiss,[data-phase=unfolding] .book-dismiss,[data-phase=closing] .book-dismiss,[data-phase=returning] .book-dismiss{opacity:0;pointer-events:none}
+.turning-sheet{position:absolute;inset:0;z-index:3;transform-origin:0 50%;transform-style:preserve-3d;pointer-events:none}
+.turning-sheet .sheet-front,.sheet-back{position:absolute;inset:0;backface-visibility:hidden;box-shadow:5px 0 16px #42362125}
+.sheet-back{transform:rotateY(180deg);background:linear-gradient(90deg,#f1eddf 85%,#dbd4be);display:flex;flex-direction:column;justify-content:space-between;padding:36px;color:#89917b;font:9px/2 Consolas,monospace;letter-spacing:.12em}
+.sheet-back i{font:24px/1.7 'Songti SC','SimSun',serif;align-self:center;margin-bottom:60px;color:#a9aa93}
+
+/* Reading layout: each spread has two content pages; the index lives in the toolbar. */
+dialog.research-reader{padding:64px 40px 32px}
+.book-stage{width:min(100%,1120px);height:min(700px,calc(100dvh - 132px))}
+.book-stage .research-margin,.book-stage .research-page{padding:32px 42px 20px;display:flex;flex-direction:column;min-height:0;height:100%;box-sizing:border-box}
+.book-stage .research-margin{overflow:hidden}
+.book-stage .research-page-head{font:10px/1.6 Consolas,monospace;letter-spacing:.07em;padding-bottom:16px;min-height:17px;flex-shrink:0}
+.book-stage .research-page-head>span:last-child{font-size:9px}
+.book-stage .research-margin h3,.book-stage .research-page h3{font:400 32px/1.45 'Songti SC','SimSun',serif;margin:25px 0 23px;letter-spacing:-.015em;flex-shrink:0}
+.book-stage .research-content{font:16px/1.95 'Microsoft YaHei','PingFang SC',sans-serif;color:#465749;flex:1;min-height:0;overflow:auto;padding-right:3px}
+.book-stage .research-content p{margin:0 0 20px}
+.book-stage .research-content strong{font-weight:600;color:#234839}
+.book-stage .research-content .page-aside{margin-top:26px;padding-top:16px;border-top:1px solid #d5d4c3;color:#85806b;font-size:13px;line-height:1.9}
+.left-folio{display:flex;justify-content:space-between;gap:20px;align-items:center;font:10px/1.5 Consolas,monospace;color:#7a816c;border-top:1px solid #cdd1be;min-height:44px;padding-top:8px;margin-top:15px;flex-shrink:0}
+.book-stage .research-controls{min-height:44px}
+.book-stage .research-controls>span{font-size:11px;letter-spacing:.06em}.book-stage .research-controls button{font-size:13px}
+.book-toolbar{position:absolute;top:max(15px,calc((100dvh - 700px)/2 - 35px));width:min(1120px,calc(100% - 80px));display:flex;align-items:center;gap:12px;color:#faf7ed;z-index:5;font:12px/1.5 'Microsoft YaHei',sans-serif}
+.book-toolbar label{color:#f1eddf}.book-toolbar label>span{opacity:.5;margin-left:12px}
+.book-toolbar select{font:inherit;color:#f8f3e2;border:0;border-bottom:1px solid #d0d6c45c;background:#234035;padding:9px 30px 9px 12px;border-radius:3px;cursor:pointer;max-width:210px}
+.book-toolbar option{background:#f4f1e8;color:#284337}
+.book-toolbar .book-dismiss{position:static;margin-left:auto;font-size:12px;padding:6px 12px;min-height:38px;background:#234035;border-color:#d0d6c45c}
+[data-phase=opening] .book-toolbar,[data-phase=unfolding] .book-toolbar,[data-phase=closing] .book-toolbar,[data-phase=returning] .book-toolbar{visibility:hidden}
+.mobile-note-intro{display:none}
+.note-kicker{font:11px/1.6 'Microsoft YaHei',sans-serif;color:#8c8269;letter-spacing:.13em}
+.opening-question{padding:10px 0 0}.book-stage .research-content .opening-question p{font:400 35px/1.7 'Songti SC','SimSun',serif;color:#294b3c;margin:23px 0 15px;letter-spacing:-.02em}.opening-question em{font-style:normal;color:#9b6353}
+.sound-lines{height:82px;display:flex;gap:8px;align-items:center;padding:0 8px;margin:25px 0}.sound-lines i{height:var(--bar);background:#758b73;width:5px;border-radius:2px;opacity:.7}.sound-lines i:nth-child(3n){background:#b68570}
+.note-definition{margin:23px 0}.note-definition h4{font:600 15px/1.7 'Microsoft YaHei',sans-serif;margin:20px 0 6px;color:#284c3c}.book-stage .note-definition p{font-size:15px;margin-bottom:18px}
+.book-stage .research-route{padding:0;margin:4px 0 24px;list-style:none}.research-route li{display:grid;grid-template-columns:35px 1fr;gap:20px;padding:12px 0 20px;position:relative;margin:0!important}.research-route li:not(:last-child):before{content:'';position:absolute;left:14px;top:45px;bottom:-5px;border-left:1px solid #c5cbb7}.research-route li>span{width:28px;height:28px;border:1px solid #b9c3ad;border-radius:50%;text-align:center;font:11px/28px Consolas,monospace;color:#9b6353}.research-route h4{font:500 21px/1.4 'Songti SC','SimSun',serif;margin:0 0 8px}.book-stage .research-route p{font-size:14px;line-height:1.8;margin:0}
+.orchestra-head{display:grid;grid-template-columns:1fr 1fr;padding:0 0 12px;border-bottom:1px solid #aab7a1;font-size:11px;color:#7c816c}
+.orchestra-map{margin:0 0 20px}.orchestra-map>div{display:grid;grid-template-columns:1fr 1fr;position:relative;border-bottom:1px solid #d5d8c7;padding:11px 0 10px}.orchestra-map>div:after{content:'→';position:absolute;left:43%;top:14px;color:#9f9f87;font-size:14px}.orchestra-map dt,.orchestra-map dd{margin:0;font-size:16px;line-height:1.7;color:#2a4a38}.orchestra-map dd{color:#966454}.orchestra-map small{display:block;font:10px/1.7 Consolas,monospace;color:#7c856e}
+.book-stage .research-content .note-source{font-size:11px;line-height:1.85;color:#81836f}.note-source a{color:#976253;white-space:nowrap;border-bottom:1px solid #c5a99a}
+.book-stage .research-content figure{margin:10px 0 22px}.book-stage .research-content figure img{height:auto;max-height:300px;width:100%;object-fit:contain;background:#fffdf5;border:1px solid #dedecf}.book-stage .research-content figcaption{font-size:11px;line-height:1.8;margin-top:10px}
+.sequence-caption{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:20px 0;border-top:1px solid #cccdbb;border-bottom:1px solid #cccdbb;margin:25px 0 22px;font-size:14px}.sequence-caption b{font-weight:400;color:#a3735d}
+.book-stage .research-content .next-question{font:400 29px/1.7 'Songti SC','SimSun',serif;color:#9b6353;margin:6px 0 27px}.book-stage .note-project-link{display:inline-block;font-size:13px;margin-top:12px}
+@media(max-width:1050px){.book-stage .research-margin,.book-stage .research-page{padding:28px 30px 18px}.book-stage .research-margin h3,.book-stage .research-page h3{font-size:28px;margin:22px 0 20px}.book-stage .research-content{font-size:15px;line-height:1.9}.book-stage .research-content .opening-question p{font-size:29px}.sound-lines{gap:6px}.book-stage .research-content .next-question{font-size:26px}}
+@media(max-height:790px) and (min-width:781px){.book-stage .research-margin,.book-stage .research-page{padding-top:23px}.book-stage .research-margin h3,.book-stage .research-page h3{font-size:27px;margin:18px 0}.book-stage .research-content{font-size:15px;line-height:1.8}.book-stage .research-content p{margin-bottom:16px}.book-stage .research-content .page-aside{margin-top:18px;padding-top:12px}.book-stage .research-content .opening-question p{font-size:29px;margin-top:16px}.sound-lines{height:60px;margin:16px 0}.orchestra-map>div{padding:7px 0}.research-route li{padding-bottom:14px}}
+@media(max-width:780px){dialog.research-reader{padding:67px 20px 26px}.book-stage{grid-template-columns:1fr;max-width:510px;height:calc(100dvh - 109px);transform-origin:50% 50%}.book-stage .research-margin{display:none}.book-stage .research-page{padding:24px 25px 14px}.book-stage .research-page h3{font-size:27px;line-height:1.45;margin:18px 0}.book-stage .research-content{font-size:15px;line-height:1.95}.book-toolbar{top:14px;width:min(510px,calc(100% - 36px));gap:8px}.book-toolbar label{font-size:11px}.book-toolbar label>span{display:none}.book-toolbar select{font-size:12px;padding:7px;max-width:165px}.book-toolbar .book-dismiss{padding:6px 8px;gap:10px}.book-stage:before{inset:-5px -5px -8px}.book-front-cover{left:0;padding:34px}[data-phase=opening] .book-stage:before,[data-phase=returning] .book-stage:before{left:-5px}.book-stage .research-page-head>span:last-child{display:none}.book-stage .research-controls{gap:8px}.book-stage .research-controls button{min-height:44px;font-size:12px}.mobile-note-intro{display:block;padding-bottom:12px;margin-bottom:24px;border-bottom:1px solid #cccebd}.mobile-note-intro>h4{font:400 23px/1.6 'Songti SC','SimSun',serif;margin:0 0 22px}.mobile-note-intro .page-aside{display:none}.book-stage .research-content .opening-question p{font-size:28px}.sound-lines{gap:6px;height:65px}.orchestra-map dt,.orchestra-map dd{font-size:15px}.orchestra-map small{font-size:9px}.sequence-caption{font-size:12px}.book-stage .research-content .next-question{font-size:26px}.book-stage .research-content figure img{max-height:none}}
+@media(max-width:370px){dialog.research-reader{padding-left:12px;padding-right:12px}.book-stage .research-page{padding-left:21px;padding-right:20px}.book-toolbar label{display:none}.book-toolbar select{max-width:190px}.book-stage .research-content .opening-question p{font-size:25px}}
+@media(prefers-reduced-motion:reduce){dialog.research-reader::backdrop{backdrop-filter:none}}
+
+/* Grid tracks must not grow with the longest illustrated page. */
+.book-stage{grid-template-rows:minmax(0,1fr)}
+.book-stage .research-book{min-height:0;min-width:0}
+.book-stage .left-folio,.book-stage .research-controls{box-sizing:border-box;height:54px;min-height:54px;flex-shrink:0;align-items:center}
+.mobile-folio{display:none}
+@media(max-width:780px){.desktop-folio{display:none}.mobile-folio{display:inline}}
+
+@media(min-width:781px){.book-stage .research-page[data-layout="sequence"] figure img{max-height:clamp(150px,26vh,240px)}}
+
+/* The left page turns with its cover; no stationary left board remains behind. */
+.book-stage .research-margin{transform-origin:100% 50%;backface-visibility:hidden;z-index:2;box-shadow:0 3px 0 #d1cdb9,0 5px 0 #e9e5d6,-2px 1px 0 7px #9e6955}
+.book-stage:before{left:50%}
+@media(max-width:780px){.book-stage:before{left:-5px}}

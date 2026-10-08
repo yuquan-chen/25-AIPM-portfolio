@@ -280,6 +280,7 @@
     .right-panel::-webkit-scrollbar-track { background: rgba(156,142,123,.12); }
     .right-panel::-webkit-scrollbar-thumb { background: #984536; border: 1px solid transparent; background-clip: padding-box; border-radius: 5px; }
   </style>
+  <link rel="stylesheet" href="../../assets/finance-chapter-map.css?v=20261005-finance-chapter-2">
 </head>
 <body>
   <div class="entry-screen" id="entryScreen" role="dialog" aria-modal="true" aria-label="Finance Agent 系统地图介绍">
@@ -287,7 +288,7 @@
       <div class="entry-number">01</div><div class="entry-divider" aria-hidden="true"></div>
       <div class="entry-body"><div class="entry-kicker">FEATURED SYSTEM · RUNTIME MAP</div>
         <h2>让模型提方案，<br>让系统掌握执行边界</h2>
-        <p>一张可交互的 2D 系统运行地图。沿着请求、审查、只读执行与证据轨道，看一次财务 Agent 如何把动作留在边界内。</p>
+        <p>根据开源运行时归纳的交互职责图。沿着 Schema 规划、方法确认、模拟执行与结果解读，查看实现与边界。</p>
         <div class="entry-list" aria-label="Finance Agent 内容目录"><span>01 / 接住请求</span><span>02 / 审查方法</span><span>03 / 用户确认</span><span>04 / 返回证据</span></div>
         <span class="entry-hint">点我！点我！点我！</span>
       </div>
@@ -315,12 +316,12 @@
             <button class="run-button" id="playButton" type="button">Ⅱ &nbsp;暂停主路径</button>
             <button class="step-button" id="stepButton" type="button" title="下一步" aria-label="主路径下一步">→</button>
           </div>
-          <div class="flow-status">CURRENT / <b id="flowStep">01 API 入口</b><br>只读数据访问发生在确认之后</div>
+          <div class="flow-status">CURRENT / <b id="flowStep">01 API 入口</b><br>方法确认后进入当前模拟执行路径</div>
         </section>
       </nav>
 
       <section class="map-panel" aria-label="Finance Agent 系统运行架构图">
-        <div class="map-head"><strong>RUNTIME TOPOLOGY / ORTHOGRAPHIC MAP</strong><span>Zone 只表示职责归属；粗锈红线表示真实请求路径</span></div>
+        <div class="map-head"><strong>RUNTIME TOPOLOGY / ORTHOGRAPHIC MAP</strong><span>职责分组与简化主线；Schema 检索和规划合并展示</span></div>
         <div class="map-tools" aria-label="地图缩放">
           <button class="map-tool" id="zoomIn" type="button" aria-label="放大">+</button>
           <button class="map-tool" id="zoomOut" type="button" aria-label="缩小">−</button>
@@ -328,7 +329,7 @@
         </div>
         <svg id="systemMap" viewBox="0 0 1120 760" role="img" aria-labelledby="mapTitle mapDesc" preserveAspectRatio="xMidYMid meet">
           <title id="mapTitle">Finance Agent 固定二维系统运行地图</title>
-          <desc id="mapDesc">请求从 API 入口进入 Agent Control Core，经过方法审查与用户确认后进入只读执行，最终返回结果回复。上下文、安全护栏与证据轨道以较弱虚线表示。</desc>
+          <desc id="mapDesc">请求经过 Schema 检索与方法规划、校验和用户确认后，进入本地模拟执行，再由结果解读器返回说明。这是职责示意，并非逐节点运行轨迹。</desc>
           <defs>
             <pattern id="hatchLight" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(25)"><rect width="5" height="5" fill="#fbf3e2"/><line x1="0" y1="0" x2="0" y2="5" stroke="#9c967f" stroke-width=".65"/></pattern>
             <pattern id="hatchSage" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(25)"><rect width="5" height="5" fill="#dce2d5"/><line x1="0" y1="0" x2="0" y2="5" stroke="#7c8977" stroke-width=".7"/></pattern>
@@ -357,8 +358,8 @@
             <text class="zone-title core" x="530" y="259" text-anchor="middle">Agent Control Core</text>
             <text class="zone-label" x="838" y="241">ZONE 04 / REVIEW GATE</text>
             <text class="zone-title" x="838" y="261">Review Gate</text>
-            <text class="zone-label" x="724" y="499">ZONE 05 / READ-ONLY EXECUTION</text>
-            <text class="zone-title" x="724" y="519">Read-only Execution</text>
+            <text class="zone-label" x="724" y="499">ZONE 05 / EXECUTION</text>
+            <text class="zone-title" x="724" y="519">Execution</text>
             <text class="zone-label" x="280" y="494">ZONE 06 / EVIDENCE</text>
             <text class="zone-title" x="280" y="514">Evidence</text>
           </g>
@@ -427,11 +428,11 @@
 
       <aside class="right-panel" aria-live="polite">
         <div class="right-header"><h2>What it does</h2><span id="detailCode">SYSTEM / 00</span></div>
-        <div class="overview">一条主线讲清楚请求如何完成；三组暗线解释系统为什么安全。模型可以提出方法，但不能绕过审查直接读取数据。</div>
+        <div class="overview">主线归纳当前确认执行路径；虚线表示上下文、校验与证据关系。点击模块查看对应实现及尚待完善的边界。</div>
         <section class="detail">
           <div class="panel-kicker" id="detailKicker">System Overview</div>
           <h3 id="detailTitle">请求如何安全地完成</h3>
-          <p id="detailCopy">API 把请求交给控制核心。只有通过方法审查并获得用户确认，分析方法才会进入只读沙箱；执行结果和审计证据最终一起回到结果回复。</p>
+          <p id="detailCopy">请求经 Schema 检索、方法规划和校验后交给用户确认；当前执行使用模拟数据和本地 Runner。专门的结果解读模型接收结果，普通规划上下文与其分开。</p>
           <dl class="detail-meta">
             <dt>所属空间</dt><dd id="detailZone">All zones</dd>
             <dt>运行角色</dt><dd id="detailRole">主路径 + 三组支撑关系</dd>
@@ -439,10 +440,10 @@
           </dl>
         </section>
         <div class="legend" aria-label="线路图例">
-          <button class="legend-button main" type="button" data-focus="main"><i></i><span>主路径 / 用户请求的真实运行路径</span></button>
-          <button class="legend-button branch" type="button" data-focus="branch"><i></i><span>主路径分支 / 直接回复、重规划、拒绝</span></button>
+          <button class="legend-button main" type="button" data-focus="main"><i></i><span>主线 / 简化的确认执行路径</span></button>
+          <button class="legend-button branch" type="button" data-focus="branch"><i></i><span>分支示意 / 直接回复、重规划、修订</span></button>
           <button class="legend-button context" type="button" data-focus="context"><i></i><span>上下文 / 模型、记忆、目录提供信息</span></button>
-          <button class="legend-button guardrail" type="button" data-focus="guardrail"><i></i><span>安全护栏 / 限制方法与执行边界</span></button>
+          <button class="legend-button guardrail" type="button" data-focus="guardrail"><i></i><span>校验规则 / 检查方法与字段策略</span></button>
           <button class="legend-button evidence" type="button" data-focus="evidence"><i></i><span>证据轨道 / 结果、审计与状态留证</span></button>
           <button class="legend-button event" type="button" data-focus=""><i></i><span>锈红圆点 / 事件检查点</span></button>
           <button class="legend-button zone" type="button" data-focus=""><i></i><span>Zone 边界 / 只表达职责归属</span></button>
@@ -453,6 +454,7 @@
     <footer class="footer"><span>Hover / click a module to inspect · click a legend item to isolate a track</span><span>Finance Agent / Runtime Architecture / 2026</span></footer>
   </main>
 
+  <script src="../../scripts/finance-model.js?v=1"></script>
   <script>
     const NS = "http://www.w3.org/2000/svg";
     const map = document.getElementById("systemMap");
@@ -464,27 +466,12 @@
       { id: "surface", no: "01", name: "Surface", sub: "入口 / 回复", copy: "系统与用户接触的表面：请求从 API 进入，最终结果从回复模块返回。" },
       { id: "core", no: "02", name: "Agent Control Core", sub: "规划 / 校验 / 分析", copy: "控制核心把自然语言目标收紧为结构化、可审查且符合策略的分析方法。" },
       { id: "context", no: "03", name: "Context & Policy", sub: "模型 / 记忆 / 策略", copy: "为规划提供必要语境与约束，但不拥有数据读取权限。" },
-      { id: "review", no: "04", name: "Review Gate", sub: "方法审查 / 用户确认", copy: "任何数据读取都必须先通过方法审查，再得到用户明确确认。" },
-      { id: "execution", no: "05", name: "Read-only Execution", sub: "沙箱 / 只读数据源", copy: "经确认的方法只在受限沙箱中执行，数据源连接始终保持只读。" },
+      { id: "review", no: "04", name: "Review Gate", sub: "方法校验 / 用户确认", copy: "生成的方法先通过结构与策略校验、模拟试运行，再展示给用户确认。执行失败后的自动修复尚未增加再次确认的停点。" },
+      { id: "execution", no: "05", name: "Execution", sub: "本地执行 / 模拟数据", copy: "当前确认路径使用模拟数据和本地 Runner。SQL 按查询策略校验；本地 Provider 不构成生产安全隔离，Firecracker 仍待接入。" },
       { id: "evidence", no: "06", name: "Evidence", sub: "结果 / 审计 / 状态", copy: "保存结果引用、哈希、审计记录与运行状态，让每次读取都可追溯。" }
     ];
 
-    const nodeData = [
-      { id: "api", seq: "01", title: "API 入口", type: "FASTAPI / SSE", zone: "surface", role: "主路径入口", source: "api/app.py", x: 70, y: 303, w: 110, h: 52, copy: "接收用户请求并建立运行上下文；执行过程中的关键状态通过事件流返回前端。" },
-      { id: "response", seq: "02", title: "响应规划", type: "RESPONSE PLAN", zone: "core", role: "意图与响应路由", source: "chat/response_plan.py", x: 285, y: 300, w: 130, h: 58, kind: "core", copy: "先判断请求是普通对话、帮助、澄清还是需要数据读取的分析任务。" },
-      { id: "validation", seq: "03", title: "动作校验", type: "TOOL DECISION", zone: "core", role: "能力边界校验", source: "chat/tool_decision.py", x: 465, y: 300, w: 130, h: 58, kind: "core", copy: "检查动作是否属于系统允许的技能与操作；不需要读取数据的请求可以在这里直接回复。" },
-      { id: "analysis", seq: "04", title: "分析计划", type: "ANALYSIS PLANNER", zone: "core", role: "生成结构化方法", source: "planner/analysis_planner.py", x: 645, y: 300, w: 130, h: 58, kind: "core", copy: "结合目录、业务语义和策略，把目标拆成字段、过滤条件、聚合与输出结构。" },
-      { id: "review-node", seq: "05", title: "方法审查", type: "HARNESS / VALIDATOR", zone: "review", role: "执行前安全闸门", source: "harness/validator.py", x: 830, y: 300, w: 110, h: 58, copy: "审查方法、SQL、字段与敏感数据边界；不合格的方法会被送回分析计划重新生成。" },
-      { id: "approval", seq: "06", title: "用户确认", type: "APPROVAL GATE", zone: "review", role: "用户授权", source: "graph/runtime.py", x: 970, y: 300, w: 110, h: 58, copy: "向用户展示将要执行的方法和读取范围。取消、修改或拒绝会回到响应规划。" },
-      { id: "sandbox", seq: "07", title: "只读沙箱", type: "SANDBOX RUNTIME", zone: "execution", role: "受限执行环境", source: "sandbox/runtime.py", x: 930, y: 530, w: 130, h: 55, kind: "support", copy: "只在隔离环境内运行已经审查并确认的方法，限制执行能力与资源边界。" },
-      { id: "source", seq: "08", title: "只读数据源", type: "READ-ONLY DB", zone: "execution", role: "受控数据读取", source: "executor/readonly_db.py", x: 770, y: 610, w: 130, h: 56, kind: "support", copy: "真实数据只从只读连接出现；系统不能通过这条路径修改生产数据。" },
-      { id: "reply", seq: "09", title: "结果回复", type: "RENDERER / REPLY", zone: "surface", role: "主路径出口", source: "renderer/reply_generator.py", x: 70, y: 595, w: 110, h: 54, copy: "把执行结果、必要说明和状态信息组织为用户可以直接阅读的最终回复。" },
-      { id: "llm", seq: "C1", title: "模型提供方", type: "LLM PROVIDER", zone: "context", role: "上下文提供方", source: "llm/provider.py", x: 280, y: 110, w: 124, h: 52, kind: "support", copy: "模型参与理解和规划，但不直接访问真实数据，也不能绕过审查触发执行。" },
-      { id: "memory", seq: "C2", title: "记忆上下文", type: "SELECTOR / SUMMARY", zone: "context", role: "相关上下文", source: "memory/selector.py", x: 447, y: 110, w: 124, h: 52, kind: "support", copy: "只选择与当前请求相关的对话摘要、引用和安全上下文，控制注入范围。" },
-      { id: "policy", seq: "C3", title: "目录与策略", type: "CATALOG + POLICY", zone: "context", role: "结构与约束", source: "metadata/catalog.py", x: 614, y: 110, w: 124, h: 52, kind: "support", copy: "目录描述可用数据结构，策略决定字段可见性、敏感边界和允许的读取方法。" },
-      { id: "result-store", seq: "E1", title: "结果存储", type: "PRIVATE RESULT STORE", zone: "evidence", role: "结果证据", source: "memory/private_result_store.py", x: 515, y: 530, w: 132, h: 48, kind: "support", copy: "保存受控结果引用、内容哈希与必要的结果元信息，避免原始结果无边界传播。" },
-      { id: "audit", seq: "E2", title: "审计与状态", type: "AUDIT / CHECKPOINT", zone: "evidence", role: "过程证据", source: "audit/audit_logger.py", x: 330, y: 530, w: 132, h: 48, kind: "support", copy: "记录规划、确认、执行、错误与恢复状态，为复核和故障恢复保留轨迹。" }
-    ];
+    const nodeData = window.FinanceModules;
 
     const mainOrder = ["api", "response", "validation", "analysis", "review-node", "approval", "sandbox", "source", "reply"];
     const zoneById = Object.fromEntries(zones.map(zone => [zone.id, zone]));
@@ -609,10 +596,33 @@
     const checkpoints = [...document.querySelectorAll(".checkpoint")];
     const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const duration = 15000;
+    let chapterVisible = true;
     let running = !prefersReduced;
     let elapsed = 0;
     let lastTime = performance.now();
     let lastStep = -1;
+    let replayControlled = false;
+
+    // The chapter's conversation owns playback while a linked replay is active.
+    window.addEventListener('message', event => {
+      if (event.source !== parent || event.origin !== location.origin || event.data?.type !== 'finance-replay-state') return;
+      const {node, state, completed} = event.data;
+      if (node !== null && !nodeById[node]) return;
+      replayControlled = true;
+      setRunning(false);
+      tracer.style.visibility = 'hidden';
+      document.querySelectorAll('.module.running').forEach(el => el.classList.remove('running'));
+      document.querySelectorAll('.module').forEach(el => el.classList.toggle('replay-passed', Array.isArray(completed) && completed.includes(el.dataset.node)));
+      clearSelection();
+      if (node) {
+        selectNode(node);
+        if (state === 'running') document.querySelector(`.module[data-node="${node}"]`)?.classList.add('running');
+      }
+      flowStep.textContent = node ? `${nodeById[node].title} · ${state === 'waiting' ? '等待对话确认' : state === 'done' ? '已完成' : state === 'cancelled' ? '已取消' : state === 'paused' ? '已暂停' : '跟随对话'}` : '等待发送问题';
+      playButton.textContent = '跟随上方对话';
+      playButton.disabled = true;
+      stepButton.disabled = true;
+    });
 
     function setRunning(next) {
       running = next && !prefersReduced;
@@ -640,8 +650,10 @@
 
     function tick(now) {
       const delta = Math.max(0, now - lastTime); lastTime = now;
-      if (running) elapsed = (elapsed + delta) % duration;
-      renderFlow(elapsed / duration);
+      if (chapterVisible && !document.hidden && !replayControlled) {
+        if (running) elapsed = (elapsed + delta) % duration;
+        renderFlow(elapsed / duration);
+      }
       requestAnimationFrame(tick);
     }
 
@@ -660,7 +672,7 @@
       detailCode.textContent = "SYSTEM / 00";
       detailKicker.textContent = "System Overview";
       detailTitle.textContent = "请求如何安全地完成";
-      detailCopy.textContent = "API 把请求交给控制核心。只有通过方法审查并获得用户确认，分析方法才会进入只读沙箱；执行结果和审计证据最终一起回到结果回复。";
+      detailCopy.textContent = "请求经 Schema 检索、方法规划和校验后交给用户确认；当前执行使用模拟数据和本地 Runner。专门的结果解读模型接收结果，普通规划上下文与其分开。";
       detailZone.textContent = "All zones";
       detailRole.textContent = "主路径 + 三组支撑关系";
       detailSource.textContent = "src/finance_agent";
@@ -672,6 +684,17 @@
 
     const params = new URLSearchParams(window.location.search);
     const isEmbedded = params.get("embed") === "1";
+    const isChapter = params.get("chapter") === "1";
+    if (isChapter) {
+      document.body.classList.add("chapter-mode");
+      setRunning(false);
+      const shell = document.querySelector(".shell");
+      const reportSize = () => window.parent.postMessage({type:"finance-chapter-size",height:Math.ceil(shell.getBoundingClientRect().height)},location.origin);
+      new ResizeObserver(reportSize).observe(shell);
+      window.addEventListener("message",event=>{
+        if(event.source===parent&&event.origin===location.origin&&event.data?.type==="finance-chapter-active") chapterVisible=Boolean(event.data.active);
+      });
+    }
     const parentTargetOrigin = window.location.origin === "null" ? "*" : window.location.origin;
     const entryScreen = document.getElementById("entryScreen");
     const entryCopy = document.getElementById("entryCopy");

@@ -1,0 +1,74 @@
+/* A closed archive drawer at the end of the portfolio, then its pulled-out file tray. */
+.notes-cta-row { display: grid; place-items: center; margin: clamp(38px, 6vw, 76px) 0 22px; perspective: 1100px; }
+.notes-cabinet { position: relative; z-index: 1; width: min(900px, 94%); padding: 16px 17px 20px; background: #183a2e; border: 3px solid #6d8061; box-shadow: 8px 9px 0 #071c16, inset 0 0 0 4px #234b3b; transform-style: preserve-3d; }
+.notes-cabinet::before { content: "NOTE ARCHIVE / 04 FILES"; display: block; padding: 0 4px 12px; color: #c4c4a4; font: 10px/1.4 Consolas, monospace; letter-spacing: .14em; }
+.notes-cabinet-top { position: absolute; top: -10px; left: 13px; right: 13px; height: 8px; background: #758767; border: 2px solid #183a2e; box-shadow: 0 -3px #0c281e; }
+.notes-cabinet-drawer { appearance: none; position: relative; z-index: 2; display: grid; width: 100%; min-height: 124px; place-content: center; gap: 14px; padding: 18px 22px 16px; border: 3px solid #97a17b; background: linear-gradient(180deg,#e8dfc4 0%,#d8cfb3 100%); color: #213b30; box-shadow: inset 0 0 0 3px #f1e9d2, 0 5px 0 #0c281e; cursor: pointer; font: inherit; transition: transform .58s cubic-bezier(.18,.8,.2,1), box-shadow .5s, background .2s; transform-style:preserve-3d; }
+.notes-cabinet-drawer:hover { transform: translateY(-4px); box-shadow: inset 0 0 0 3px #f1e9d2, 0 9px 0 #0c281e; background: #f1e9d2; }
+.notes-cabinet-drawer:active { transform: translateY(5px) scale(1.01); box-shadow: inset 0 0 0 3px #f1e9d2, 0 0 0 #0c281e; }
+.notes-cabinet-label { justify-self: center; padding: 10px 20px; border: 2px solid #82906c; background: #f3e5a8; box-shadow: 2px 2px 0 #798260; color: #263c2e; font: 600 clamp(15px, 2vw, 19px)/1.5 'Microsoft YaHei',sans-serif; text-align: center; }
+.notes-cabinet-handle { display: block; justify-self: center; width: 76px; height: 10px; border: 2px solid #687b60; border-radius: 0 0 5px 5px; background: #a9ad8b; box-shadow: 0 3px 0 #435b47; }
+.notes-cabinet-drawer:focus-visible { outline: 3px solid #e9bd63; outline-offset: 5px; }
+.notes-cabinet-feet { position: absolute; left: 26px; right: 26px; bottom: -9px; height: 7px; background: #718160; box-shadow: 0 4px 0 #0c281e; }
+
+.notes-file-tray { position:relative; z-index:1; max-height:0; margin:0 12px; overflow:hidden; opacity:0; visibility:hidden; transform:translateY(-58px) translateZ(-36px) rotateX(-7deg); transform-origin:top center; border:3px solid #7b8968; border-top:0; background:#183a2e; box-shadow:inset 0 0 0 4px #254b3a; transition:max-height .88s cubic-bezier(.18,.8,.2,1), margin .5s, transform .72s cubic-bezier(.18,.8,.2,1), opacity .28s, visibility 0s linear .88s; }
+.notes-cabinet.is-open .notes-file-tray { max-height:1900px; margin:14px -24px 0; opacity:1; visibility:visible; transform:translateY(0) translateZ(24px) rotateX(0); transition:max-height .9s cubic-bezier(.18,.8,.2,1), margin .55s, transform .72s cubic-bezier(.18,.8,.2,1), opacity .3s .12s, visibility 0s; }
+.notes-cabinet.is-open .notes-cabinet-drawer { transform:translateY(13px) translateZ(24px); box-shadow:inset 0 0 0 3px #f1e9d2, 0 14px 0 #0c281e, 0 20px 22px #06191055; }
+.notes-cabinet.is-open .notes-cabinet-feet { opacity:.25; }
+.notes-file-tray-inner { padding:12px; background:#183a2e; }
+.notes-file-tray-head { display:flex; align-items:center; justify-content:space-between; gap:14px; padding:7px 9px 12px; border-bottom:2px solid #748364; color:#d8c78a; font:10px/1.5 Consolas,monospace; letter-spacing:.1em; }
+.notes-drawer-close { appearance:none; padding:7px 12px; border:2px solid #a8ad87; background:#e8dfc4; color:#263d30; cursor:pointer; font:600 12px/1.4 'Microsoft YaHei',sans-serif; }
+.notes-drawer-close:hover,.notes-drawer-close:focus-visible { background:#f3e5a8; outline:2px solid #f3e5a8; outline-offset:3px; }
+#notes.notes-drawer-content { --paper:#e9e1ca; --paper-deep:#d8ccb2; --paper-light:#f6efdf; --line:#c8bda5; --line-soft:#d7ccb6; --red:#984536; --muted:#777365; --green:#405248; --ink:#282a24; --blue:#53666a; padding:0; color:var(--ink); }
+#notes .box-label { display: block; margin: 0; padding: 9px 12px; background: #d9cfb4; color: #665648; font: 10px/1.5 Consolas,monospace; letter-spacing: .1em; }
+#notes .journey-shell { display:grid; grid-template-columns:minmax(0,1fr); overflow:visible; border:2px solid #a8a181; background:#e9e1ca; box-shadow:4px 5px 0 #0b281d66; }
+#notes .journey-nav { grid-column:1; grid-row:1; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); align-items:stretch; gap:14px 22px; padding:36px 23px 23px; border-bottom:8px solid #a7a182; background:repeating-linear-gradient(0deg,#e2d9c2 0,#e2d9c2 2px,#e9e1ca 2px,#e9e1ca 11px); position:relative; z-index:2; }
+#notes .journey-nav::before { content:"FILE DRAWER / SELECT A FOLDER"; position:absolute; top:10px; left:18px; color:#72654f; font:9px/1.4 Consolas,monospace; letter-spacing:.1em; }
+#notes .journey-step { appearance:none; position:relative; z-index:1; display:flex; flex-direction:column; justify-content:flex-end; width:calc(100% - 12px); min-width:0; min-height:120px; padding:14px 18px 13px; border:2px solid #887e68; border-radius:13px 13px 0 0; background:#f3eddd; box-shadow:3px 4px 0 #45574438; color:#293c30; cursor:pointer; text-align:left; transform:translateY(0); transition:transform .25s,background .2s,box-shadow .2s; }
+#notes .journey-step:nth-of-type(even) { justify-self:end; width:calc(100% - 12px); min-height:138px; }
+#notes .journey-step:nth-of-type(3) { margin-left:18px; }
+#notes .journey-step::before { content:""; position:absolute; top:-18px; left:12px; width:min(62%,125px); height:18px; border:2px solid #887e68; border-bottom:0; border-radius:10px 10px 0 0; background:inherit; }
+#notes .journey-step::after { content:""; position:absolute; top:10px; right:10px; bottom:auto; left:auto; width:5px; height:calc(100% - 20px); background:#b6754b; opacity:0; transition:opacity .2s; }
+#notes .journey-step:hover { transform:translateY(-5px); }
+#notes .journey-step[aria-selected="true"] { z-index:4; background:#fffaf0; box-shadow:6px 8px 0 #45574435,0 9px 16px #312b1d20; transform:translateY(-11px); }
+#notes .journey-step[aria-selected="true"]::after { opacity:1; }
+#notes .journey-step span { color:#8a503d; font:10px/1.5 Consolas,monospace; }
+#notes .journey-step b { display:block; margin:9px 0 6px; font:600 14px/1.45 'Microsoft YaHei',sans-serif; }
+#notes .journey-step small { color:#596456; font:10px/1.45 Consolas,monospace; }
+#notes .journey-step:focus-visible { outline:3px solid #a64f3d; outline-offset:4px; }
+#notes .notes-file-reader { padding:12px; background:#e9e1ca; }
+#notes .notes-file-reader[hidden],#notes .journey-detail[hidden] { display:none!important; }
+#notes .notes-back-to-files { appearance:none; display:block; margin:0 0 10px; padding:8px 12px; border:1px solid #9b8f72; background:#f4eddd; color:#35483a; cursor:pointer; font:12px/1.5 'Microsoft YaHei',sans-serif; }
+#notes .notes-back-to-files:hover,#notes .notes-back-to-files:focus-visible { background:#f3e5a8; outline:2px solid #a64f3d; outline-offset:2px; }
+#notes .journey-detail { grid-column:1; grid-row:1; width:auto; height:auto; min-height:0; border:1px solid #c8bda5; background:#eee6d1; animation:folder-page-in .3s ease both; }
+#notes .journey-detail > * { animation:folder-page-in .35s cubic-bezier(.2,.75,.25,1) both; }
+@keyframes folder-page-in { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+#notes .journey-copy { padding:28px 30px; color:#29382e; }
+#notes .journey-copy h3 { color:#233b30; }
+#notes .journey-article .article-lede,#notes .journey-article .article-body p { color:#4f473a; }
+#notes .journey-article .article-quote,#notes .journey-article .key-point { color:#405248; }
+#notes .journey-artifact { background-color:#eee6d1; }
+
+@media(max-width:760px) {
+  .notes-cabinet { width:94%; padding:13px 12px 16px; }
+  .notes-cabinet-drawer { min-height:112px; padding:15px 12px; }
+  .notes-cabinet.is-open .notes-file-tray { margin:10px -12px 0; }
+  .notes-file-tray-inner { padding:8px; }
+  .notes-file-tray-head { font-size:9px; }
+  #notes .journey-nav { grid-template-columns:1fr; gap:15px; padding:34px 12px 14px; }
+  #notes .journey-step,#notes .journey-step:nth-of-type(even) { min-height:133px; padding:12px 10px; }
+  #notes .journey-step:nth-of-type(3) { margin-left:0; }
+  #notes .journey-step b { font-size:12px; }
+  #notes .journey-step small { font-size:9px; overflow-wrap:anywhere; }
+  #notes .journey-copy { padding:21px 17px; }
+  #notes .journey-artifact { padding:12px; }
+  #notes .artifact-figure { min-height:320px; }
+  #notes .tensor-stage { grid-template-columns:1fr; gap:8px; margin-bottom:30px; }
+  #notes .tensor-stage::before,#notes .tensor-stage::after { display:none; }
+  #notes .tensor-shape,#notes .tensor-stage:nth-of-type(even) .tensor-shape { transform:none; }
+  #notes .tensor-shape.is-open { width:100%; margin-left:0; }
+  #notes .tensor-connector-left { display:none; }
+}
+@media(prefers-reduced-motion:reduce) {
+  #notes .journey-step,#notes .journey-detail > * { animation:none; transition:none; }
+}

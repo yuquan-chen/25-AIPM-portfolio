@@ -1,0 +1,69 @@
+@font-face {
+  font-family: 'Portfolio Pixel';
+  src: url('./fonts/fusion-pixel-12px-zh.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+/* Cabinet labels use the bundled Chinese pixel font; long reading stays calm and clear. */
+.notes-cta-row { display:grid; place-items:center; margin:70px 0 18px; }
+.notes-cabinet { position:relative; width:min(1040px,100%); scroll-margin-top:110px; }
+.notes-drawer-scene { position:relative; width:100%; aspect-ratio:800/216; overflow-anchor:none; }
+.notes-drawer-art { position:absolute; inset:0; pointer-events:none; }
+.notes-drawer-art svg { shape-rendering:crispEdges; }
+.notes-cabinet-drawer { appearance:none; position:absolute; z-index:6; display:flex; justify-content:center; align-items:flex-start; padding:2.7% 8% 0; color:#302f2d; border:0; background:transparent; cursor:grab; -webkit-tap-highlight-color:transparent; }
+.notes-cabinet-drawer:active { cursor:grabbing; }
+.notes-cabinet-label { display:block; padding:9px 22px; background:#fffefa; border:1px solid #494844; color:#302f2d; font:500 clamp(12px,1.35vw,16px)/1.5 'Portfolio Pixel',monospace; box-shadow:3px 3px 0 #343330; transition:background .18s,transform .18s,box-shadow .18s; }
+.notes-cabinet-drawer:hover .notes-cabinet-label { background:#fff; transform:translate(-1px,-1px); box-shadow:4px 4px 0 #343330; }
+#notesCabinet[data-drawer-state="open"] .notes-cabinet-label,#notesCabinet[data-drawer-state="reading"] .notes-cabinet-label { display:none; }
+.notes-cabinet-drawer:focus-visible { outline:2px solid #d8aa70; outline-offset:0; }
+.notes-file-tabs { position:absolute; inset:0; pointer-events:none; }
+.notes-folder-tab { appearance:none; position:absolute; z-index:3; display:flex; align-items:center; justify-content:center; gap:8px; margin:0; padding:0 12px; border:0; background:none; color:#302f2d; cursor:pointer; pointer-events:auto; text-align:center; white-space:nowrap; font:400 clamp(12px,1.35vw,15px)/1.15 'Portfolio Pixel',monospace; -webkit-tap-highlight-color:transparent; }
+.notes-folder-tab span { font:11px/var(--label-height,34px) 'Portfolio Pixel',monospace; }
+.notes-folder-tab b { font-weight:400; line-height:var(--label-height,34px); }
+.notes-folder-tab:focus-visible { outline:2px solid #a96b45; outline-offset:0; }
+.notes-folder-tab:disabled { opacity:1; color:#302f2d; cursor:default; }
+#notes [hidden] { display:none!important; }
+
+#notes { --paper:#fffefa; --paper-deep:#e6e5de; --paper-light:#fffefa; --line:#bcbab3; --line-soft:#d6d5ce; --red:#665a4a; --muted:#77746d; --green:#45443f; --ink:#302f2d; --blue:#565b59; color:var(--ink); }
+#notes .notes-file-reader { position:absolute; z-index:5; display:flex; flex-direction:column; overflow:hidden; overscroll-behavior:contain; scrollbar-width:thin; scrollbar-color:#9e9b93 transparent; padding:0 16px 14px; color:var(--ink); background:#fffefa; border:1px solid #494844; box-shadow:4px 4px 0 #343330; }
+#notes .notes-reader-toolbar { position:sticky; z-index:6; top:0; flex:none; display:flex; justify-content:space-between; align-items:center; gap:12px; padding:9px 0 12px; background:#fffefa; border-bottom:1px solid #c7c6bf; }
+#notes .notes-reader-toolbar span { color:#66645f; font:9px/1.4 'Portfolio Pixel',monospace; letter-spacing:.04em; }
+#notes .journey-detail { display:grid; flex:1; grid-template-columns:minmax(0,.94fr) minmax(0,1.06fr); gap:16px; min-height:0; height:auto; overflow:hidden; }
+#notes .journey-copy { min-width:0; height:100%; max-height:none; overflow:auto; padding:18px 14px 24px 0; border:0; border-right:1px solid var(--line); scrollbar-width:thin; scrollbar-color:#b5b3ac transparent; }
+#notes .journey-copy .eyebrow { font:9px/1.7 'Portfolio Pixel',monospace; color:#6d6a63; letter-spacing:.03em; }
+#notes .journey-copy h3 { margin:10px 0 19px; max-width:none; color:#302f2d; font:400 clamp(20px,2.2vw,25px)/1.6 'Portfolio Pixel',monospace; letter-spacing:0; }
+#notes .article-lede,#notes .article-body p,#notes .article-end { max-width:none; color:#45443f; font:14px/1.9 'Microsoft YaHei',sans-serif; margin:0 0 16px; }
+#notes .article-lede { font-weight:500; }
+#notes .article-body { max-width:none; }
+#notes .article-quote { max-width:none; margin:21px 0; padding:8px 0 8px 14px; border-left:2px solid #8e826d; font:14px/1.9 'Songti SC','SimSun',serif; color:#4b4943; }
+#notes .article-quote cite { display:block; font:9px/1.8 'Portfolio Pixel',monospace; margin-top:8px; color:#77746d; }
+#notes .key-point { color:#33332e; font-weight:600; }
+#notes .journey-artifact { display:block; min-width:0; min-height:0; height:100%; max-height:100%; padding:14px 0 16px 2px; border:0; overflow:auto; scrollbar-width:thin; scrollbar-color:#b5b3ac transparent; }
+#notes .artifact-figure { min-width:0; min-height:100%; height:auto; margin:0; }
+#notes .artifact-figure img { display:block; height:auto; max-width:100%; }
+#notes .artifact-code { min-height:0; padding:16px; font-size:11px; overflow-wrap:anywhere; }
+#notes .journey-artifact:has(.tensor-flow) { background-image:linear-gradient(rgba(48,47,45,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(48,47,45,.08) 1px,transparent 1px),linear-gradient(rgba(48,47,45,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(48,47,45,.025) 1px,transparent 1px); background-size:32px 32px,32px 32px,8px 8px,8px 8px; }
+#notes .tensor-flow { --flow-gap:18px; }
+#notes .tensor-card { padding:12px 11px; }
+
+@media(max-width:680px) {
+  .notes-cta-row { margin-top:45px; }
+  .notes-cabinet { width:calc(100% + 28px); }
+  .notes-cabinet-drawer { padding:2.4% 7% 0; }
+  .notes-cabinet-label { padding:5px 10px; font-size:10px; }
+  .notes-folder-tab { padding:0 8px; font-size:11px; gap:6px; }
+  .notes-folder-tab span { font-size:9px; }
+  #notes .notes-file-reader { padding:0 8px 10px; overflow:auto; }
+  #notes .journey-detail { display:block; overflow:visible; }
+  #notes .journey-copy { height:auto; max-height:none; overflow:visible; padding:16px 2px 14px; border-right:0; border-bottom:1px solid var(--line); }
+  #notes .journey-copy h3 { font-size:19px; }
+  #notes .journey-artifact { height:auto; max-height:40vh; min-height:180px; padding:12px 0; overflow:auto; }
+  #notes .article-lede,#notes .article-body p,#notes .article-end { font-size:13px; }
+  #notes .tensor-stage { grid-template-columns:1fr; gap:12px; margin-bottom:30px; }
+  #notes .tensor-stage::before,#notes .tensor-stage::after,#notes .tensor-connector-left { display:none; }
+  #notes .tensor-shape,#notes .tensor-stage:nth-of-type(even) .tensor-shape { transform:none; }
+  #notes .tensor-shape.is-open,#notes .tensor-action.is-open { width:100%; margin:0; }
+}
+@media(prefers-reduced-motion:reduce) { .notes-cabinet * { transition:none!important; animation:none!important; scroll-behavior:auto; } }

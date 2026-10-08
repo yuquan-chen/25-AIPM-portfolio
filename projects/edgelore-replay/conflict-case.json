@@ -1,0 +1,1063 @@
+{
+  "kind": "synthetic-inputs-real-core-output",
+  "generatedAt": "2026-10-05T14:26:04.118Z",
+  "description": "虚构输入；运行本地 Edgelore 已构建的 capture、autoResolveConstraintGuided、resolveConflict 导出真实状态。汇报文案与时序为前端编排，不是线上推送或测评记录。",
+  "ids": {
+    "budget": "node:core:statement:2d14eb1d-a846-4964-8ef5-595a1dfe9f52",
+    "budgetNew": "node:core:statement:dab880d0-5dd2-4c51-83cc-7c4112d72992",
+    "owner": "node:core:statement:30deaa16-98e4-4af4-962d-f5b3c7db0406",
+    "ownerNew": "node:core:statement:c48fe6c2-e757-4d0e-8174-ff921063be12",
+    "budgetDimension": "node:core:dimension:d95aa286-d275-415e-a4b7-d27cc9b16b82",
+    "ownerDimension": "node:core:dimension:3fea9d6d-72dc-4c68-9138-2ca47b2cd4db",
+    "rule": "constraint:0dc485c8-8b36-4361-b5bc-55088d884406"
+  },
+  "baseline": {
+    "nodes": [
+      {
+        "id": "node:core:dimension:d95aa286-d275-415e-a4b7-d27cc9b16b82",
+        "type": "core:dimension",
+        "created_by": "human:demo",
+        "created_at": "2026-10-05T09:01:00.000Z",
+        "updated_at": "2026-10-05T09:01:00.000Z",
+        "schema_version": "m0.1",
+        "source_refs": [
+          "demo:message:1"
+        ],
+        "state": "tentative",
+        "attributes": {
+          "propertyKey": "budget",
+          "subjectRef": "$scopeOwner"
+        },
+        "tags": [],
+        "key": "budget",
+        "cardinality": "single"
+      },
+      {
+        "id": "node:core:statement:2d14eb1d-a846-4964-8ef5-595a1dfe9f52",
+        "type": "core:statement",
+        "created_by": "human:demo",
+        "created_at": "2026-10-05T09:01:00.000Z",
+        "updated_at": "2026-10-05T09:01:00.000Z",
+        "schema_version": "m0.1",
+        "source_refs": [
+          "demo:message:1"
+        ],
+        "state": "accepted",
+        "attributes": {},
+        "tags": [],
+        "dimension_id": "node:core:dimension:d95aa286-d275-415e-a4b7-d27cc9b16b82",
+        "value": 5000,
+        "unit": "CNY"
+      },
+      {
+        "id": "node:core:dimension:3fea9d6d-72dc-4c68-9138-2ca47b2cd4db",
+        "type": "core:dimension",
+        "created_by": "human:demo",
+        "created_at": "2026-10-05T09:02:00.000Z",
+        "updated_at": "2026-10-05T09:02:00.000Z",
+        "schema_version": "m0.1",
+        "source_refs": [
+          "demo:message:2"
+        ],
+        "state": "tentative",
+        "attributes": {
+          "propertyKey": "owner",
+          "subjectRef": "$scopeOwner"
+        },
+        "tags": [],
+        "key": "owner",
+        "cardinality": "single"
+      },
+      {
+        "id": "node:core:statement:30deaa16-98e4-4af4-962d-f5b3c7db0406",
+        "type": "core:statement",
+        "created_by": "human:demo",
+        "created_at": "2026-10-05T09:02:00.000Z",
+        "updated_at": "2026-10-05T09:02:00.000Z",
+        "schema_version": "m0.1",
+        "source_refs": [
+          "demo:message:2"
+        ],
+        "state": "accepted",
+        "attributes": {},
+        "tags": [],
+        "dimension_id": "node:core:dimension:3fea9d6d-72dc-4c68-9138-2ca47b2cd4db",
+        "value": "Alice"
+      }
+    ],
+    "edges": [],
+    "constraints": [
+      {
+        "id": "constraint:0dc485c8-8b36-4361-b5bc-55088d884406",
+        "kind": "core:constraint",
+        "revision_id": "constraint-revision:1",
+        "name": "预算不超过6000元",
+        "participants": [
+          "node:core:dimension:d95aa286-d275-415e-a4b7-d27cc9b16b82"
+        ],
+        "bindings": {
+          "x1": "node:core:dimension:d95aa286-d275-415e-a4b7-d27cc9b16b82"
+        },
+        "expression": {
+          "op": "<=",
+          "args": [
+            {
+              "op": "avg",
+              "args": [
+                {
+                  "ref": "x1"
+                }
+              ]
+            },
+            6000
+          ]
+        },
+        "activation_state": "active",
+        "approved_by": "human:demo",
+        "approved_at": "2026-10-05T14:26:04.113Z",
+        "created_by": "human:demo",
+        "created_at": "2026-10-05T14:26:04.111Z",
+        "schema_version": "m0.1",
+        "source_refs": [],
+        "attributes": {},
+        "tags": []
+      }
+    ],
+    "conflicts": []
+  },
+  "budgetConflict": {
+    "nodes": [
+      {
+        "id": "node:core:dimension:d95aa286-d275-415e-a4b7-d27cc9b16b82",
+        "type": "core:dimension",
+        "created_by": "human:demo",
+        "created_at": "2026-10-05T09:01:00.000Z",
+        "updated_at": "2026-10-05T14:26:04.113Z",
+        "schema_version": "m0.1",
+        "source_refs": [
+          "demo:message:1"
+        ],
+        "state": "conflict",
+        "attributes": {
+          "propertyKey": "budget",
+          "subjectRef": "$scopeOwner"
+        },
+        "tags": [],
+        "key": "budget",
+        "cardinality": "single"
+      },
+      {
+        "id": "node:core:statement:2d14eb1d-a846-4964-8ef5-595a1dfe9f52",
+        "type": "core:statement",
+        "created_by": "human:demo",
+        "created_at": "2026-10-05T09:01:00.000Z",
+        "updated_at": "2026-10-05T09:01:00.000Z",
+        "schema_version": "m0.1",
+        "source_refs": [
+          "demo:message:1"
+        ],
+        "state": "accepted",
+        "attributes": {},
+        "tags": [],
+        "dimension_id": "node:core:dimension:d95aa286-d275-415e-a4b7-d27cc9b16b82",
+        "value": 5000,
+        "unit": "CNY"
+      },
+      {
+        "id": "node:core:dimension:3fea9d6d-72dc-4c68-9138-2ca47b2cd4db",
+        "type": "core:dimension",
+        "created_by": "human:demo",
+        "created_at": "2026-10-05T09:02:00.000Z",
+        "updated_at": "2026-10-05T09:02:00.000Z",
+        "schema_version": "m0.1",
+        "source_refs": [
+          "demo:message:2"
+        ],
+        "state": "tentative",
+        "attributes": {
+          "propertyKey": "owner",
+          "subjectRef": "$scopeOwner"
+        },
+        "tags": [],
+        "key": "owner",
+        "cardinality": "single"
+      },
+      {
+        "id": "node:core:statement:30deaa16-98e4-4af4-962d-f5b3c7db0406",
+        "type": "core:statement",
+        "created_by": "human:demo",
+        "created_at": "2026-10-05T09:02:00.000Z",
+        "updated_at": "2026-10-05T09:02:00.000Z",
+        "schema_version": "m0.1",
+        "source_refs": [
+          "demo:message:2"
+        ],
+        "state": "accepted",
+        "attributes": {},
+        "tags": [],
+        "dimension_id": "node:core:dimension:3fea9d6d-72dc-4c68-9138-2ca47b2cd4db",
+        "value": "Alice"
+      },
+      {
+        "id": "node:core:statement:dab880d0-5dd2-4c51-83cc-7c4112d72992",
+        "type": "core:statement",
+        "created_by": "human:demo",
+        "created_at": "2026-10-05T09:03:00.000Z",
+        "updated_at": "2026-10-05T09:03:00.000Z",
+        "schema_version": "m0.1",
+        "source_refs": [
+          "demo:message:3"
+        ],
+        "state": "tentative",
+        "attributes": {},
+        "tags": [],
+        "dimension_id": "node:core:dimension:d95aa286-d275-415e-a4b7-d27cc9b16b82",
+        "value": 8000
+      }
+    ],
+    "edges": [
+      {
+        "id": "edge:afb7994c-9e46-4f95-a5f4-5fae68cfb943",
+        "type": "core:contradicts",
+        "from": "node:core:statement:dab880d0-5dd2-4c51-83cc-7c4112d72992",
+        "to": "node:core:statement:2d14eb1d-a846-4964-8ef5-595a1dfe9f52",
+        "created_by": "human:demo",
+        "created_at": "2026-10-05T09:03:00.000Z",
+        "schema_version": "m0.1",
+        "source_refs": [
+          "demo:message:3"
+        ],
+        "attributes": {
+          "reason": "single-cardinality incompatible values"
+        },
+        "tags": []
+      }
+    ],
+    "constraints": [
+      {
+        "id": "constraint:0dc485c8-8b36-4361-b5bc-55088d884406",
+        "kind": "core:constraint",
+        "revision_id": "constraint-revision:1",
+        "name": "预算不超过6000元",
+        "participants": [
+          "node:core:dimension:d95aa286-d275-415e-a4b7-d27cc9b16b82"
+        ],
+        "bindings": {
+          "x1": "node:core:dimension:d95aa286-d275-415e-a4b7-d27cc9b16b82"
+        },
+        "expression": {
+          "op": "<=",
+          "args": [
+            {
+              "op": "avg",
+              "args": [
+                {
+                  "ref": "x1"
+                }
+              ]
+            },
+            6000
+          ]
+        },
+        "activation_state": "active",
+        "approved_by": "human:demo",
+        "approved_at": "2026-10-05T14:26:04.113Z",
+        "created_by": "human:demo",
+        "created_at": "2026-10-05T14:26:04.111Z",
+        "schema_version": "m0.1",
+        "source_refs": [],
+        "attributes": {},
+        "tags": []
+      }
+    ],
+    "conflicts": [
+      {
+        "dimensionId": "node:core:dimension:d95aa286-d275-415e-a4b7-d27cc9b16b82",
+        "dimensionKey": "budget",
+        "participantIds": [
+          "node:core:statement:dab880d0-5dd2-4c51-83cc-7c4112d72992",
+          "node:core:statement:2d14eb1d-a846-4964-8ef5-595a1dfe9f52"
+        ],
+        "incumbents": [
+          {
+            "statementId": "node:core:statement:2d14eb1d-a846-4964-8ef5-595a1dfe9f52",
+            "value": 5000,
+            "state": "accepted",
+            "createdBy": "human:demo",
+            "createdAt": "2026-10-05T09:01:00.000Z"
+          }
+        ],
+        "challengers": [
+          {
+            "statementId": "node:core:statement:dab880d0-5dd2-4c51-83cc-7c4112d72992",
+            "value": 8000,
+            "state": "tentative",
+            "createdBy": "human:demo",
+            "createdAt": "2026-10-05T09:03:00.000Z"
+          }
+        ]
+      }
+    ]
+  },
+  "budgetResolved": {
+    "nodes": [
+      {
+        "id": "node:core:dimension:d95aa286-d275-415e-a4b7-d27cc9b16b82",
+        "type": "core:dimension",
+        "created_by": "human:demo",
+        "created_at": "2026-10-05T09:01:00.000Z",
+        "updated_at": "2026-10-05T14:26:04.115Z",
+        "schema_version": "m0.1",
+        "source_refs": [
+          "demo:message:1"
+        ],
+        "state": "accepted",
+        "attributes": {
+          "propertyKey": "budget",
+          "subjectRef": "$scopeOwner"
+        },
+        "tags": [],
+        "key": "budget",
+        "cardinality": "single"
+      },
+      {
+        "id": "node:core:statement:2d14eb1d-a846-4964-8ef5-595a1dfe9f52",
+        "type": "core:statement",
+        "created_by": "human:demo",
+        "created_at": "2026-10-05T09:01:00.000Z",
+        "updated_at": "2026-10-05T09:01:00.000Z",
+        "schema_version": "m0.1",
+        "source_refs": [
+          "demo:message:1"
+        ],
+        "state": "accepted",
+        "attributes": {},
+        "tags": [],
+        "dimension_id": "node:core:dimension:d95aa286-d275-415e-a4b7-d27cc9b16b82",
+        "value": 5000,
+        "unit": "CNY"
+      },
+      {
+        "id": "node:core:dimension:3fea9d6d-72dc-4c68-9138-2ca47b2cd4db",
+        "type": "core:dimension",
+        "created_by": "human:demo",
+        "created_at": "2026-10-05T09:02:00.000Z",
+        "updated_at": "2026-10-05T09:02:00.000Z",
+        "schema_version": "m0.1",
+        "source_refs": [
+          "demo:message:2"
+        ],
+        "state": "tentative",
+        "attributes": {
+          "propertyKey": "owner",
+          "subjectRef": "$scopeOwner"
+        },
+        "tags": [],
+        "key": "owner",
+        "cardinality": "single"
+      },
+      {
+        "id": "node:core:statement:30deaa16-98e4-4af4-962d-f5b3c7db0406",
+        "type": "core:statement",
+        "created_by": "human:demo",
+        "created_at": "2026-10-05T09:02:00.000Z",
+        "updated_at": "2026-10-05T09:02:00.000Z",
+        "schema_version": "m0.1",
+        "source_refs": [
+          "demo:message:2"
+        ],
+        "state": "accepted",
+        "attributes": {},
+        "tags": [],
+        "dimension_id": "node:core:dimension:3fea9d6d-72dc-4c68-9138-2ca47b2cd4db",
+        "value": "Alice"
+      },
+      {
+        "id": "node:core:statement:dab880d0-5dd2-4c51-83cc-7c4112d72992",
+        "type": "core:statement",
+        "created_by": "human:demo",
+        "created_at": "2026-10-05T09:03:00.000Z",
+        "updated_at": "2026-10-05T14:26:04.115Z",
+        "schema_version": "m0.1",
+        "source_refs": [
+          "demo:message:3"
+        ],
+        "state": "superseded",
+        "attributes": {},
+        "tags": [],
+        "dimension_id": "node:core:dimension:d95aa286-d275-415e-a4b7-d27cc9b16b82",
+        "value": 8000
+      }
+    ],
+    "edges": [
+      {
+        "id": "edge:afb7994c-9e46-4f95-a5f4-5fae68cfb943",
+        "type": "core:contradicts",
+        "from": "node:core:statement:dab880d0-5dd2-4c51-83cc-7c4112d72992",
+        "to": "node:core:statement:2d14eb1d-a846-4964-8ef5-595a1dfe9f52",
+        "created_by": "human:demo",
+        "created_at": "2026-10-05T09:03:00.000Z",
+        "schema_version": "m0.1",
+        "source_refs": [
+          "demo:message:3"
+        ],
+        "attributes": {
+          "reason": "single-cardinality incompatible values"
+        },
+        "tags": []
+      },
+      {
+        "id": "edge:a27f06d2-181e-4c15-bd3b-2537f6b009f4",
+        "type": "core:supersedes",
+        "from": "node:core:statement:2d14eb1d-a846-4964-8ef5-595a1dfe9f52",
+        "to": "node:core:statement:dab880d0-5dd2-4c51-83cc-7c4112d72992",
+        "created_by": "human:demo",
+        "created_at": "2026-10-05T14:26:04.115Z",
+        "schema_version": "m0.1",
+        "source_refs": [],
+        "attributes": {
+          "resolution": true,
+          "note": "constraint-guided: \"预算不超过6000元\" decides — 5000 satisfied; others: 8000=violated"
+        },
+        "tags": []
+      }
+    ],
+    "constraints": [
+      {
+        "id": "constraint:0dc485c8-8b36-4361-b5bc-55088d884406",
+        "kind": "core:constraint",
+        "revision_id": "constraint-revision:1",
+        "name": "预算不超过6000元",
+        "participants": [
+          "node:core:dimension:d95aa286-d275-415e-a4b7-d27cc9b16b82"
+        ],
+        "bindings": {
+          "x1": "node:core:dimension:d95aa286-d275-415e-a4b7-d27cc9b16b82"
+        },
+        "expression": {
+          "op": "<=",
+          "args": [
+            {
+              "op": "avg",
+              "args": [
+                {
+                  "ref": "x1"
+                }
+              ]
+            },
+            6000
+          ]
+        },
+        "activation_state": "active",
+        "approved_by": "human:demo",
+        "approved_at": "2026-10-05T14:26:04.113Z",
+        "created_by": "human:demo",
+        "created_at": "2026-10-05T14:26:04.111Z",
+        "schema_version": "m0.1",
+        "source_refs": [],
+        "attributes": {},
+        "tags": []
+      }
+    ],
+    "conflicts": []
+  },
+  "automatic": {
+    "status": "resolved",
+    "reason": "constraint-guided: \"预算不超过6000元\" decides — 5000 satisfied; others: 8000=violated",
+    "result": {
+      "dimensionId": "node:core:dimension:d95aa286-d275-415e-a4b7-d27cc9b16b82",
+      "dimensionKey": "budget",
+      "winnerId": "node:core:statement:2d14eb1d-a846-4964-8ef5-595a1dfe9f52",
+      "supersededIds": [
+        "node:core:statement:dab880d0-5dd2-4c51-83cc-7c4112d72992"
+      ]
+    }
+  },
+  "ownerConflict": {
+    "nodes": [
+      {
+        "id": "node:core:dimension:d95aa286-d275-415e-a4b7-d27cc9b16b82",
+        "type": "core:dimension",
+        "created_by": "human:demo",
+        "created_at": "2026-10-05T09:01:00.000Z",
+        "updated_at": "2026-10-05T14:26:04.115Z",
+        "schema_version": "m0.1",
+        "source_refs": [
+          "demo:message:1"
+        ],
+        "state": "accepted",
+        "attributes": {
+          "propertyKey": "budget",
+          "subjectRef": "$scopeOwner"
+        },
+        "tags": [],
+        "key": "budget",
+        "cardinality": "single"
+      },
+      {
+        "id": "node:core:statement:2d14eb1d-a846-4964-8ef5-595a1dfe9f52",
+        "type": "core:statement",
+        "created_by": "human:demo",
+        "created_at": "2026-10-05T09:01:00.000Z",
+        "updated_at": "2026-10-05T09:01:00.000Z",
+        "schema_version": "m0.1",
+        "source_refs": [
+          "demo:message:1"
+        ],
+        "state": "accepted",
+        "attributes": {},
+        "tags": [],
+        "dimension_id": "node:core:dimension:d95aa286-d275-415e-a4b7-d27cc9b16b82",
+        "value": 5000,
+        "unit": "CNY"
+      },
+      {
+        "id": "node:core:dimension:3fea9d6d-72dc-4c68-9138-2ca47b2cd4db",
+        "type": "core:dimension",
+        "created_by": "human:demo",
+        "created_at": "2026-10-05T09:02:00.000Z",
+        "updated_at": "2026-10-05T14:26:04.116Z",
+        "schema_version": "m0.1",
+        "source_refs": [
+          "demo:message:2"
+        ],
+        "state": "conflict",
+        "attributes": {
+          "propertyKey": "owner",
+          "subjectRef": "$scopeOwner"
+        },
+        "tags": [],
+        "key": "owner",
+        "cardinality": "single"
+      },
+      {
+        "id": "node:core:statement:30deaa16-98e4-4af4-962d-f5b3c7db0406",
+        "type": "core:statement",
+        "created_by": "human:demo",
+        "created_at": "2026-10-05T09:02:00.000Z",
+        "updated_at": "2026-10-05T09:02:00.000Z",
+        "schema_version": "m0.1",
+        "source_refs": [
+          "demo:message:2"
+        ],
+        "state": "accepted",
+        "attributes": {},
+        "tags": [],
+        "dimension_id": "node:core:dimension:3fea9d6d-72dc-4c68-9138-2ca47b2cd4db",
+        "value": "Alice"
+      },
+      {
+        "id": "node:core:statement:dab880d0-5dd2-4c51-83cc-7c4112d72992",
+        "type": "core:statement",
+        "created_by": "human:demo",
+        "created_at": "2026-10-05T09:03:00.000Z",
+        "updated_at": "2026-10-05T14:26:04.115Z",
+        "schema_version": "m0.1",
+        "source_refs": [
+          "demo:message:3"
+        ],
+        "state": "superseded",
+        "attributes": {},
+        "tags": [],
+        "dimension_id": "node:core:dimension:d95aa286-d275-415e-a4b7-d27cc9b16b82",
+        "value": 8000
+      },
+      {
+        "id": "node:core:statement:c48fe6c2-e757-4d0e-8174-ff921063be12",
+        "type": "core:statement",
+        "created_by": "human:demo",
+        "created_at": "2026-10-05T09:04:00.000Z",
+        "updated_at": "2026-10-05T09:04:00.000Z",
+        "schema_version": "m0.1",
+        "source_refs": [
+          "demo:message:4"
+        ],
+        "state": "tentative",
+        "attributes": {},
+        "tags": [],
+        "dimension_id": "node:core:dimension:3fea9d6d-72dc-4c68-9138-2ca47b2cd4db",
+        "value": "Bob"
+      }
+    ],
+    "edges": [
+      {
+        "id": "edge:afb7994c-9e46-4f95-a5f4-5fae68cfb943",
+        "type": "core:contradicts",
+        "from": "node:core:statement:dab880d0-5dd2-4c51-83cc-7c4112d72992",
+        "to": "node:core:statement:2d14eb1d-a846-4964-8ef5-595a1dfe9f52",
+        "created_by": "human:demo",
+        "created_at": "2026-10-05T09:03:00.000Z",
+        "schema_version": "m0.1",
+        "source_refs": [
+          "demo:message:3"
+        ],
+        "attributes": {
+          "reason": "single-cardinality incompatible values"
+        },
+        "tags": []
+      },
+      {
+        "id": "edge:a27f06d2-181e-4c15-bd3b-2537f6b009f4",
+        "type": "core:supersedes",
+        "from": "node:core:statement:2d14eb1d-a846-4964-8ef5-595a1dfe9f52",
+        "to": "node:core:statement:dab880d0-5dd2-4c51-83cc-7c4112d72992",
+        "created_by": "human:demo",
+        "created_at": "2026-10-05T14:26:04.115Z",
+        "schema_version": "m0.1",
+        "source_refs": [],
+        "attributes": {
+          "resolution": true,
+          "note": "constraint-guided: \"预算不超过6000元\" decides — 5000 satisfied; others: 8000=violated"
+        },
+        "tags": []
+      },
+      {
+        "id": "edge:6d3bfc06-48fb-445f-b7ab-3335bdf0caeb",
+        "type": "core:contradicts",
+        "from": "node:core:statement:c48fe6c2-e757-4d0e-8174-ff921063be12",
+        "to": "node:core:statement:30deaa16-98e4-4af4-962d-f5b3c7db0406",
+        "created_by": "human:demo",
+        "created_at": "2026-10-05T09:04:00.000Z",
+        "schema_version": "m0.1",
+        "source_refs": [
+          "demo:message:4"
+        ],
+        "attributes": {
+          "reason": "single-cardinality incompatible values"
+        },
+        "tags": []
+      }
+    ],
+    "constraints": [
+      {
+        "id": "constraint:0dc485c8-8b36-4361-b5bc-55088d884406",
+        "kind": "core:constraint",
+        "revision_id": "constraint-revision:1",
+        "name": "预算不超过6000元",
+        "participants": [
+          "node:core:dimension:d95aa286-d275-415e-a4b7-d27cc9b16b82"
+        ],
+        "bindings": {
+          "x1": "node:core:dimension:d95aa286-d275-415e-a4b7-d27cc9b16b82"
+        },
+        "expression": {
+          "op": "<=",
+          "args": [
+            {
+              "op": "avg",
+              "args": [
+                {
+                  "ref": "x1"
+                }
+              ]
+            },
+            6000
+          ]
+        },
+        "activation_state": "active",
+        "approved_by": "human:demo",
+        "approved_at": "2026-10-05T14:26:04.113Z",
+        "created_by": "human:demo",
+        "created_at": "2026-10-05T14:26:04.111Z",
+        "schema_version": "m0.1",
+        "source_refs": [],
+        "attributes": {},
+        "tags": []
+      }
+    ],
+    "conflicts": [
+      {
+        "dimensionId": "node:core:dimension:3fea9d6d-72dc-4c68-9138-2ca47b2cd4db",
+        "dimensionKey": "owner",
+        "participantIds": [
+          "node:core:statement:c48fe6c2-e757-4d0e-8174-ff921063be12",
+          "node:core:statement:30deaa16-98e4-4af4-962d-f5b3c7db0406"
+        ],
+        "incumbents": [
+          {
+            "statementId": "node:core:statement:30deaa16-98e4-4af4-962d-f5b3c7db0406",
+            "value": "Alice",
+            "state": "accepted",
+            "createdBy": "human:demo",
+            "createdAt": "2026-10-05T09:02:00.000Z"
+          }
+        ],
+        "challengers": [
+          {
+            "statementId": "node:core:statement:c48fe6c2-e757-4d0e-8174-ff921063be12",
+            "value": "Bob",
+            "state": "tentative",
+            "createdBy": "human:demo",
+            "createdAt": "2026-10-05T09:04:00.000Z"
+          }
+        ]
+      }
+    ]
+  },
+  "escalation": {
+    "status": "escalated",
+    "reason": "no active single-dimension constraint can arbitrate"
+  },
+  "branches": {
+    "Alice": {
+      "result": {
+        "dimensionId": "node:core:dimension:3fea9d6d-72dc-4c68-9138-2ca47b2cd4db",
+        "dimensionKey": "owner",
+        "winnerId": "node:core:statement:30deaa16-98e4-4af4-962d-f5b3c7db0406",
+        "supersededIds": [
+          "node:core:statement:c48fe6c2-e757-4d0e-8174-ff921063be12"
+        ]
+      },
+      "nodes": [
+        {
+          "id": "node:core:dimension:d95aa286-d275-415e-a4b7-d27cc9b16b82",
+          "type": "core:dimension",
+          "created_by": "human:demo",
+          "created_at": "2026-10-05T09:01:00.000Z",
+          "updated_at": "2026-10-05T14:26:04.115Z",
+          "schema_version": "m0.1",
+          "source_refs": [
+            "demo:message:1"
+          ],
+          "state": "accepted",
+          "attributes": {
+            "propertyKey": "budget",
+            "subjectRef": "$scopeOwner"
+          },
+          "tags": [],
+          "key": "budget",
+          "cardinality": "single"
+        },
+        {
+          "id": "node:core:statement:2d14eb1d-a846-4964-8ef5-595a1dfe9f52",
+          "type": "core:statement",
+          "created_by": "human:demo",
+          "created_at": "2026-10-05T09:01:00.000Z",
+          "updated_at": "2026-10-05T09:01:00.000Z",
+          "schema_version": "m0.1",
+          "source_refs": [
+            "demo:message:1"
+          ],
+          "state": "accepted",
+          "attributes": {},
+          "tags": [],
+          "dimension_id": "node:core:dimension:d95aa286-d275-415e-a4b7-d27cc9b16b82",
+          "value": 5000,
+          "unit": "CNY"
+        },
+        {
+          "id": "node:core:dimension:3fea9d6d-72dc-4c68-9138-2ca47b2cd4db",
+          "type": "core:dimension",
+          "created_by": "human:demo",
+          "created_at": "2026-10-05T09:02:00.000Z",
+          "updated_at": "2026-10-05T14:26:04.118Z",
+          "schema_version": "m0.1",
+          "source_refs": [
+            "demo:message:2"
+          ],
+          "state": "accepted",
+          "attributes": {
+            "propertyKey": "owner",
+            "subjectRef": "$scopeOwner"
+          },
+          "tags": [],
+          "key": "owner",
+          "cardinality": "single"
+        },
+        {
+          "id": "node:core:statement:30deaa16-98e4-4af4-962d-f5b3c7db0406",
+          "type": "core:statement",
+          "created_by": "human:demo",
+          "created_at": "2026-10-05T09:02:00.000Z",
+          "updated_at": "2026-10-05T09:02:00.000Z",
+          "schema_version": "m0.1",
+          "source_refs": [
+            "demo:message:2"
+          ],
+          "state": "accepted",
+          "attributes": {},
+          "tags": [],
+          "dimension_id": "node:core:dimension:3fea9d6d-72dc-4c68-9138-2ca47b2cd4db",
+          "value": "Alice"
+        },
+        {
+          "id": "node:core:statement:dab880d0-5dd2-4c51-83cc-7c4112d72992",
+          "type": "core:statement",
+          "created_by": "human:demo",
+          "created_at": "2026-10-05T09:03:00.000Z",
+          "updated_at": "2026-10-05T14:26:04.115Z",
+          "schema_version": "m0.1",
+          "source_refs": [
+            "demo:message:3"
+          ],
+          "state": "superseded",
+          "attributes": {},
+          "tags": [],
+          "dimension_id": "node:core:dimension:d95aa286-d275-415e-a4b7-d27cc9b16b82",
+          "value": 8000
+        },
+        {
+          "id": "node:core:statement:c48fe6c2-e757-4d0e-8174-ff921063be12",
+          "type": "core:statement",
+          "created_by": "human:demo",
+          "created_at": "2026-10-05T09:04:00.000Z",
+          "updated_at": "2026-10-05T14:26:04.118Z",
+          "schema_version": "m0.1",
+          "source_refs": [
+            "demo:message:4"
+          ],
+          "state": "superseded",
+          "attributes": {},
+          "tags": [],
+          "dimension_id": "node:core:dimension:3fea9d6d-72dc-4c68-9138-2ca47b2cd4db",
+          "value": "Bob"
+        }
+      ],
+      "edges": [
+        {
+          "id": "edge:afb7994c-9e46-4f95-a5f4-5fae68cfb943",
+          "type": "core:contradicts",
+          "from": "node:core:statement:dab880d0-5dd2-4c51-83cc-7c4112d72992",
+          "to": "node:core:statement:2d14eb1d-a846-4964-8ef5-595a1dfe9f52",
+          "created_by": "human:demo",
+          "created_at": "2026-10-05T09:03:00.000Z",
+          "schema_version": "m0.1",
+          "source_refs": [
+            "demo:message:3"
+          ],
+          "attributes": {
+            "reason": "single-cardinality incompatible values"
+          },
+          "tags": []
+        },
+        {
+          "id": "edge:a27f06d2-181e-4c15-bd3b-2537f6b009f4",
+          "type": "core:supersedes",
+          "from": "node:core:statement:2d14eb1d-a846-4964-8ef5-595a1dfe9f52",
+          "to": "node:core:statement:dab880d0-5dd2-4c51-83cc-7c4112d72992",
+          "created_by": "human:demo",
+          "created_at": "2026-10-05T14:26:04.115Z",
+          "schema_version": "m0.1",
+          "source_refs": [],
+          "attributes": {
+            "resolution": true,
+            "note": "constraint-guided: \"预算不超过6000元\" decides — 5000 satisfied; others: 8000=violated"
+          },
+          "tags": []
+        },
+        {
+          "id": "edge:6d3bfc06-48fb-445f-b7ab-3335bdf0caeb",
+          "type": "core:contradicts",
+          "from": "node:core:statement:c48fe6c2-e757-4d0e-8174-ff921063be12",
+          "to": "node:core:statement:30deaa16-98e4-4af4-962d-f5b3c7db0406",
+          "created_by": "human:demo",
+          "created_at": "2026-10-05T09:04:00.000Z",
+          "schema_version": "m0.1",
+          "source_refs": [
+            "demo:message:4"
+          ],
+          "attributes": {
+            "reason": "single-cardinality incompatible values"
+          },
+          "tags": []
+        },
+        {
+          "id": "edge:b8b41342-ec8f-497c-a2a7-14612ed4b062",
+          "type": "core:supersedes",
+          "from": "node:core:statement:30deaa16-98e4-4af4-962d-f5b3c7db0406",
+          "to": "node:core:statement:c48fe6c2-e757-4d0e-8174-ff921063be12",
+          "created_by": "human:demo",
+          "created_at": "2026-10-05T14:26:04.118Z",
+          "schema_version": "m0.1",
+          "source_refs": [],
+          "attributes": {
+            "resolution": true,
+            "note": "交互演示：用户确认负责人为 Alice"
+          },
+          "tags": []
+        }
+      ],
+      "conflicts": []
+    },
+    "Bob": {
+      "result": {
+        "dimensionId": "node:core:dimension:3fea9d6d-72dc-4c68-9138-2ca47b2cd4db",
+        "dimensionKey": "owner",
+        "winnerId": "node:core:statement:c48fe6c2-e757-4d0e-8174-ff921063be12",
+        "supersededIds": [
+          "node:core:statement:30deaa16-98e4-4af4-962d-f5b3c7db0406"
+        ]
+      },
+      "nodes": [
+        {
+          "id": "node:core:dimension:d95aa286-d275-415e-a4b7-d27cc9b16b82",
+          "type": "core:dimension",
+          "created_by": "human:demo",
+          "created_at": "2026-10-05T09:01:00.000Z",
+          "updated_at": "2026-10-05T14:26:04.115Z",
+          "schema_version": "m0.1",
+          "source_refs": [
+            "demo:message:1"
+          ],
+          "state": "accepted",
+          "attributes": {
+            "propertyKey": "budget",
+            "subjectRef": "$scopeOwner"
+          },
+          "tags": [],
+          "key": "budget",
+          "cardinality": "single"
+        },
+        {
+          "id": "node:core:statement:2d14eb1d-a846-4964-8ef5-595a1dfe9f52",
+          "type": "core:statement",
+          "created_by": "human:demo",
+          "created_at": "2026-10-05T09:01:00.000Z",
+          "updated_at": "2026-10-05T09:01:00.000Z",
+          "schema_version": "m0.1",
+          "source_refs": [
+            "demo:message:1"
+          ],
+          "state": "accepted",
+          "attributes": {},
+          "tags": [],
+          "dimension_id": "node:core:dimension:d95aa286-d275-415e-a4b7-d27cc9b16b82",
+          "value": 5000,
+          "unit": "CNY"
+        },
+        {
+          "id": "node:core:dimension:3fea9d6d-72dc-4c68-9138-2ca47b2cd4db",
+          "type": "core:dimension",
+          "created_by": "human:demo",
+          "created_at": "2026-10-05T09:02:00.000Z",
+          "updated_at": "2026-10-05T14:26:04.118Z",
+          "schema_version": "m0.1",
+          "source_refs": [
+            "demo:message:2"
+          ],
+          "state": "accepted",
+          "attributes": {
+            "propertyKey": "owner",
+            "subjectRef": "$scopeOwner"
+          },
+          "tags": [],
+          "key": "owner",
+          "cardinality": "single"
+        },
+        {
+          "id": "node:core:statement:30deaa16-98e4-4af4-962d-f5b3c7db0406",
+          "type": "core:statement",
+          "created_by": "human:demo",
+          "created_at": "2026-10-05T09:02:00.000Z",
+          "updated_at": "2026-10-05T14:26:04.118Z",
+          "schema_version": "m0.1",
+          "source_refs": [
+            "demo:message:2"
+          ],
+          "state": "superseded",
+          "attributes": {},
+          "tags": [],
+          "dimension_id": "node:core:dimension:3fea9d6d-72dc-4c68-9138-2ca47b2cd4db",
+          "value": "Alice"
+        },
+        {
+          "id": "node:core:statement:dab880d0-5dd2-4c51-83cc-7c4112d72992",
+          "type": "core:statement",
+          "created_by": "human:demo",
+          "created_at": "2026-10-05T09:03:00.000Z",
+          "updated_at": "2026-10-05T14:26:04.115Z",
+          "schema_version": "m0.1",
+          "source_refs": [
+            "demo:message:3"
+          ],
+          "state": "superseded",
+          "attributes": {},
+          "tags": [],
+          "dimension_id": "node:core:dimension:d95aa286-d275-415e-a4b7-d27cc9b16b82",
+          "value": 8000
+        },
+        {
+          "id": "node:core:statement:c48fe6c2-e757-4d0e-8174-ff921063be12",
+          "type": "core:statement",
+          "created_by": "human:demo",
+          "created_at": "2026-10-05T09:04:00.000Z",
+          "updated_at": "2026-10-05T14:26:04.118Z",
+          "schema_version": "m0.1",
+          "source_refs": [
+            "demo:message:4"
+          ],
+          "state": "accepted",
+          "attributes": {},
+          "tags": [],
+          "dimension_id": "node:core:dimension:3fea9d6d-72dc-4c68-9138-2ca47b2cd4db",
+          "value": "Bob"
+        }
+      ],
+      "edges": [
+        {
+          "id": "edge:afb7994c-9e46-4f95-a5f4-5fae68cfb943",
+          "type": "core:contradicts",
+          "from": "node:core:statement:dab880d0-5dd2-4c51-83cc-7c4112d72992",
+          "to": "node:core:statement:2d14eb1d-a846-4964-8ef5-595a1dfe9f52",
+          "created_by": "human:demo",
+          "created_at": "2026-10-05T09:03:00.000Z",
+          "schema_version": "m0.1",
+          "source_refs": [
+            "demo:message:3"
+          ],
+          "attributes": {
+            "reason": "single-cardinality incompatible values"
+          },
+          "tags": []
+        },
+        {
+          "id": "edge:a27f06d2-181e-4c15-bd3b-2537f6b009f4",
+          "type": "core:supersedes",
+          "from": "node:core:statement:2d14eb1d-a846-4964-8ef5-595a1dfe9f52",
+          "to": "node:core:statement:dab880d0-5dd2-4c51-83cc-7c4112d72992",
+          "created_by": "human:demo",
+          "created_at": "2026-10-05T14:26:04.115Z",
+          "schema_version": "m0.1",
+          "source_refs": [],
+          "attributes": {
+            "resolution": true,
+            "note": "constraint-guided: \"预算不超过6000元\" decides — 5000 satisfied; others: 8000=violated"
+          },
+          "tags": []
+        },
+        {
+          "id": "edge:6d3bfc06-48fb-445f-b7ab-3335bdf0caeb",
+          "type": "core:contradicts",
+          "from": "node:core:statement:c48fe6c2-e757-4d0e-8174-ff921063be12",
+          "to": "node:core:statement:30deaa16-98e4-4af4-962d-f5b3c7db0406",
+          "created_by": "human:demo",
+          "created_at": "2026-10-05T09:04:00.000Z",
+          "schema_version": "m0.1",
+          "source_refs": [
+            "demo:message:4"
+          ],
+          "attributes": {
+            "reason": "single-cardinality incompatible values"
+          },
+          "tags": []
+        },
+        {
+          "id": "edge:5711323e-22e4-41cf-a985-53baf69e15a8",
+          "type": "core:supersedes",
+          "from": "node:core:statement:c48fe6c2-e757-4d0e-8174-ff921063be12",
+          "to": "node:core:statement:30deaa16-98e4-4af4-962d-f5b3c7db0406",
+          "created_by": "human:demo",
+          "created_at": "2026-10-05T14:26:04.118Z",
+          "schema_version": "m0.1",
+          "source_refs": [],
+          "attributes": {
+            "resolution": true,
+            "note": "交互演示：用户确认负责人为 Bob"
+          },
+          "tags": []
+        }
+      ],
+      "conflicts": []
+    }
+  }
+}

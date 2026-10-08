@@ -1,0 +1,12 @@
+/* Shared exhibit shell with Finance Agent. */
+.edgelore-exhibit{border:1px solid #b6c3b2;border-radius:5px;background:#f7f6ee;box-shadow:0 18px 32px -28px #183d3250;overflow:hidden}
+.edgelore-exhibit .edgelore-replay-intro{padding:17px 24px;background:#e2e8da;color:#23483c;display:flex;align-items:center;gap:16px;border-bottom:1px solid #cbd3c3}
+.edgelore-exhibit .edgelore-replay-intro p{font:14px/1.7 'Microsoft YaHei',sans-serif}
+.edgelore-exhibit .edgelore-replay-intro>span{font-size:11px;color:#5f7063;margin:0}
+.edgelore-exhibit .edgelore-replay-intro a{font-size:11px;color:#23483c;border-color:#a8b9a4;white-space:nowrap}
+.edgelore-exhibit-inset{padding:0;background:#f7f6ee}
+.edgelore-exhibit .edgelore-replay-frame{height:748px;background:#f7f6ee}
+@media(max-width:760px){.edgelore-exhibit .edgelore-replay-intro{padding:14px 16px;gap:10px}.edgelore-exhibit .edgelore-replay-intro p{font-size:12px}.edgelore-exhibit .edgelore-replay-intro>span{font-size:10px}.edgelore-exhibit .edgelore-replay-intro .edgelore-demo-kind{display:none}.edgelore-exhibit .edgelore-replay-frame{height:748px}}
+.edgelore-exhibit{border-color:#c8cdbe;background:#faf8f2}
+.edgelore-exhibit .edgelore-replay-intro{background:#eeeee4;border-color:#d4d2c5}
+.edgelore-exhibit-inset,.edgelore-exhibit .edgelore-replay-frame{background:#faf8f2}

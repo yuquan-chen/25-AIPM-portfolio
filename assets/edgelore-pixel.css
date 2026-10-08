@@ -1,0 +1,87 @@
+/* Edgelore uses the same optional skin as Finance Agent. */
+@font-face{font-family:'Finance Pixel';src:url('./fonts/fusion-pixel-12px-zh.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+.pixel-core{display:none}
+body:not(.standalone) .memory-window{display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden}
+body:not(.standalone) .workspace{height:var(--ex-body,820px)}
+body:not(.standalone) .messages,body:not(.standalone)[data-replay-start=true] .messages{flex:1 1 0;height:0;min-height:0;scrollbar-gutter:stable}
+body:not(.standalone) .composer{height:156px;flex:0 0 156px;display:flex;flex-direction:column;justify-content:space-between}
+body:not(.standalone) .composer textarea{max-height:84px;flex:none}
+body:not(.standalone) .inspector{height:164px;min-height:164px;max-height:164px;flex:0 0 164px}
+:root[data-finance-style=pixel] #edgelore-project .project-overview h2{font:400 48px/1.25 'Finance Pixel',monospace;letter-spacing:0}
+:root[data-finance-style=pixel] .edgelore-exhibit{border:3px solid #1c3c2e;border-radius:0;background:#ded4b5;box-shadow:4px 0 #839571,0 4px #839571,8px 8px #102b2355}
+:root[data-finance-style=pixel] .edgelore-exhibit .demo-shell-bar{background:#234c3a;border-color:#879672;color:#efe0ba;box-shadow:inset 0 3px #365f46,inset 0 -3px #163b2b;font-family:'Finance Pixel',monospace}
+:root[data-finance-style=pixel] .edgelore-exhibit .demo-shell-bar :is(span,small){font:12px/1.5 'Finance Pixel',monospace;color:#efe0ba}
+:root[data-finance-style=pixel] .edgelore-exhibit .demo-shell-bar i{width:7px;height:7px;border-radius:0;background:#e8b694;box-shadow:2px 2px #122e22}
+:root[data-finance-style=pixel] .edgelore-exhibit-inset,:root[data-finance-style=pixel] .edgelore-replay-frame{background:#ded4b5}
+:root[data-finance-style=pixel] body:not(.standalone):has(#replay),:root[data-finance-style=pixel] body.standalone:has(#replay){--ex-paper:#ded4b5;--ex-head:#c9c5a5;--ex-field:#c3c8a3;--ex-input:#e7ddbe;--ex-ink:#203c30;--ex-muted:#4b5945;--ex-line:#8e9876;--ex-accent:#a16c62;--ex-blue:#5e7c51;--ex-amber:#a47944;--ink:#203c30;--muted:#4b5945;--line:#8e9876;--paper:#ded4b5;--green:#5e7c51;--clay:#a16c62;--amber:#a47944;color:var(--ink);background:var(--paper);font-family:'Finance Pixel',monospace}
+:root[data-finance-style=pixel] #replay,:root[data-finance-style=pixel] #replay :is(p,span,small,strong,b,h2,h3,h4,button,select,option,textarea,code,pre,summary,li,td,th,text,time){font-family:'Finance Pixel',monospace!important;font-synthesis:none;font-weight:400;letter-spacing:0}
+:root[data-finance-style=pixel] #replay :is(.message p,.message li,.markdown-body,.markdown-body p,.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.ghost-hint,.ghost-hint small,.composer textarea,.evidence-title,.pane-head h2,.memory-count b){font-size:16px;line-height:1.75;color:var(--ink)}
+:root[data-finance-style=pixel] #replay :is(.message-meta,.message-note,.message details,.message summary,.session-divider,.mock-model,.preset-label,#turn-count,.mock-model small,.memory-count>span,.memory-toolbar,.memory-toolbar b,.memory-toolbar [role=status],.replay-position,.eyebrow,.evidence-source,.evidence-original,.evidence-original p,.evidence-original pre,.inspector select,.graph-topline,.graph-topline span,.graph-legend,.atlas-note,.playback,.playback button,.chapters button,.embed-view-switch button,.gov-choices button){font-size:12px!important;line-height:1.5;letter-spacing:0}
+:root[data-finance-style=pixel] #replay .workspace{background-color:var(--paper);background-image:linear-gradient(#586b3e0c 1px,transparent 1px),linear-gradient(90deg,#586b3e0c 1px,transparent 1px);background-size:8px 8px}
+:root[data-finance-style=pixel] #replay :is(.conversation,.memory){background:transparent}
+:root[data-finance-style=pixel] #replay .conversation::after{border-left:2px solid #84916e;background-size:10px 48px,5px 8px}
+:root[data-finance-style=pixel] #replay .composer,:root[data-finance-style=pixel] #replay .message.user .bubble{background:#e7ddbe;border:2px solid #7c8965;border-radius:0;box-shadow:3px 3px #3d57302b}
+:root[data-finance-style=pixel] #replay .message.user .bubble{background:#c4caa4}
+:root[data-finance-style=pixel] #replay .composer-actions #send{background:#5e7c51;border:2px solid #173c2a;border-radius:0;color:#f4e5bd;box-shadow:2px 2px #173c2a;font-size:20px}
+:root[data-finance-style=pixel] #replay .composer-actions #send:hover:not(:disabled){background:#42653f}
+:root[data-finance-style=pixel] #replay .composer-actions #send:disabled{background:#93a080;color:#d6d5b9}
+:root[data-finance-style=pixel] #replay :is(.inline-report,.recall-result,.message details[open]){padding:12px;border:2px solid #a16c62;border-radius:0;background:#e7ddbe;box-shadow:3px 3px #a16c6238}
+:root[data-finance-style=pixel] #replay .gov-choices button{background:#dca982;border:2px solid #89513c;border-radius:0;box-shadow:2px 2px #89513c40;color:#203c30;min-height:40px}
+:root[data-finance-style=pixel] #replay :is(.messages,.inspector,textarea,pre,blockquote){scrollbar-color:#a16c62 transparent;scrollbar-width:thin}
+:root[data-finance-style=pixel] #replay .memory-window{margin:12px 8px 14px;border:4px solid #294c38;border-radius:0;background:#bdc39f;box-shadow:0 0 0 2px #91a07b,4px 4px 0 2px #3e6048,inset 0 0 0 2px #e3dfb9}
+:root[data-finance-style=pixel] #replay .memory-window .pane-head{background:#31563f;color:#f1e1b9;min-height:52px;height:52px;padding:10px 12px;border-bottom:3px solid #879875}
+:root[data-finance-style=pixel] #replay .memory-window .pane-head :is(h2,b,span){color:#f1e1b9}
+:root[data-finance-style=pixel] #replay .memory-toolbar{padding:10px 12px;background:#ced0aa;color:#334a32;min-height:50px}
+:root[data-finance-style=pixel] #replay .atlas{border:0;background-color:#bdc39f;background-image:repeating-linear-gradient(0deg,transparent 0 7px,#324c3020 7px 8px)}
+:root[data-finance-style=pixel] #replay .graph-controls button{border:2px solid #344d34;border-radius:0;background:#e8d6a8;color:#203c30;box-shadow:2px 2px #344d3440}
+:root[data-finance-style=pixel] #replay .graph-legend i,:root[data-finance-style=pixel] #replay .dot{border-radius:0}
+:root[data-finance-style=pixel] #replay .inspector{background:transparent;border-color:#8e9876}
+:root[data-finance-style=pixel] #replay :is(.playback,.masthead){background:#234c3a;border-color:#879672;color:#efe0ba;box-shadow:inset 0 3px #365f46,inset 0 -3px #163b2b}
+:root[data-finance-style=pixel] #replay .playback :is(button,span){color:#efe0ba}
+:root[data-finance-style=pixel] #replay :is(.network-node circle.node-core,.network-node path.node-core,.node-halo,.gov-node circle){display:none}
+:root[data-finance-style=pixel] #replay .pixel-core{display:block;shape-rendering:crispEdges;stroke:#344d34;stroke-width:2px;filter:drop-shadow(3px 3px #344d3455)}
+:root[data-finance-style=pixel] #replay .network-node .node-core{fill:#5e7c51}
+:root[data-finance-style=pixel] #replay .network-node.session .node-core{fill:#e8d6a8}
+:root[data-finance-style=pixel] #replay .network-node.entity .node-core{fill:#dca982}
+:root[data-finance-style=pixel] #replay .network-node.dimension .node-core{fill:#97ad80}
+:root[data-finance-style=pixel] #replay .network-node.tentative .node-core{fill:#d8bb89;stroke-dasharray:3 2}
+:root[data-finance-style=pixel] #replay .network-node.selected .node-core,:root[data-finance-style=pixel] #replay .network-node.supporting .node-core{fill:#efbd85;stroke:#8b4534;stroke-width:3px}
+:root[data-finance-style=pixel] #replay .network-node :is(.node-label,.node-sub),:root[data-finance-style=pixel] #replay .network-edge text{fill:#203c30;stroke:#bdc39f;font-size:16px}
+:root[data-finance-style=pixel] #replay .network-node .node-sub,:root[data-finance-style=pixel] #replay .network-edge text{font-size:12px}
+:root[data-finance-style=pixel] #replay .gov-node .pixel-core{fill:#97ad80}
+:root[data-finance-style=pixel] #replay .gov-node.tentative .pixel-core{fill:#efbd85;stroke:#a16c62}
+:root[data-finance-style=pixel] #replay .gov-node.superseded .pixel-core{fill:#c9c5a5;stroke-dasharray:4 3}
+:root[data-finance-style=pixel] #replay .gov-node.selected .pixel-core{stroke:#8b4534;stroke-width:4px}
+:root[data-finance-style=pixel] #replay .gov-rule{rx:0;fill:#e8d6a8;stroke:#344d34;stroke-width:2px}
+:root[data-finance-style=pixel] #replay .gov-node :is(.label,.sub),:root[data-finance-style=pixel] #replay :is(.gov-rule-text,.gov-edge-label){fill:#203c30;stroke:#bdc39f}
+:root[data-finance-style=pixel] #replay .gov-edge.conflict{stroke:#a16c62}
+:root[data-finance-style=pixel] #replay .gov-edge.resolved{stroke:#5e7c51}
+@media(max-width:760px){:root[data-finance-style=pixel] #edgelore-project .project-overview h2{font-size:36px}body:not(.standalone) .composer{height:176px;flex-basis:176px}body:not(.standalone) .memory-window{margin:8px 8px 12px}:root[data-finance-style=pixel] #replay .pane-head{flex-wrap:wrap;height:auto;min-height:58px;gap:4px}:root[data-finance-style=pixel] #replay .memory-window .pane-head h2{font-size:12px}:root[data-finance-style=pixel] #replay .memory-toolbar{flex-wrap:wrap}:root[data-finance-style=pixel] #replay .mock-model{font-size:12px!important}}
+:root[data-finance-style=pixel] #replay .network-edge line{stroke:#84916e}
+:root[data-finance-style=pixel] #replay .network-edge.about line,:root[data-finance-style=pixel] #replay .network-edge.active line{stroke:#a16c62}
+:root[data-finance-style=pixel] #replay .owner-label{fill:#efe0ba;stroke:none}
+:root[data-finance-style=pixel] #replay .memory-count{display:flex;align-items:center;gap:8px}
+:root[data-finance-style=pixel] #replay .memory-count>span{margin:0;max-width:100px}
+:root[data-finance-style=pixel] #replay .graph-topline{gap:8px;flex-wrap:wrap}
+:root[data-finance-style=pixel] #replay .graph-topline>span{flex:1 1 145px}
+:root[data-finance-style=pixel] #replay #graph-size{display:block;margin-left:0}
+:root[data-finance-style=pixel] #replay .graph-controls{flex:none}
+:root[data-finance-style=pixel] #replay .gov-node .label{font-size:20px}
+:root[data-finance-style=pixel] #replay .gov-node .sub,:root[data-finance-style=pixel] #replay .gov-edge-label{font-size:16px}
+:root[data-finance-style=pixel] #replay .gov-rule-text{font-size:18px}
+:root[data-finance-style=pixel] #replay #inline-arrow path{fill:#5e7c51}
+:root[data-finance-style=pixel] #replay .gov-edge:not(.conflict):not(.resolved){stroke:#84916e}
+:root[data-finance-style=pixel] #replay .graph-legend .legend-session{background:#e8d6a8}
+body.standalone .memory-window{display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden}
+@media(min-width:761px){body.standalone .workspace{height:820px}body.standalone :is(.conversation,.memory){display:flex;flex-direction:column;min-height:0}body.standalone .messages{flex:1;min-height:0;height:0}body.standalone .atlas{flex:1;min-height:0;display:flex;flex-direction:column}body.standalone #atlas{height:0;min-height:0;flex:1}body.standalone .inspector{height:164px;min-height:164px;max-height:164px;overflow:auto}body.standalone .composer{flex:none}}
+@media(max-width:760px){
+ body:not(.standalone) .memory .inspector{height:124px;min-height:124px;max-height:124px;flex-basis:124px}
+ :root[data-finance-style=pixel] #replay .memory-toolbar>span{max-width:none;text-align:left;flex:1 1 100%}
+ :root[data-finance-style=pixel] #replay .graph-topline>span{display:none}
+ :root[data-finance-style=pixel] #replay .graph-topline{justify-content:flex-end;padding-top:4px}
+ :root[data-finance-style=pixel] #replay .atlas-note{display:none}
+ :root[data-finance-style=pixel] #replay .gov-node .label{font-size:26px}
+ :root[data-finance-style=pixel] #replay .gov-node .sub,:root[data-finance-style=pixel] #replay .gov-edge-label{font-size:20px}
+ :root[data-finance-style=pixel] #replay .gov-rule-text{font-size:20px}
+}
+:root[data-finance-style=pixel] #replay .gov-node :is(.label,.sub),:root[data-finance-style=pixel] #replay :is(.gov-rule-text,.gov-edge-label){paint-order:stroke fill;stroke-width:3px}

@@ -1,0 +1,25 @@
+/* Scoped to original-source prose; does not change the surrounding chat shell. */
+.message .markdown-body,.evidence-original .markdown-body{font:14px/1.8 'Microsoft YaHei','PingFang SC',Arial,sans-serif;color:var(--ink);white-space:normal;overflow-wrap:anywhere;margin-top:14px;min-width:0}
+.message .markdown-body p,.evidence-original .markdown-body p{font:inherit;line-height:inherit;white-space:normal;margin:0 0 .85em;color:inherit}
+.markdown-body>:last-child{margin-bottom:0!important}
+.markdown-body strong{font-weight:700;color:inherit}
+.markdown-body em{font-style:italic}
+.markdown-body :is(h1,h2,h3,h4,h5,h6){font-family:inherit;font-weight:650;line-height:1.5;letter-spacing:0;color:inherit;margin:1.25em 0 .5em}
+.markdown-body h1{font-size:1.4em}.markdown-body h2{font-size:1.25em}.markdown-body h3{font-size:1.12em}.markdown-body :is(h4,h5,h6){font-size:1em}
+.markdown-body :is(ol,ul){margin:.65em 0 1em;padding-left:1.7em}
+.markdown-body li{padding-left:.2em;margin:.4em 0}
+.markdown-body li::marker{color:var(--muted);font-variant-numeric:tabular-nums}
+.markdown-body li>p{margin-bottom:.35em!important}
+.markdown-body li :is(ul,ol){margin:.35em 0}
+.markdown-body a{color:#426b8b;text-decoration:underline;text-underline-offset:3px}
+.markdown-body :not(pre)>code{font: .9em/1.6 Consolas,monospace;background:#e8ece3;border-radius:3px;padding:.12em .3em}
+.markdown-body pre{max-width:100%;overflow:auto;white-space:pre;margin:1em 0;padding:12px;background:#eef0e8;border:1px solid var(--line);border-radius:5px;font:12px/1.7 Consolas,monospace;tab-size:2}
+.markdown-body pre code{font:inherit;white-space:inherit}
+.message .markdown-body blockquote,.evidence-original .markdown-body blockquote{font:inherit;max-height:none;overflow:visible;margin:.9em 0;padding:0 0 0 14px;border-left:2px solid #a7b5a0;color:var(--muted)}
+.markdown-body hr{border:0;border-top:1px solid var(--line);margin:1.3em 0}
+.markdown-table{overflow-x:auto;margin:1em 0;max-width:100%}
+.markdown-body table{border-collapse:collapse;min-width:100%;font:inherit}
+.markdown-body :is(th,td){padding:7px 10px;border:1px solid var(--line);text-align:left;vertical-align:top}
+.markdown-body th{font-weight:600;background:#eef0e8}
+.evidence-original>.markdown-body{max-height:220px;overflow-y:auto;padding-right:8px;font-size:12px}
+@media(max-width:760px){.message .markdown-body{font-size:16px;line-height:1.75}.evidence-original .markdown-body{font-size:14px}}

@@ -1,0 +1,76 @@
+/* A shared reading column for all portfolio chapters. */
+.project-chapter {
+  --chapter-content-width: 1080px;
+}
+
+.project-chapter .chapter-inner {
+  width: 100%;
+  max-width: var(--chapter-content-width);
+  margin-inline: auto;
+}
+
+/* Align running headers, introductions, demos and notes to the same edges.
+   The research dialog owns its viewport-based book layout independently. */
+.project-chapter .chapter-inner > :not(dialog) {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  margin-inline: 0;
+}
+
+.project-chapter .chapter-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: clamp(36px, 6vw, 86px);
+}
+
+.project-chapter .chapter-intro {
+  width: 100%;
+  max-width: none;
+}
+
+@media (max-width: 600px) {
+  .project-chapter .chapter-heading {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Match the finance exhibit's green title strip, then soften the app surface. */
+.edgelore-exhibit {
+  border: 1px solid #80998b;
+  background: #dde5df;
+  box-shadow: 0 20px 35px -28px #10291f66;
+}
+.edgelore-exhibit .edgelore-replay-intro {
+  max-width: none;
+  margin: 0;
+  padding: 17px 22px;
+  background: #23483c;
+  color: #f4f1e4;
+}
+.edgelore-exhibit .edgelore-replay-intro p {
+  font: 13px/1.7 'Microsoft YaHei', sans-serif;
+}
+.edgelore-exhibit .edgelore-replay-intro > span {
+  color: #c0ccba;
+}
+.edgelore-exhibit .edgelore-replay-intro a {
+  color: #f4f1e4;
+  border-bottom: 1px solid #819d8c;
+  padding-bottom: 3px;
+}
+.edgelore-exhibit-inset {
+  padding: 8px;
+  background: #dde5df;
+}
+.edgelore-exhibit .edgelore-replay-frame {
+  width: 100%;
+  margin: 0;
+  background: #f8f9f6;
+  box-shadow: none;
+}
+@media (max-width: 760px) {
+  .edgelore-exhibit .edgelore-replay-intro { padding: 14px 16px; }
+  .edgelore-exhibit-inset { padding: 5px; }
+}

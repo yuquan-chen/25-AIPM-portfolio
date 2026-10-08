@@ -1,0 +1,153 @@
+/* Cover-only themes: the projects and notes keep the fixed night/pixel palette. */
+.cover[data-cover-mode="day"] {
+  --paper: #edf0e9;
+  --sheet: #e6e9e2;
+  --ink: #173d35;
+  --secondary: #65725f;
+  --detail: #798372;
+  --red: #a16c62;
+  --name-accent: #8b5f56;
+  --line: #bbc3b3;
+  color: var(--ink);
+  background: var(--paper);
+}
+.cover[data-cover-mode="night"] {
+  --paper: #111c19;
+  --sheet: #161d1b;
+  --ink: #e5e5ce;
+  --secondary: #b0bdab;
+  --detail: #94a68f;
+  --red: #d6a394;
+  --name-accent: #d9a99a;
+  --line: #3a4d40;
+  color: var(--ink);
+  background: var(--paper);
+}
+.cover[data-cover-style="pixel"] .cover-signature h1,
+.cover[data-cover-style="pixel"] .cover-signature :is(.signature-kicker, .signature-copy),
+.cover[data-cover-style="pixel"] .cover-foot,
+.cover[data-cover-style="pixel"] .cover-margin p {
+  font-family: 'Finance Pixel', 'Microsoft YaHei', monospace;
+  font-synthesis: none;
+  letter-spacing: 0;
+}
+.cover[data-cover-style="pixel"] .cover-signature h1 { font-size: clamp(42px, 5.2vw, 72px); }
+.cover[data-cover-style="paper"] .cover-signature h1 { font-family: Georgia, 'Times New Roman', serif; }
+.cover-theme-panel {
+  --panel-line: rgba(229, 231, 208, .22);
+  --panel-fill: rgba(17, 28, 25, .56);
+  --panel-ink: #e5e5ce;
+  --panel-muted: #b0bdab;
+  flex: none;
+  width: 244px;
+  padding: 10px 12px 9px;
+  border: 1px solid var(--panel-line);
+  background: var(--panel-fill);
+  color: var(--panel-ink);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, .1);
+  backdrop-filter: blur(14px) saturate(125%);
+  -webkit-backdrop-filter: blur(14px) saturate(125%);
+  font: 9px/1.45 'Microsoft YaHei', sans-serif;
+}
+.cover[data-cover-mode="day"] .cover-theme-panel {
+  --panel-line: rgba(23, 61, 53, .25);
+  --panel-fill: rgba(237, 240, 233, .62);
+  --panel-ink: #173d35;
+  --panel-muted: #65725f;
+}
+.cover-theme-row { display: grid; grid-template-columns: 28px 1fr; align-items: center; gap: 8px; }
+.cover-theme-row + .cover-theme-row { margin-top: 6px; }
+.cover-theme-row > span { color: var(--panel-muted); }
+.cover-segment { display: flex; gap: 2px; padding: 2px; border: 1px solid var(--panel-line); }
+.cover-segment button {
+  min-width: 0;
+  flex: 1;
+  padding: 4px 5px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--panel-muted);
+  cursor: pointer;
+  font: inherit;
+  white-space: nowrap;
+}
+.cover-segment button[aria-pressed="true"] { background: var(--panel-ink); color: var(--paper); }
+.cover-segment button:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+.cover-time-axis { margin-top: 9px; }
+.cover-time-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; color: var(--panel-muted); }
+.cover-time-meta time { color: var(--panel-ink); font: 10px/1.4 Consolas, monospace; font-variant-numeric: tabular-nums; }
+.cover-time-track { position: relative; height: 4px; background: linear-gradient(90deg, #71826a, #d1bd7e 30%, #e4ae76 53%, #99765f 75%, #465c4a); }
+.cover-time-track > span { position: absolute; top: 50%; left: var(--cover-time-progress, 0%); width: 8px; height: 8px; border: 1px solid var(--panel-ink); border-radius: 50%; background: var(--red); box-shadow: 0 0 0 2px var(--panel-fill); transform: translate(-50%, -50%); }
+.cover-time-scale { display: flex; justify-content: space-between; margin-top: 4px; color: var(--panel-muted); font: 8px/1.4 Consolas, monospace; }
+.cover-nav .cover-style-switch {
+  display: none;
+  flex: none;
+  gap: 2px;
+  height: 30px;
+  box-sizing: border-box;
+  align-items: center;
+  padding: 2px;
+  border: 1px solid rgba(207, 219, 200, .24);
+  background: rgba(255, 255, 255, .035);
+}
+.cover-nav.cover-style-visible .cover-style-switch { display: flex; }
+.cover-nav nav > a {
+  display: flex;
+  min-height: 30px;
+  align-items: center;
+  line-height: 1;
+}
+.cover-nav .cover-style-switch button {
+  display: flex;
+  height: 24px;
+  min-height: 0;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  border: 0;
+  background: transparent;
+  color: rgba(231, 234, 218, .74);
+  cursor: pointer;
+  font: 10px/1.3 'Microsoft YaHei', sans-serif;
+  white-space: nowrap;
+}
+.cover-nav .cover-style-switch button[aria-pressed="true"] { background: #ded4b5; color: #203c30; box-shadow: 2px 2px rgba(4, 20, 14, .32); }
+.cover-nav .cover-style-switch button:focus-visible { outline: 2px solid #d6a394; outline-offset: 2px; }
+.contents-sheet {
+  border-top-color: rgba(207, 219, 200, .24);
+  background-color: rgba(17, 32, 26, .82);
+  backdrop-filter: blur(22px) saturate(130%);
+  -webkit-backdrop-filter: blur(22px) saturate(130%);
+}
+.cover-nav {
+  background: rgba(20, 42, 34, .60);
+  border-bottom-color: rgba(207, 219, 200, .25);
+  backdrop-filter: blur(20px) saturate(130%);
+  -webkit-backdrop-filter: blur(20px) saturate(130%);
+}
+@media(max-width:1000px) {
+  .cover-theme-panel { width: 220px; }
+}
+@media(max-width:650px) {
+  .cover-nav nav { gap: 8px; }
+  .cover-nav nav > a { min-height: 34px; }
+  .cover-nav .cover-style-switch { height: 34px; }
+  .cover-nav .cover-style-switch button { height: 28px; padding-inline: 6px; font-size: 9px; }
+  .cover-foot { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: auto auto; align-items: end; }
+  .cover-foot > span:first-child { grid-column: 1; grid-row: 1; }
+  .cover-foot > a { position: relative; left: auto; bottom: auto; grid-column: 1; grid-row: 2; justify-self: center; transform: none; }
+  .cover-theme-panel { grid-column: 2; grid-row: 1 / 3; }
+  .cover-theme-panel { width: 184px; padding: 7px 8px; font-size: 8px; }
+  .cover-theme-row { grid-template-columns: 24px 1fr; gap: 5px; }
+  .cover-theme-row + .cover-theme-row { margin-top: 4px; }
+  .cover-segment button { padding: 4px 3px; }
+  .cover-time-axis { margin-top: 6px; }
+  .cover[data-cover-style="pixel"] .cover-signature h1 { font-size: clamp(38px, 9.5vw, 48px); }
+}
+@media(max-width:380px) {
+  .cover-nav nav { gap: 5px; }
+  .cover-nav .cover-style-switch button { padding-inline: 4px; font-size: 8px; }
+  .cover-theme-panel { width: 160px; padding-inline: 6px; }
+  .cover-theme-row { grid-template-columns: 21px 1fr; gap: 4px; }
+  .cover-segment button { font-size: 7px; }
+}

@@ -1,0 +1,1 @@
+{"name":"portfolio-notes-drawer-motion","private":true,"type":"module","scripts":{"build":"node build.mjs"},"dependencies":{"esbuild":"0.28.2","react":"19.3.0","react-dom":"19.3.0","remotion":"4.0.534"}}

@@ -1,0 +1,58 @@
+/* A continuous portfolio surface. Only the site navigation stays fixed. */
+:root {--nav-height:68px;--nav-glass:rgba(244,243,236,.76)}
+:root[data-light-mode="night"] {--nav-glass:rgba(20,42,34,.60)}
+.cover-nav {
+  inset:0 0 auto;padding-inline:var(--gutter);
+  background:var(--paper);border-bottom:1px solid var(--line);
+  box-shadow:0 1px 0 #ffffff0a;
+}
+@supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))) {
+  .cover-nav {background:var(--nav-glass);backdrop-filter:blur(20px) saturate(115%);-webkit-backdrop-filter:blur(20px) saturate(115%)}
+}
+.cover,.contents-sheet {position:relative;top:auto}
+.contents-sheet {box-shadow:none}
+.project-chapter,#finance-project,.edgelore-chapter {
+  box-shadow:none;border-top:0;padding-top:0;padding-bottom:52px;
+  scroll-margin-top:0;
+}
+.project-chapter .chapter-inner {border-top:1px solid var(--line)}
+.project-chapter .chapter-heading.project-overview {
+  display:grid;grid-template-columns:minmax(0,1fr) auto;
+  align-items:end;gap:30px;padding:32px 0 28px;
+}
+.project-overview .editorial-label,#finance-project .project-overview .editorial-label {font-size:10px;margin:0 0 16px;letter-spacing:.09em}
+.project-chapter .project-overview h2,#finance-project .project-overview h2 {font-size:clamp(32px,3.6vw,46px);line-height:1.25;letter-spacing:-.035em}
+.project-deck {font-size:14px;line-height:1.9;color:var(--secondary);margin:14px 0 0;max-width:42em}
+.project-actions {display:flex;flex-direction:column;align-items:flex-end;gap:12px;padding-bottom:4px;font-size:12px;white-space:nowrap}
+.project-actions>a,.project-actions>button {font:inherit;color:var(--ink);border:0;border-bottom:1px solid var(--line);padding:0 0 7px;background:none;cursor:pointer}
+.project-actions>a:hover,.project-actions>button:hover {color:var(--red);border-color:var(--red)}
+.project-actions span {color:var(--red);margin-left:16px}
+.project-actions small,.project-actions .project-secondary-link {font-size:10px;color:var(--secondary)}
+.project-actions .project-secondary-link {border:0;padding:0}
+.project-details {margin-top:20px;border-bottom:1px solid var(--line);font-size:12px;color:var(--secondary)}
+.project-details>summary {display:flex;align-items:center;justify-content:space-between;gap:20px;padding:17px 0 20px;cursor:pointer;list-style:none}
+.project-details>summary::-webkit-details-marker {display:none}
+.project-details>summary>span:first-child {color:var(--ink)}
+.details-action {display:flex;align-items:center;gap:20px;font-size:11px;white-space:nowrap}
+.details-action b {font:22px/1 Georgia,serif;transition:transform .2s}
+.project-details[open] .details-action b {transform:rotate(45deg)}
+.project-detail-copy {display:grid;grid-template-columns:1fr 1fr;gap:40px;padding:4px 0 24px}
+.project-detail-copy p,.project-detail-lead {font-size:13px;line-height:2;margin:0 0 16px}
+.project-details .finance-principles {margin:8px 0 28px}
+.project-details .edgelore-notes {margin:8px 0 24px}
+.project-details .memory-sources {margin-bottom:24px}
+.edgelore-chapter .chapter-end {margin-top:28px;padding:22px 0 0}
+@media(max-width:650px) {
+  :root {--nav-height:60px}
+  .cover-nav {padding-inline:20px;gap:16px}
+  .cover-nav nav {gap:16px}
+  .project-chapter .chapter-heading.project-overview {grid-template-columns:1fr;gap:20px;padding:28px 0 24px}
+  .project-actions {flex-direction:row;align-items:center;justify-content:space-between;white-space:normal;gap:16px}
+  .project-deck {font-size:13px;margin-top:12px}
+  .project-chapter,#finance-project,.edgelore-chapter {padding-bottom:32px}
+  .project-detail-copy {grid-template-columns:1fr;gap:0}
+  .details-action {gap:10px}
+  .project-details>summary {gap:12px;font-size:11px}
+}
+@media(max-width:360px) {.cover-nav nav {gap:11px}.wordmark {font-size:9px}.project-actions small {max-width:140px;text-align:right}}
+@media(prefers-reduced-motion:reduce) {.details-action b {transition:none}}

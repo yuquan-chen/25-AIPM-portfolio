@@ -3,8 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="设计有边界的自主性：25点学习的 AI 产品、Agent 系统与可视化实验档案。">
-  <title>设计有边界的自主性｜25点学习</title>
+  <meta name="description" content="设计有边界的自主性：Charles Chen的 AI 产品、Agent 系统与可视化实验档案。">
+  <title>设计有边界的自主性｜Charles Chen</title>
+  <meta http-equiv="refresh" content="0; url=./cover-preview.html">
+  <script>
+    // GitHub Pages serves index.html at the site root; route visitors to the reviewed portfolio.
+    window.location.replace(new URL("./cover-preview.html" + location.search + location.hash, location.href));
+  </script>
   <style>
     :root {
       --paper: #eee4cc;
@@ -887,12 +892,13 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="./assets/journey-drawer.css?v=1">
 </head>
 <body>
   <div class="page">
     <span id="top" class="page-top-anchor" aria-hidden="true"></span>
     <nav class="site-nav" aria-label="网站导航">
-      <a class="identity" href="#top">25点学习.的产品作品集</a>
+      <a class="identity" href="#top">Charles Chen · 作品集</a>
       <div class="nav-links">
         <a href="#works">Works</a>
         <a href="#notes">Notes</a>
@@ -930,7 +936,7 @@
           <p class="hero-copy-paragraph">我是一个能全栈的 <span class="key-point">AIPM</span>，做产品，也把它写出来。</p>
           <p class="hero-copy-paragraph">我的工作始终围绕一个问题：如何为 AI 设定边界，让它发挥真正的自主能力——<span class="key-point">看见、判断、提议和行动</span>，并在需要时停下来，<span class="key-point">把控制权还给人</span>。这就是 <span class="key-point">Human in the loop</span>：不只是 human 在 loop，AI 也需要知道什么时候该 loop。</p>
           <div class="hero-bottom">
-            <span class="hero-location">SHENZHEN<br>25点学习<br><span class="hero-open">AI PM/ AI NATIVE / FULL-STACK / TOC / CITY STUDY</span></span>
+            <span class="hero-location">SHENZHEN<br>Charles Chen<br><span class="hero-open">AI PM/ AI NATIVE / FULL-STACK / TOC / CITY STUDY</span></span>
           </div>
           <button class="city-inline-page" id="cityInlinePage" type="button" aria-label="左侧城市可听化研究笔记页面">
             <span class="city-book-window-controls" aria-label="书本窗口控制"><span class="city-book-window-dot city-book-window-dot-red city-book-close-inline" role="button" tabindex="0" title="关闭笔记" aria-label="关闭笔记"></span><span class="city-book-window-dot city-book-window-dot-yellow" aria-hidden="true"></span><span class="city-book-window-dot city-book-window-dot-green" aria-hidden="true"></span></span>
@@ -1119,13 +1125,13 @@
             </div>
           </div>
 
-          <div class="journey-nav" role="tablist" aria-label="LLM 学习路径">
-            <button class="journey-step" type="button" role="tab" aria-selected="false" data-journey="data"><span>01 / Early April</span><b>第一次转折：训练从定义一条数据开始</b><small>Reasoning Schema · Data Curation · First Training</small></button>
-            <button class="journey-step" type="button" role="tab" aria-selected="false" data-journey="structure"><span>02 / Mid April</span><b>后来，我开始跟着张量读 Transformer</b><small>Encoder–Decoder · Sinusoidal PE · MHA</small></button>
-            <button class="journey-step" type="button" role="tab" aria-selected="false" data-journey="state"><span>03 / Late April</span><b>再后来，我想看见生成的过程</b><small>Token NLL · Attention Statistics</small></button>
-            <button class="journey-step" type="button" role="tab" aria-selected="true" data-journey="distribution"><span>04 / May</span><b>到了五月，我把三组输出放进一张地图</b><small>Baseline · Training · LoRA SFT</small></button>
+          <div class="journey-nav" role="tablist" aria-label="学习随笔抽屉目录">
+            <button class="journey-step" id="journey-step-data" type="button" role="tab" aria-selected="false" aria-controls="journey-detail" data-journey="data"><span>01 / Early April</span><b>第一次转折：训练从定义一条数据开始</b><small>Reasoning Schema · Data Curation · First Training</small></button>
+            <button class="journey-step" id="journey-step-structure" type="button" role="tab" aria-selected="false" aria-controls="journey-detail" data-journey="structure"><span>02 / Mid April</span><b>后来，我开始跟着张量读 Transformer</b><small>Encoder–Decoder · Sinusoidal PE · MHA</small></button>
+            <button class="journey-step" id="journey-step-state" type="button" role="tab" aria-selected="false" aria-controls="journey-detail" data-journey="state"><span>03 / Late April</span><b>再后来，我想看见生成的过程</b><small>Token NLL · Attention Statistics</small></button>
+            <button class="journey-step" id="journey-step-distribution" type="button" role="tab" aria-selected="true" aria-controls="journey-detail" data-journey="distribution"><span>04 / May</span><b>到了五月，我把三组输出放进一张地图</b><small>Baseline · Training · LoRA SFT</small></button>
           </div>
-          <div class="journey-detail" id="journey-detail" role="tabpanel" aria-live="polite"></div>
+          <div class="journey-detail" id="journey-detail" role="tabpanel" aria-labelledby="journey-step-data" aria-live="polite"></div>
         </div>
       </section>
 
@@ -1157,7 +1163,7 @@
       </section>
     </main>
 
-    <footer class="site-footer"><span>25点学习 / SHENZHEN</span><span>BUILDING SYSTEMS THAT KNOW WHEN TO STOP.</span><span>© 2026</span></footer>
+    <footer class="site-footer"><span>Charles Chen / SHENZHEN</span><span>BUILDING SYSTEMS THAT KNOW WHEN TO STOP.</span><span>© 2026</span></footer>
   </div>
 
   <script src="./scripts/llm-journey.js?v=20260823-highlights"></script>

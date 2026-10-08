@@ -1,0 +1,15 @@
+/* The opening alone overlaps. The wrapper releases before the first project. */
+.cover-index-turn {position:relative;isolation:isolate}
+@media(min-width:761px) and (prefers-reduced-motion:no-preference) {
+  .cover-index-turn.is-ready>.cover {position:sticky;top:var(--cover-pin-top,0px);z-index:0}
+  .cover-index-turn.is-ready>.contents-sheet {
+    position:relative;top:auto;z-index:1;
+    box-shadow:0 -1px 0 #ffffff20,0 -14px 34px rgb(15 36 28 / var(--cover-turn-shadow,0));
+  }
+  .cover-index-turn.is-ready .catalogue-intro h2 {
+    transform:translateY(var(--cover-title-y,0px));opacity:var(--cover-title-opacity,1);
+  }
+  .cover-index-turn.is-ready .catalogue-intro>p {
+    transform:translateY(var(--cover-copy-y,0px));opacity:var(--cover-copy-opacity,1);
+  }
+}

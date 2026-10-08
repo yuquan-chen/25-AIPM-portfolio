@@ -1,0 +1,70 @@
+/* One shared outer format for both embedded project demonstrations. */
+#financePreview .demo-shell-bar,.edgelore-exhibit .demo-shell-bar{box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;gap:16px;height:56px;min-height:56px;padding:0 24px;margin:0;background:#eeeee4;border-bottom:1px solid #d4d2c5;color:#23483c;font:14px/1.5 'Microsoft YaHei',sans-serif}
+#financePreview .demo-shell-bar>span,.edgelore-exhibit .demo-shell-bar>span{display:flex;align-items:center;gap:10px;color:inherit;font:inherit;margin:0}
+.demo-shell-bar i{display:inline-block;width:6px;height:6px;flex:none;border-radius:50%;background:#7a9180}
+#financePreview .demo-shell-bar small,.edgelore-exhibit .demo-shell-bar small{font:11px/1.5 'Microsoft YaHei',sans-serif;color:#72776b;white-space:nowrap}
+#financePreview .demo-shell-footer,body:not(.standalone) .demo-shell-footer{box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;gap:16px;height:64px;min-height:64px;padding:0 24px;background:#f3f2eb;border-top:1px solid #d4d2c5;color:#72776b;font:11px/1.5 'Microsoft YaHei',sans-serif}
+#financePreview .demo-shell-footer>div,body:not(.standalone) .demo-shell-footer>div{display:flex;align-items:center;gap:22px;flex:none}
+#financePreview .demo-shell-footer button,body:not(.standalone) .demo-shell-footer button{min-height:44px;padding:0;border:0;background:none;color:#23483c;font:12px/1.5 'Microsoft YaHei',sans-serif;white-space:nowrap}
+#financePreview .demo-shell-footer button:disabled{opacity:.35}
+body:not(.standalone) .demo-shell-footer>span{min-width:0;font:11px/1.5 'Microsoft YaHei',sans-serif}
+body:not(.standalone) .replay-position{min-width:0;max-width:155px;min-height:34px;border:0;border-bottom:1px solid #d4d2c5;border-radius:0;background:transparent;color:#72776b;font:11px/1.5 'Microsoft YaHei',sans-serif}
+body:not(.standalone) .conversation .pane-head time{display:none}
+#finance-project .demo-caption,#edgelore-project .demo-caption{font:12px/1.85 'Microsoft YaHei',sans-serif;color:var(--secondary);max-width:none;margin:16px 0 0;padding:0}
+#finance-project .demo-notes,#edgelore-project .demo-notes{width:100%;max-width:none;margin:22px 0 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+#finance-project .demo-notes>summary,#edgelore-project .demo-notes>summary{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:62px;padding:16px 0;font:13px/1.5 'Microsoft YaHei',sans-serif;color:var(--ink)}
+.demo-notes>summary .details-action{display:flex;align-items:center;gap:20px;font-size:12px;color:var(--secondary)}
+@media(min-width:761px){
+ #financePreview .finance-replay-layout{padding:0 14px;gap:18px;grid-template-columns:minmax(0,.96fr) minmax(0,1.08fr)}
+ #financePreview .finance-chat,#financePreview .finance-trace{height:640px}
+ #financePreview .finance-chat-head,#financePreview .finance-trace-head{height:58px;min-height:58px}
+ body:not(.standalone) .workspace{height:640px}
+}
+@media(max-width:760px){
+ #financePreview .demo-shell-bar,.edgelore-exhibit .demo-shell-bar{height:52px;min-height:52px;padding:0 16px;gap:8px;font-size:12px}
+ #financePreview .demo-shell-bar small,.edgelore-exhibit .demo-shell-bar small{font-size:9px}
+ #financePreview .demo-shell-footer,body:not(.standalone) .demo-shell-footer{height:58px;min-height:58px;padding:0 16px;gap:10px;font-size:10px}
+ #financePreview .demo-shell-footer>div,body:not(.standalone) .demo-shell-footer>div{gap:14px}
+ #financePreview .demo-shell-footer button,body:not(.standalone) .demo-shell-footer button{font-size:11px}
+ #financeReplayCaption{max-width:145px}
+ body:not(.standalone) .replay-position{max-width:140px;font-size:10px}
+ body:not(.standalone) .demo-shell-footer>span{font-size:10px}
+}
+@media(min-width:761px){
+ body:not(.standalone) .workspace{box-sizing:border-box;padding:0 14px;column-gap:18px;grid-template-columns:minmax(0,.96fr) minmax(0,1.08fr)}
+ body:not(.standalone) .conversation{padding-right:22px}
+ body:not(.standalone) .pane-head{padding-inline:12px}
+ #financePreview .finance-trace-canvas{max-width:440px}
+}
+
+/* Shared typography extends to the project introduction and pane headings. */
+:is(#finance-project,#edgelore-project) .chapter-heading.project-overview{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;padding:48px 0 34px;gap:32px}
+:is(#finance-project,#edgelore-project) .project-overview .editorial-label{font:12px/1.7 Consolas,'Microsoft YaHei',sans-serif;letter-spacing:.07em;margin:0 0 22px}
+:is(#finance-project,#edgelore-project) .project-overview h2{font:400 clamp(36px,4.4vw,58px)/1.25 'Songti SC','SimSun',serif;letter-spacing:-.04em;margin:0}
+:is(#finance-project,#edgelore-project) .project-deck{font:19px/1.8 'Microsoft YaHei',sans-serif;margin:20px 0 0;color:var(--ink)}
+:is(#finance-project,#edgelore-project) .project-actions{display:flex;flex-direction:column;align-items:flex-end;gap:18px;font:14px/1.7 'Microsoft YaHei',sans-serif}
+:is(#finance-project,#edgelore-project) .project-secondary-link{font-size:12px}
+#financePreview .finance-chat-head,#financePreview .finance-trace-head,body:not(.standalone) .pane-head h2{font:500 12px/1.5 'Microsoft YaHei',sans-serif;color:#72776b}
+#financePreview .finance-chat-empty,body:not(.standalone) .ghost-hint{padding:28px 6px 14px;margin:0;text-align:left;color:#23483c}
+#financePreview .finance-welcome-mark{display:none}
+#financePreview .finance-chat-empty::before,body:not(.standalone) .ghost-hint::before{content:'ƒ.';display:block;font:italic 30px/1 Georgia,serif;color:#9b6d5b;margin-bottom:24px}
+body:not(.standalone) .ghost-hint::before{content:'e.'}
+#financePreview .finance-chat-empty>span:not(.finance-welcome-mark),body:not(.standalone) .ghost-hint{font:400 28px/1.5 'Songti SC','SimSun',serif}
+#financePreview .finance-chat-empty p,body:not(.standalone) .ghost-hint small{font:14px/1.85 'Microsoft YaHei',sans-serif;color:#72776b;margin:16px 0 22px}
+body:not(.standalone) .messages{padding:20px 14px;scroll-padding:20px}
+body:not(.standalone) .composer{margin:0 10px 12px}
+body:not(.standalone) .preset-label,body:not(.standalone) #turn-count{font:11px/1.5 'Microsoft YaHei',sans-serif!important}
+body:not(.standalone) .mock-model{font:12px/1.5 'Microsoft YaHei',sans-serif}
+@media(max-width:760px){
+ :is(#finance-project,#edgelore-project) .chapter-heading.project-overview{grid-template-columns:1fr;padding:32px 0 25px;gap:24px}
+ :is(#finance-project,#edgelore-project) .project-overview .editorial-label{font-size:11px;margin-bottom:18px}
+ :is(#finance-project,#edgelore-project) .project-overview h2{font-size:clamp(32px,7.8vw,42px)}
+ :is(#finance-project,#edgelore-project) .project-deck{font-size:17px;margin-top:16px}
+ :is(#finance-project,#edgelore-project) .project-actions{flex-direction:row;align-items:center;justify-content:flex-start;gap:28px}
+ #financePreview .finance-chat-empty::before,body:not(.standalone) .ghost-hint::before{display:none}
+ #financePreview .finance-chat-empty,body:not(.standalone) .ghost-hint{padding:2px 0 4px}
+ #financePreview .finance-chat-empty>span:not(.finance-welcome-mark),body:not(.standalone) .ghost-hint{font-size:24px}
+ #financePreview .finance-chat-empty p,body:not(.standalone) .ghost-hint small{font-size:15px;margin:10px 0 16px}
+ body:not(.standalone) .messages{padding:16px}
+ body:not(.standalone) .composer{margin:0 12px 12px}
+}

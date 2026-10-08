@@ -1,0 +1,28 @@
+#finance-project{padding-bottom:28px}
+.edgelore-chapter{border-top:0;box-shadow:none;padding-top:22px}
+.memory-exhibit{border:1px solid var(--line);background:#faf8f0;color:#173d35;max-width:1080px;margin:auto;--memory-muted:#687465}
+.memory-exhibit-top{padding:20px 28px;display:flex;justify-content:space-between;align-items:center;gap:20px;border-bottom:1px solid #d6dacd}
+.memory-exhibit-top strong{font:400 21px/1.5 'Songti SC','SimSun',serif}.memory-exhibit-top small{font-size:11px;color:var(--memory-muted)}
+.memory-steps{display:flex;gap:24px;padding:0 28px;border-bottom:1px solid #d6dacd}
+.memory-steps button{border:0;border-bottom:2px solid transparent;background:none;padding:17px 0;color:#687465;cursor:pointer;font-size:12px;display:flex;gap:10px;align-items:center}
+.memory-steps button span{font:11px Consolas,monospace;color:#9a6158}.memory-steps button[aria-pressed=true]{border-color:#9a6158;color:#173d35}
+.memory-workbench{display:grid;grid-template-columns:1.2fr 1fr;min-height:350px}
+.memory-records{padding:28px;border-right:1px solid #d6dacd;display:grid;align-content:start;gap:18px}
+.memory-slot{font:11px/1.8 Consolas,'Microsoft YaHei',sans-serif;color:#687465;margin:0 0 3px;display:flex;justify-content:space-between;gap:12px}.memory-slot span:last-child{color:#9a6158}
+.memory-record{position:relative;border:1px solid #cdd3c5;border-left:3px solid #55765d;background:#f1f2e8;padding:15px 18px}
+.memory-record[data-state=tentative]{border-left-color:#b17b68;background:#f5eee2}.memory-record[data-state=superseded]{border-left-color:#a4aa9a;background:#f1f0e8}
+.memory-record-top{display:flex;justify-content:space-between;gap:12px;font:11px/1.6 Consolas,'Microsoft YaHei',sans-serif;color:#687465}.memory-record-top b{font-weight:400;color:#315343}
+.memory-record[data-state=tentative] b{color:#945c4b}.memory-record[data-state=superseded] b{color:#747b70}
+.memory-record p{font:400 23px/1.5 'Songti SC','SimSun',serif;margin:13px 0}.memory-record small{font-size:11px;line-height:1.8;color:#687465;display:block}
+.memory-empty{border:1px dashed #ccd1c4;padding:28px 18px;font-size:12px;color:#747e6d;line-height:1.9}
+.memory-reading{padding:30px;display:flex;flex-direction:column;justify-content:center;gap:12px}
+.memory-reading>span{font:10px/1.8 Consolas,monospace;letter-spacing:.08em;color:#9a6158}.memory-reading h3{font:400 27px/1.5 'Songti SC','SimSun',serif;margin:0}.memory-reading p{font-size:13px;line-height:2;margin:0;color:#51634f}
+.memory-recall{margin-top:8px;border-top:1px solid #d6dacd;padding-top:17px}.memory-recall small{display:block;font:10px/1.8 Consolas,'Microsoft YaHei',sans-serif;color:#687465;margin-bottom:5px}
+.memory-footnote{margin:0;padding:14px 28px;border-top:1px solid #d6dacd;color:#687465;font-size:11px;line-height:1.8}
+.edgelore-notes{max-width:1080px;margin:32px auto}.edgelore-notes p{font-size:13px}
+.memory-sources{max-width:1080px;margin:0 auto 36px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-size:12px;color:var(--secondary)}
+.memory-sources summary{padding:18px 0;cursor:pointer;color:var(--ink)}.memory-sources p{max-width:860px;line-height:2;margin:0 0 16px}.memory-sources a{color:var(--red);border-bottom:1px solid var(--line)}
+@media(max-width:760px){.memory-exhibit-top{padding:18px 20px;align-items:flex-start;flex-direction:column;gap:5px}.memory-steps{padding:0 20px;gap:20px}.memory-steps button{font-size:11px;gap:7px}.memory-records,.memory-reading{padding:22px}.memory-reading h3{font-size:24px}}
+@media(max-width:600px){.memory-workbench{grid-template-columns:1fr}.memory-records{border-right:0;border-bottom:1px solid #d6dacd;padding:20px}.memory-reading{padding:24px 20px;min-height:245px;justify-content:flex-start}.memory-record p{font-size:23px}.memory-steps{gap:0;justify-content:space-between}.memory-steps button{font-size:12px;gap:5px}.memory-exhibit{margin:0 -10px}.memory-footnote{padding:14px 20px}}
+
+.edgelore-replay-intro{max-width:1240px;margin:0 auto 18px;display:flex;justify-content:space-between;align-items:center;gap:20px}.edgelore-replay-intro p{font:400 22px/1.5 'SimSun',serif;margin:0}.edgelore-replay-intro>span{font-size:10px;color:var(--secondary)}.edgelore-replay-frame{display:block;width:100%;height:855px;border:0;background:#fafbf7;color-scheme:light;box-shadow:0 24px 42px -35px #173d3555}.edgelore-notes{max-width:1240px}.memory-sources{max-width:1240px}@media(max-width:760px){.edgelore-replay-intro{display:block}.edgelore-replay-intro>span{display:block;margin-top:8px}}@media(max-width:600px){.edgelore-replay-frame{width:calc(100% + 20px);margin-left:-10px;height:1240px}.edgelore-replay-intro p{font-size:21px}}

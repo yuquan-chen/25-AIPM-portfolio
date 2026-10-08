@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>陪伴式 Agent · 项目说明</title>
+  <style>
+    :root { color-scheme: dark; --page: #1b3029; --paper: #f1ecdd; --ink: #26372f; --muted: #657366; --line: #c6c9b7; --accent: #9a6158; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--page); color: #e4e8d7; font: 15px/1.85 "Microsoft YaHei", "Noto Sans CJK SC", sans-serif; }
+    a { color: inherit; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 18px max(6vw, 24px); border-bottom: 1px solid #405647; font: 11px/1.5 Consolas, monospace; letter-spacing: .04em; }
+    .topbar a { text-decoration: none; color: #c6cdb9; }
+    .topbar a:hover { color: #fff; }
+    main { width: min(900px, calc(100% - 40px)); margin: 64px auto 100px; padding: clamp(26px, 6vw, 64px); background: var(--paper); color: var(--ink); border: 1px solid #d2d1bf; box-shadow: 5px 5px #0c20194d; }
+    .eyebrow { margin: 0 0 18px; color: var(--accent); font: 11px/1.5 Consolas, monospace; letter-spacing: .08em; }
+    h1 { margin: 0; font: 500 clamp(34px, 6vw, 54px)/1.3 "Microsoft YaHei", sans-serif; letter-spacing: -.03em; }
+    .lead { max-width: 680px; margin: 16px 0 0; color: #596458; font-size: 16px; }
+    .rule { height: 1px; margin: 34px 0; background: var(--line); }
+    #document-body { overflow-wrap: anywhere; }
+    #document-body h2 { margin: 42px 0 16px; padding-top: 24px; border-top: 1px solid var(--line); font-size: 25px; line-height: 1.5; }
+    #document-body h3 { margin: 28px 0 10px; font-size: 18px; }
+    #document-body p, #document-body ul, #document-body ol { margin: 12px 0 18px; }
+    #document-body li { padding-left: 4px; margin: 5px 0; }
+    #document-body strong { color: #26372f; }
+    #document-body blockquote { margin: 20px 0; padding: 8px 18px; border-left: 3px solid var(--accent); color: #5d655b; background: #e7e2d4; }
+    #document-body table { width: 100%; margin: 22px 0; border-collapse: collapse; font-size: 13px; }
+    #document-body th, #document-body td { padding: 10px 12px; border: 1px solid var(--line); text-align: left; vertical-align: top; }
+    #document-body th { background: #e7e2d4; }
+    #document-body pre { overflow: auto; padding: 18px; background: #26372f; color: #e6e5d5; font: 13px/1.7 Consolas, monospace; }
+    #document-body code { font-family: Consolas, monospace; }
+    #document-body :not(pre) > code { padding: 2px 5px; background: #e5e0d1; }
+    #document-body hr { margin: 30px 0; border: 0; border-top: 1px solid var(--line); }
+    .doc-foot { display: flex; justify-content: space-between; gap: 18px; margin-top: 46px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font: 10px/1.7 Consolas, monospace; }
+    .error { color: #8a3e36; }
+    @media (max-width: 600px) { main { width: calc(100% - 24px); margin: 24px auto 50px; padding: 24px 20px; } .topbar { padding: 15px 18px; } #document-body h2 { font-size: 22px; } #document-body table { display: block; overflow-x: auto; white-space: nowrap; } .doc-foot { flex-direction: column; } }
+  </style>
+  <script defer src="../../assets/vendor/marked/marked.umd.js"></script>
+  <script defer src="../../assets/vendor/dompurify/purify.min.js"></script>
+  <script defer>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const host = document.getElementById('document-body');
+      try {
+        const response = await fetch('./project.md');
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const source = (await response.text())
+          .replace(/^---\s*[\s\S]*?\n---\s*/, '')
+          .replace(/^## 一句话介绍\s*\r?\n[\s\S]*?(?=^## 问题(?:\s|$))/m, '');
+        if (!window.marked?.parse || !window.DOMPurify?.sanitize) throw new Error('文档组件未能加载');
+        host.innerHTML = window.DOMPurify.sanitize(window.marked.parse(source));
+      } catch (error) {
+        host.innerHTML = `<p class="error">项目说明暂时无法载入。你可以直接查看 <a href="./project.md">Markdown 原文</a>。</p>`;
+      }
+    });
+  </script>
+</head>
+<body>
+  <header class="topbar"><a href="../../cover-preview.html#companion-project">CHARLES CHEN / 返回鹅宝项目</a><span>PROJECT NOTES · 2026</span></header>
+  <main>
+    <p class="eyebrow">COMPANION AGENT / PROJECT DOCUMENT</p>
+    <h1>陪伴式 Agent</h1>
+    <p class="lead">一个安静的社交陪伴系统，通过观察输入行为，在真正需要时递出沟通建议。</p>
+    <div class="rule" aria-hidden="true"></div>
+    <article id="document-body" aria-live="polite"><p>正在载入项目说明……</p></article>
+    <footer class="doc-foot"><span>CHARLES CHEN · PROJECT NOTES</span><a href="./project.md">查看 Markdown 原文 ↗</a></footer>
+  </main>
+</body>
+</html>

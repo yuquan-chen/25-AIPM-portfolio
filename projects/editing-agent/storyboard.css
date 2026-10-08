@@ -1,0 +1,16 @@
+/* Preserve the supplied illustration proportions at every viewport size. */
+.storyboard-art .assets{padding-top:2px;align-self:center}
+.storyboard-art .asset{display:grid;grid-template-columns:52px minmax(0,1fr);align-items:center;gap:8px;width:100%;margin-top:8px;transform:none}
+:root.storyboard-art .asset .pixel-thumb{width:52px;height:auto;aspect-ratio:5/6;image-rendering:auto;border:1px solid #718165;box-shadow:2px 2px 0 #65745240}
+:root.storyboard-art .asset span{font-size:11px;line-height:1.6;margin:0;white-space:pre-line;overflow-wrap:anywhere}
+:root.storyboard-art .phone{display:flex;flex-direction:column;width:180px;padding:15px 6px 6px;border-radius:0;background:#aaba92}
+:root.storyboard-art .phone .pixel-preview{width:100%;height:auto;aspect-ratio:9/16;image-rendering:auto}
+:root.storyboard-art .phone :is(.pixel-scene-title,.pixel-scene-caption){position:absolute;font-size:11px;line-height:1.5;left:10px;right:10px;width:auto;padding:3px 2px;border:1px solid #856847;background:#ead08eee}
+:root.storyboard-art .pixel-scene-title{top:23px;bottom:auto;margin:0}
+:root.storyboard-art .pixel-scene-caption{top:auto;bottom:15px;margin:0}
+:root.storyboard-art .phone :is(.pixel-scene-title,.pixel-scene-caption):empty{display:none}
+:root.storyboard-art .phone-dot{display:none}
+:root.storyboard-art #filmDialog .phone{width:min(280px,43vh)}
+:root.storyboard-art #filmDialog .pixel-scene-title,:root.storyboard-art #filmDialog .pixel-scene-caption{font-size:14px}
+@media(max-width:1000px){.storyboard-art .asset{grid-template-columns:44px minmax(0,1fr);gap:5px}:root.storyboard-art .asset .pixel-thumb{width:44px}:root.storyboard-art .asset span{font-size:10px}}
+@media(max-width:760px){:root.storyboard-art .phone{width:160px}.storyboard-art .canvas{height:380px}.storyboard-art .asset{grid-template-columns:44px minmax(0,1fr);margin-top:7px}:root.storyboard-art .phone :is(.pixel-scene-title,.pixel-scene-caption){font-size:10px}}

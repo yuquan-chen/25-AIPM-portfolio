@@ -1,0 +1,157 @@
+/* Shared shell dimensions, three control dots, conversation scale, and resizable split. */
+:root{--demo-copy:16px;--demo-meta:12px;--demo-clay:#a16c62}
+.demo-split-handle{display:none}
+@media(min-width:761px){
+  #financePreview .finance-replay-layout.demo-split,body #replay .workspace.demo-split,#workbench .desk.demo-split{position:relative;display:grid;grid-template-columns:var(--demo-columns,minmax(0,47fr) minmax(0,53fr))!important;column-gap:18px;padding-inline:14px}
+  .demo-split>.demo-split-handle{display:block;position:absolute;z-index:10;top:10px;bottom:10px;left:var(--demo-seam,47%);width:18px;padding:0;border:0;border-left:1px solid #84916e;cursor:col-resize;touch-action:none;background:repeating-linear-gradient(to bottom,#84916e 0 1px,transparent 1px 48px) left top/12px 48px repeat-y,repeating-linear-gradient(to bottom,#a4ac8e 0 1px,transparent 1px 8px) left top/6px 8px repeat-y;color:#a16c62}
+  .demo-split-handle::before{content:'';position:absolute;top:48%;left:-3px;width:7px;height:32px;border:1px solid currentColor;background:#ded4b5;box-shadow:2px 2px #a16c6228}
+  .demo-split-handle:hover,.demo-split-handle:focus-visible{color:#865347;background-color:#a16c6215;outline:1px solid #a16c62;outline-offset:2px}
+  #financePreview .demo-split>.finance-chat::after,#replay .demo-split>.conversation::after{display:none}
+  #workbench .demo-split>.conversation{border-right:0;padding-right:12px;min-width:0;background:transparent}
+  html.demo-resizing,html.demo-resizing *{cursor:col-resize!important;user-select:none!important}
+}
+:root #workbench .welcome h1{font-size:var(--demo-copy);line-height:1.75;font-weight:400;letter-spacing:0;margin:16px 0}
+:root #workbench .welcome h1 em{font-style:normal;text-decoration:none}
+:root #workbench .welcome p,:root #workbench .message p,:root #workbench .composer textarea{font-size:var(--demo-copy);line-height:1.75}
+:root #workbench .welcome-mark{display:none}
+:root #workbench :is(.welcome .eyebrow,.message small,.composer label,.composer small,.pane-title,.pane-title small,.titlebar strong,.top-note,.bottom-bar,.proposal li span){font-size:var(--demo-meta);line-height:1.5}
+:root #workbench .messages{padding:20px 14px;scrollbar-gutter:stable;scrollbar-color:var(--demo-clay) transparent}
+:root #workbench .composer{height:156px;flex:0 0 156px;margin:0 10px 12px;padding:12px;display:flex;flex-direction:column;justify-content:space-between;border-color:#7c8965}
+:root #workbench .composer textarea{height:70px;padding:0;margin:0 0 6px}
+:root #workbench .composer button{width:34px;height:34px;flex-shrink:0}
+:root #workbench .proposal{padding:12px 15px;border-color:var(--demo-clay)}
+:root #workbench .proposal strong,:root #workbench .proposal li{font-size:var(--demo-copy);line-height:1.75}
+:root #workbench .proposal-actions button{font-size:var(--demo-meta)}
+:root #workbench .canvas{grid-template-columns:124px minmax(0,1fr);gap:12px;padding-inline:18px}
+:root #workbench .editor{min-height:0}
+:root #workbench .transport{gap:10px;padding-inline:18px}
+:root #workbench .transport-note{display:none}
+:root #workbench .timeline-ruler,:root #workbench .track{cursor:crosshair;touch-action:none}
+:root #workbench .timeline-ruler[aria-disabled=true]{cursor:default;opacity:.55}
+:root #workbench .timeline-ruler:focus-visible{outline:2px solid var(--demo-clay);outline-offset:3px}
+:root #workbench .message.user,:root #financePreview .finance-message.user,:root #replay .message.user .bubble{padding:12px 15px;margin-left:auto;margin-right:0;width:88%;max-width:88%;border:1px solid var(--demo-clay);border-radius:14px 14px 3px 14px;transform:none;box-shadow:none;background:#e8d9c5;color:#203c30;overflow-wrap:anywhere}
+:root[data-finance-style=pixel] #workbench .message.user,:root[data-finance-style=pixel] #financePreview .finance-message.user,:root[data-finance-style=pixel] #replay .message.user .bubble{border:2px solid var(--demo-clay);border-radius:0;box-shadow:3px 3px #a16c6238;background:#e7ddbe}
+@media(max-width:760px){
+  :root #workbench .composer{height:134px;flex-basis:134px;margin:8px 12px 12px}
+  :root #workbench .canvas{grid-template-columns:80px minmax(0,1fr);padding-inline:14px}
+  :root #workbench .conversation{height:440px}
+}
+@media(min-width:761px){
+  #financePreview .finance-replay-layout{height:810px}
+  :root #workbench{max-width:none;height:auto}
+  :root #workbench .titlebar{height:56px;min-height:56px}
+  :root #workbench .desk{height:801px;min-height:801px}
+  :root #workbench .bottom-bar{height:56px;min-height:56px}
+  #financePreview .demo-shell-bar,.edgelore-exhibit .demo-shell-bar{height:56px;min-height:56px}
+  #financePreview .demo-shell-footer,.edgelore-exhibit .demo-shell-footer{height:56px;min-height:56px}
+  #financePreview .demo-shell-bar>span,.edgelore-exhibit .demo-shell-bar>span{gap:10px}
+  .demo-window-dots{display:inline-flex;align-items:center;gap:4px;flex:none}
+  .demo-window-dots i{display:block;width:7px;height:7px;flex:none;border:1px solid #d9d1ae;border-radius:50%;background:#cb826b}
+  .demo-window-dots i:nth-child(2){background:#dfc477}
+  .demo-window-dots i:nth-child(3){background:#9db294}
+  #financePreview .demo-shell-bar .demo-window-dots i,.edgelore-exhibit .demo-shell-bar .demo-window-dots i{border-color:#d9d1ae;background:#cb826b}
+  #financePreview .demo-shell-bar .demo-window-dots i:nth-child(2),.edgelore-exhibit .demo-shell-bar .demo-window-dots i:nth-child(2){background:#dfc477}
+  #financePreview .demo-shell-bar .demo-window-dots i:nth-child(3),.edgelore-exhibit .demo-shell-bar .demo-window-dots i:nth-child(3){background:#9db294}
+  :root[data-finance-style=pixel] .demo-window-dots i{border-radius:0;box-shadow:2px 2px #122e22}
+  :root[data-finance-style=pixel] #workbench .titlebar{height:56px}
+}
+@media(max-width:760px){
+  #financePreview .demo-shell-bar,.edgelore-exhibit .demo-shell-bar{height:52px;min-height:52px}
+  #financePreview .demo-shell-footer,.edgelore-exhibit .demo-shell-footer{height:58px;min-height:58px}
+  .demo-window-dots{display:inline-flex;align-items:center;gap:3px;flex:none}
+  .demo-window-dots i{display:block;width:6px;height:6px;flex:none;border-radius:50%;background:#cb826b}
+  .demo-window-dots i:nth-child(2){background:#dfc477}
+  .demo-window-dots i:nth-child(3){background:#9db294}
+}
+
+/* One navigation pattern links the three project chapters. */
+.project-chapter .chapter-end{box-sizing:border-box;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:34px 0 0;padding:18px 0 0;border-top:1px solid var(--ex-line,var(--line));}
+.project-chapter .chapter-end-link{box-sizing:border-box;display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto;align-content:center;gap:7px 16px;min-height:92px;padding:15px 18px;border:1px solid var(--ex-line,var(--line));background:var(--ex-paper,var(--paper));color:var(--ex-ink,var(--ink));text-decoration:none;font:inherit;transition:background-color .18s,border-color .18s,transform .18s;}
+.project-chapter .chapter-end-link small{grid-column:1/-1;font:10px/1.5 'Microsoft YaHei',sans-serif;letter-spacing:.08em;color:var(--ex-muted,var(--secondary));}
+.project-chapter .chapter-end-link strong{font:500 18px/1.5 'Microsoft YaHei',sans-serif;}
+.project-chapter .chapter-end-link>span{align-self:center;font:20px/1 Arial,sans-serif;color:var(--ex-accent,var(--red));}
+.project-chapter .chapter-end-next{text-align:right;}
+.project-chapter .chapter-end-link:hover{border-color:var(--ex-accent,var(--red));background:var(--ex-field,var(--surface));transform:translateY(-2px);}
+:root[data-finance-style=pixel] .project-chapter .chapter-end-link{border:2px solid #7c8965;border-radius:0;background:#e7ddbe;box-shadow:3px 3px #31533d2b;color:#203c30;font-family:'Finance Pixel',monospace;}
+:root[data-finance-style=pixel] .project-chapter .chapter-end-link small{font-family:'Finance Pixel',monospace;color:#59664d;}
+:root[data-finance-style=pixel] .project-chapter .chapter-end-link strong{font:400 16px/1.5 'Finance Pixel',monospace;color:#203c30;}
+:root[data-finance-style=pixel] .project-chapter .chapter-end-link>span{color:#a95742;}
+:root[data-finance-style=pixel] .project-chapter .chapter-end-link:hover{background:#d7d3ae;box-shadow:4px 4px #31533d55;transform:translate(-1px,-1px);}
+:root[data-finance-style=pixel] #editing-project .chapter-title-block h2{font-family:'Finance Pixel',monospace;font-size:48px;line-height:1.35;font-weight:400;letter-spacing:0;}
+:root[data-finance-style=pixel] #editing-project .chapter-title-block h2 em{font:inherit;color:inherit;}
+:root[data-finance-style=pixel] #workbench .bottom-bar{justify-content:space-between;}
+:root #workbench .bottom-bar #reset{flex:none;margin:0;padding:0 10px;min-height:34px;border:1px solid currentColor;background:transparent;color:inherit;font-size:12px;}
+:root[data-finance-style=pixel] #workbench .bottom-bar #reset{border:2px solid #9aa27a;box-shadow:2px 2px #142f24;background:#c9c5a5;color:#203c30;font-family:'Finance Pixel',monospace;}
+.edgelore-context .finance-principles.edgelore-principles{grid-template-columns:repeat(3,minmax(0,1fr));margin-top:22px;}
+.edgelore-context .edgelore-principles article:nth-child(3){border-left:1px solid var(--line);border-top:0;}
+.edgelore-context .edgelore-principles h3{font-size:17px;}
+.edgelore-context .edgelore-principles p{font-size:13px;}
+:root[data-finance-style=pixel] .edgelore-context .edgelore-principles{border-color:#8e9876;}
+:root[data-finance-style=pixel] .edgelore-context .edgelore-principles article+article{border-color:#8e9876;}
+:root{--edgelore-data-red:#a63e35;--edgelore-data-text:#96382f;--edgelore-data-wash:rgba(166,62,53,.06)}
+:root[data-light-mode=night]{--edgelore-data-red:#ed7168;--edgelore-data-text:#f0b4ae;--edgelore-data-wash:rgba(237,113,104,.09)}
+#edgelore-project .edgelore-data-notes{border:2px solid var(--edgelore-data-red);color:var(--edgelore-data-text);box-shadow:3px 3px color-mix(in srgb,var(--edgelore-data-red) 30%,transparent)}
+#edgelore-project .edgelore-data-notes>summary{padding-inline:16px;background:var(--edgelore-data-wash);color:var(--edgelore-data-red)}
+#edgelore-project .edgelore-data-notes>summary>span:first-child{color:var(--edgelore-data-red);font-size:17px;line-height:1.5;font-weight:600;letter-spacing:.03em}
+#edgelore-project .edgelore-data-notes>summary .details-action{color:var(--edgelore-data-red)}
+#edgelore-project .edgelore-data-notes .edgelore-data-body{display:grid;gap:12px;padding:18px 16px 20px;border-top:1px solid var(--edgelore-data-red);color:var(--edgelore-data-text)}
+#edgelore-project .edgelore-data-notes .edgelore-data-body p{margin:0;max-width:960px;font-size:14px;line-height:1.9;color:inherit}
+#edgelore-project .edgelore-data-notes .edgelore-data-body strong{color:var(--edgelore-data-red)}
+#edgelore-project .edgelore-data-notes .edgelore-data-body a{justify-self:start;margin-top:2px;padding:8px 10px;border:1px solid var(--edgelore-data-red);background:var(--edgelore-data-wash);color:var(--edgelore-data-red);font-size:12px;text-decoration:none}
+#edgelore-project .edgelore-data-notes .edgelore-data-body a:hover{background:var(--edgelore-data-red);color:#fff8ef}
+@media(max-width:760px){
+  .project-chapter .chapter-end{grid-template-columns:1fr;gap:10px;margin-top:24px;}
+  .project-chapter .chapter-end-link{min-height:76px;}
+  .edgelore-context .finance-principles.edgelore-principles{grid-template-columns:1fr;}
+  .edgelore-context .edgelore-principles article+article{border-left:0;border-top:1px solid var(--line);}
+}
+@media(max-width:650px){:root[data-finance-style=pixel] #editing-project .chapter-title-block h2{font-size:36px;}}
+
+/* Keep every project heading on one shared grid and one shared type scale. */
+:root :is(#city-project,#finance-project,#edgelore-project,#editing-project) .chapter-heading.project-overview{box-sizing:border-box;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:32px;width:100%;max-width:1080px;margin:0 auto;padding:44px 0 32px}
+:root :is(#city-project,#finance-project,#edgelore-project,#editing-project) .chapter-title-block{min-width:0}
+:root :is(#city-project,#finance-project,#edgelore-project,#editing-project,#companion-project) .chapter-title-block>.editorial-label{display:flex;align-items:center;gap:11px;width:max-content;max-width:100%;box-sizing:border-box;margin:0 0 14px;padding:0;border:0;background:transparent;color:var(--ex-muted,var(--secondary));font:13px/1.6 Consolas,monospace;letter-spacing:.035em}
+:root :is(#city-project,#finance-project,#edgelore-project,#editing-project,#companion-project) .chapter-title-block>.editorial-label>span:first-child{color:var(--ex-accent,var(--red));font-weight:600}
+:root :is(#city-project,#finance-project,#edgelore-project,#editing-project,#companion-project) .chapter-title-block>.editorial-label>span+span::before{content:'/';margin-right:11px;color:var(--ex-line,var(--line))}
+:root :is(#city-project,#finance-project,#edgelore-project,#editing-project) .chapter-title-block>h2{margin:0;font:500 clamp(40px,4.2vw,54px)/1.25 'Portfolio Serif','Portfolio Song','Songti SC',serif;letter-spacing:0;color:var(--ex-ink,var(--ink))}
+:root :is(#city-project,#finance-project,#edgelore-project,#editing-project) .chapter-title-block>h2 :is(em,span){font:inherit;font-style:normal;color:inherit}
+:root :is(#city-project,#finance-project,#edgelore-project,#editing-project) .chapter-title-block>.project-deck{margin:14px 0 0;color:var(--ex-muted,var(--secondary));font:400 15px/1.8 'Microsoft YaHei',sans-serif}
+:root :is(#city-project,#finance-project,#edgelore-project,#editing-project) .chapter-heading>.project-actions{display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:10px;min-width:138px;margin:0;padding:0}
+:root :is(#city-project,#finance-project,#edgelore-project,#editing-project) .chapter-heading>.project-actions>:is(a,button){display:inline-flex;align-items:center;justify-content:flex-end;gap:7px;min-height:34px;padding:0 0 4px;border:0;border-bottom:1px solid var(--ex-line,var(--line));border-radius:0;background:transparent;color:var(--ex-ink,var(--ink));font:400 12px/1.5 'Microsoft YaHei',sans-serif;text-decoration:none;white-space:nowrap;cursor:pointer}
+:root :is(#city-project,#finance-project,#edgelore-project,#editing-project) .chapter-heading>.project-actions>:is(a,button):hover{border-color:var(--ex-accent,var(--red));color:var(--ex-accent,var(--red))}
+:root :is(#city-project,#finance-project,#edgelore-project,#editing-project) .chapter-heading>.project-actions small{max-width:190px;color:var(--ex-muted,var(--secondary));font:10px/1.6 'Microsoft YaHei',sans-serif;text-align:right}
+:root[data-finance-style=pixel] :is(#city-project,#finance-project,#edgelore-project,#editing-project,#companion-project) .chapter-title-block>.editorial-label{font-family:'Finance Pixel',monospace;letter-spacing:0}
+:root[data-finance-style=pixel] :is(#city-project,#finance-project,#edgelore-project,#editing-project,#companion-project) .chapter-title-block>.editorial-label>span+span::before{margin-right:11px}
+:root[data-finance-style=pixel] :is(#city-project,#finance-project,#edgelore-project,#editing-project) .chapter-title-block>h2{font:400 clamp(34px,4vw,48px)/1.35 'Finance Pixel',monospace;letter-spacing:0}
+:root[data-finance-style=pixel] :is(#city-project,#finance-project,#edgelore-project,#editing-project) .chapter-heading>.project-actions>:is(a,button){font:400 12px/1.5 'Finance Pixel',monospace}
+:root[data-finance-style=pixel] :is(#city-project,#finance-project,#edgelore-project,#editing-project) .chapter-heading>.project-actions small{font-family:'Finance Pixel',monospace}
+:root :is(#finance-project,#edgelore-project,#companion-project) .chapter-heading>.project-resources{display:grid;width:min(390px,42vw);grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;min-width:0;max-width:390px}
+:root :is(#finance-project,#edgelore-project,#companion-project) .chapter-heading>.project-resources .resource-link{box-sizing:border-box;display:grid;grid-template-columns:34px minmax(0,1fr);align-items:center;gap:10px;min-width:0;min-height:82px;padding:12px 14px;border:1px solid var(--ex-line);background:var(--ex-paper);color:var(--ex-ink);text-decoration:none}
+:root :is(#finance-project,#edgelore-project,#companion-project) .chapter-heading>.project-resources .resource-icon{display:grid;place-items:center;width:31px;height:31px;border:1px solid var(--ex-accent);color:var(--ex-accent);font:17px/1 Arial,sans-serif}
+:root :is(#finance-project,#edgelore-project,#companion-project) .chapter-heading>.project-resources .resource-link>span:last-child{display:flex;min-width:0;flex-direction:column;align-items:flex-start;gap:3px}
+:root :is(#finance-project,#edgelore-project,#companion-project) .chapter-heading>.project-resources .resource-link small{max-width:none;font:11px/1.3 Consolas,monospace;color:#465840;text-align:left}
+:root :is(#finance-project,#edgelore-project,#companion-project) .chapter-heading>.project-resources .resource-link strong{font:600 15px/1.45 'Microsoft YaHei',sans-serif;color:#493f30}
+:root[data-finance-style=pixel] :is(#finance-project,#edgelore-project,#companion-project) .chapter-heading>.project-resources .resource-link{border:2px solid #7c8965;background:#e7ddbe;box-shadow:3px 3px #31533d2b;color:#203c30;font-family:'Finance Pixel',monospace}
+:root[data-finance-style=pixel] :is(#finance-project,#edgelore-project,#companion-project) .chapter-heading>.project-resources .resource-icon{border:2px solid #a16c62;color:#a16c62}
+:root[data-finance-style=pixel] :is(#finance-project,#edgelore-project,#companion-project) .chapter-heading>.project-resources .resource-link small{font:400 11px/1.35 'Finance Pixel',monospace;color:#43543e}
+:root[data-finance-style=pixel] :is(#finance-project,#edgelore-project,#companion-project) .chapter-heading>.project-resources .resource-link strong{font:400 15px/1.5 'Finance Pixel',monospace;color:#493f30}
+:root :is(#finance-project,#edgelore-project,#companion-project) .chapter-heading>.project-resources .resource-link:hover{border-color:var(--ex-accent);transform:translateY(-2px)}
+#financePreview .finance-composer>div{position:relative;overflow:visible}
+#financePreview[data-state=idle] .finance-composer>p{max-width:48%}
+#financePreview .finance-click-hint{display:none;position:absolute;z-index:6;right:6px;bottom:49px;width:188px;height:90px;place-items:center;padding:0 12px 11px;box-sizing:border-box;border:3px solid #df6548;border-radius:48% 48% 46% 45% / 55% 57% 43% 43%;background:#ffd65a;color:#6e2e27;font:700 18px/1 'Arial Black',Arial,sans-serif;letter-spacing:.045em;text-align:center;box-shadow:0 2px 0 #df6548,0 0 0 4px #ffd65a;transform:rotate(2deg);animation:finance-hint-float 1.8s ease-in-out infinite}
+#financePreview .finance-click-hint::before{content:'';position:absolute;z-index:-1;top:-11px;left:29px;width:42px;height:35px;border-radius:50%;background:#ffd65a;box-shadow:38px -7px 0 -1px #ffd65a,78px -1px 0 0 #ffd65a}
+#financePreview .finance-click-hint::after{content:'⬇';position:absolute;right:-4px;bottom:-26px;color:#df6548;font:900 38px/1 Arial,sans-serif;text-shadow:2px 2px 0 #ffd65a;transform:rotate(0deg)}
+#financePreview[data-state=idle] .finance-click-hint{display:grid}
+@keyframes finance-hint-float{0%,100%{translate:0 0}50%{translate:0 -4px}}
+@media(max-width:760px){
+  :root :is(#city-project,#finance-project,#edgelore-project,#editing-project) .chapter-heading.project-overview{grid-template-columns:minmax(0,1fr);gap:20px;padding:34px 0 26px}
+  :root :is(#city-project,#finance-project,#edgelore-project,#editing-project) .chapter-heading>.project-actions{flex-direction:row;align-items:center;justify-content:flex-start;flex-wrap:wrap;gap:8px 18px;min-width:0}
+  :root :is(#city-project,#finance-project,#edgelore-project,#editing-project) .chapter-heading>.project-actions small{flex-basis:100%;text-align:left}
+  :root :is(#city-project,#finance-project,#edgelore-project,#editing-project) .chapter-title-block>h2{font-size:clamp(34px,7vw,44px)}
+  :root[data-finance-style=pixel] :is(#city-project,#finance-project,#edgelore-project,#editing-project) .chapter-title-block>h2{font-size:clamp(30px,7vw,42px)}
+  :root :is(#finance-project,#edgelore-project,#companion-project) .chapter-heading>.project-resources{width:min(100%,390px);grid-template-columns:repeat(2,minmax(0,1fr));max-width:100%;justify-self:start}
+  :root[data-finance-style=pixel] :is(#finance-project,#edgelore-project,#companion-project) .chapter-heading>.project-resources .resource-link{grid-template-columns:28px minmax(0,1fr);gap:8px;padding:10px}
+  :root[data-finance-style=pixel] :is(#finance-project,#edgelore-project,#companion-project) .chapter-heading>.project-resources .resource-link strong{font-size:13px}
+  :root[data-finance-style=pixel] :is(#finance-project,#edgelore-project,#companion-project) .chapter-heading>.project-resources .resource-link small{font-size:10px}
+  #financePreview .finance-click-hint{right:4px;bottom:49px;width:178px;height:86px;font-size:17px}
+}
